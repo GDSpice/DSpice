@@ -15,6 +15,6 @@ DSpice: Design and Simulation of Circuits using Spice
 
     
   <a href="https://github.com/GDSpice/DSpice/blob/main/LICENSE">
-      <img src="https://img.shields.io/badge/MIT-blue" alt="MIT">
+      <img src="https://img.shields.io/badge/Licenses-MIT-blue" alt="MIT-licenses">
   </a>
 </p>
