@@ -1,11 +1,12 @@
 # DSpice
 DSpice: Design and Simulation of Circuits using Spice
 
-<h1 align="center">
+<h4 align="center">
     <a href="https://dspice.sourceforge.io/"><img src="https://dspice.sourceforge.io/logo.png" width="175px" alt="DSpice"></a>
+    <br>
     <a href="https://dspice.sourceforge.io/">https://dspice.sf.net/</a>
     
-</h1>
+</h4>
 
 ---
 
