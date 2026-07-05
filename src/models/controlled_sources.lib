@@ -1,0 +1,69 @@
+* ================================================================
+* CONTROLLED SOURCES SPICE MODELS
+* VCVS, CCVS, VCCS, CCCS
+* ================================================================
+* File: controlled_sources.lib
+* Description: Library of all four types of controlled sources
+* ================================================================
+
+* ================================================================
+* 1. VCVS - VOLTAGE-CONTROLLED VOLTAGE SOURCE
+* ================================================================
+* SPICE Element: E
+* Syntax: E<name> N+ N- NC+ NC- <Gain>
+*   N+, N-   : Output terminals
+*   NC+, NC- : Control (sensing) voltage terminals
+*   Gain     : Voltage gain (dimensionless, V/V)
+* ================================================================
+
+.SUBCKT VCVS_MODEL NP NM NCP NCM PARAMS: GAIN=1
+E_VCVC  NP NM  NCP NCM  {GAIN}
+.ENDS VCVS_MODEL
+
+
+* ================================================================
+* 2. CCVS - CURRENT-CONTROLLED VOLTAGE SOURCE
+* ================================================================
+* SPICE Element: H
+* Syntax: H<name> N+ N- V<name> <Transresistance>
+*   N+, N-          : Output terminals
+*   V<name>         : Name of voltage source for current sensing
+*   Transresistance : Transresistance in Ohms (V/A)
+* ================================================================
+
+.SUBCKT CCVS_MODEL NP NM SP SM PARAMS: RM=1
+V_SENSE  SP SI  DC 0
+H_CCVC   NP NM  V_SENSE  {RM}
+.ENDS CCVS_MODEL
+
+
+* ================================================================
+* 3. VCCS - VOLTAGE-CONTROLLED CURRENT SOURCE
+* ================================================================
+* SPICE Element: G
+* Syntax: G<name> N+ N- NC+ NC- <Transconductance>
+*   N+, N-          : Output current terminals
+*   NC+, NC-        : Control (sensing) voltage terminals
+*   Transconductance: Transconductance in Siemens (A/V)
+* ================================================================
+
+.SUBCKT VCCS_MODEL NP NM NCP NCM PARAMS: GM=1E-3
+G_VCCS  NP NM  NCP NCM  {GM}
+.ENDS VCCS_MODEL
+
+
+* ================================================================
+* 4. CCCS - CURRENT-CONTROLLED CURRENT SOURCE
+* ================================================================
+* SPICE Element: F
+* Syntax: F<name> N+ N- V<name> <CurrentGain>
+*   N+, N-       : Output current terminals
+*   V<name>      : Name of voltage source for current sensing
+*   CurrentGain  : Current gain (dimensionless, A/A)
+* ================================================================
+
+.SUBCKT CCCS_MODEL NP NM SP SM PARAMS: BETA=1
+V_SENSE2  SP SI  DC 0
+F_CCCS    NP NM  V_SENSE2  {BETA}
+.ENDS CCCS_MODEL
+

@@ -1,0 +1,96 @@
+
+* ================================================================================
+* Model: Real Transformer (T-Model with Leakage & Resistance)
+* Description: Models a practical transformer with winding resistances, 
+*              magnetizing inductance, and leakage (via coupling < 1).
+* Ports: P1, P2 (Primary), S1, S2 (Secondary)
+*        Pm, Sm (Internal nodes - see note below)
+* Note: Standard SPICE requires all internal nodes to be in the port list. 
+*       Connect Pm and Sm to dummy nets (e.g., net_Pm, net_Sm) in your schematic.
+* ================================================================================ 
+.subckt Transformer P1 P2 S1 S2  PARAMS: 
++ Np=1000 Ns=100
++ Lm=100H
++ Rp=1
++ Rs=0.1
++ Kc=0.999
+
+* Calculate turns ratio and referred secondary inductance
+.param RATIO={Np/Ns}
+.param Ls_val={Lm*(Ns/Np)^2}
+
+* Winding Resistances
+Rp1 P1 Pm {Rp}
+Rs1 S1 Sm {Rs}
+
+* Magnetizing/Leakage Inductances
+Lp Pm P2 {Lm}
+Ls Sm S2 {Ls_val}
+
+* Magnetic Coupling (Kc must be < 1.0 to avoid singular matrix errors)
+K1 Lp Ls {Kc}
+
+.ends Transformer
+
+* ===============================================================================
+* Model: Ideal Transformer (Behavioral Model)
+* Description: Models a 100% ideal transformer using behavioral sources.
+*              No leakage, no resistance, infinite magnetizing inductance.
+* Ports: P1, P2 (Primary), S1, S2 (Secondary)
+*        Px (Internal sensing node)
+* ==============================================================================
+.subckt IdealTransformer P1 P2 S1 S2  PARAMS: Np=1000 Ns=100
+
+* Turns ratio (N = Np/Ns)
+.param N={Np/Ns}
+
+* Zero-volt voltage source to sense primary current
+Vsen P1 Px 0
+
+* Primary Voltage = N * Secondary Voltage
+E1 Px P2 VALUE={N*V(S1,S2)}
+
+* Secondary Current = -N * Primary Current (Power conservation & dot convention)
+F1 S1 S2 Vsen {-N}
+
+.ends IdealTransformer
+
+* =============================================================================
+* Model: Mutual Inductor (Coupled Inductors)
+* Description: Simple coupled inductors without ideal transformer scaling.
+* Ports: P1, P2 (Inductor 1), S1, S2 (Inductor 2)
+* Note: The 'K' parameter is the coupling coefficient (0 <= K <= 1), 
+*       NOT the mutual inductance in Henries.
+* ============================================================================
+.subckt MutualInductor P1 P2 S1 S2 PARAMS:
++ Lp=7H
++ Ls=0.02286H
++ K=0.999
+
+Lp P1 P2 {Lp}
+Ls S1 S2 {Ls}
+
+* K statement requires coupling coefficient (k), not mutual inductance (M)
+K1 Lp Ls {K}
+
+.ends MutualInductor
+
+* ===================================================================================
+* ================== USAGE EXAMPLES =================================================
+* ===================================================================================
+* 
+* 1. Real Transformer Usage:
+*    X1 P1 P2 S1 S2 net_Pm net_Sm Transformer PARAMS: Np=1000 Ns=100 Lm=100H Kc=0.99
+*    (Note: 'net_Pm' and 'net_Sm' are dummy nets required by SPICE syntax).
+*
+* 2. Ideal Transformer Usage:
+*    X2 P1 P2 S1 S2 net_Px IdealTransformer PARAMS: Np=10 Ns=1
+*    (Note: 'net_Px' is a dummy net for the internal current sensing node).
+*
+* 3. Mutual Inductor Usage:
+*    X3 N1 N2 N3 N4 MutualInductor PARAMS: Lp=10u Ls=10u K=0.95
+*
+* Dot Convention Note: 
+* For all models, the dot convention is assumed as:
+* Primary: Dot at P1. Secondary: Dot at S1.
+* ===================================================================================

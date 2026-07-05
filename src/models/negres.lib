@@ -1,0 +1,15 @@
+*
+*
+*
+.SUBCKT NEGRES p  n PARAMS: Ga=-1 Gb=-1 Ve=1
+
+B1 p n I=
++ IF(V(p,n)<-Ve,
++    Gb*(V(p,n)+Ve)-Ga*Ve,
++    IF(V(p,n)>Ve,
++       Gb*(V(p,n)-Ve)+Ga*Ve,
++       Ga*V(p,n)
++    )
++ )
+
+.ENDS NEGRES

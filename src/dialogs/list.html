@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Signal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header bar */
+    .dialog-header {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dialog-header h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+    .selected-display {
+      font-size: 12px;
+      color: #2196F3;
+      font-weight: 600;
+      font-family: 'Consolas', monospace;
+    }
+
+    /* Tree container */
+    #tree-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    /* Section header (component name: R1, C1, nodes...) */
+    .section-header {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid #e0e0e0;
+      background: #fafafa;
+    }
+    .section-header:hover { background: #f0f0f0; }
+    .section-header .arrow {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .section-header .arrow.collapsed { transform: rotate(-90deg); }
+    .section-header .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    /* Component node */
+    .component-node {
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    /* Children container */
+    .children {
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    .children.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    /* Sub-group (Voltages, Currents) */
+    .sub-group {
+      margin-left: 16px;
+      border-left: 2px solid #e0e0e0;
+    }
+    .sub-group-header {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      background: #f9f9f9;
+      border-bottom: 1px solid #eee;
+    }
+    .sub-group-header:hover { background: #f0f0f0; }
+    .sub-group-header .arrow {
+      width: 14px;
+      margin-right: 4px;
+      font-size: 9px;
+      color: #888;
+      transition: transform 0.2s;
+    }
+    .sub-group-header .arrow.collapsed { transform: rotate(-90deg); }
+
+    /* Signal row - CLICKABLE */
+    .signal-row {
+      display: flex;
+      align-items: center;
+      padding: 7px 12px 7px 32px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .signal-row:hover {
+      background: #e3f2fd;
+    }
+    .signal-row.selected {
+      background: #2196F3 !important;
+      color: #fff !important;
+    }
+    .signal-row.selected .signal-label {
+      color: #fff;
+    }
+    .signal-row.selected .type-indicator {
+      border-color: #fff;
+    }
+
+    /* Type indicator (green=volts, orange=currents) */
+    .type-indicator {
+      width: 12px;
+      height: 12px;
+      border: 1px solid #bbb;
+      border-radius: 2px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .type-voltage { background: #4CAF50; }
+    .type-current { background: #FF9800; }
+
+    /* Signal label */
+    .signal-label {
+      font-size: 12px;
+      color: #444;
+      font-family: 'Consolas', 'Courier New', monospace;
+      flex: 1;
+    }
+
+    /* Buttons bar */
+    .buttons-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+    .btn {
+      padding: 6px 20px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #f0f0f0;
+      color: #333;
+      transition: all 0.15s;
+    }
+    .btn:hover:not(:disabled) {
+      background: #e0e0e0;
+      border-color: #bbb;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: #2196F3;
+      border-color: #1976D2;
+      color: #fff;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #1976D2;
+      border-color: #1565C0;
+    }
+    .btn-primary:disabled {
+      background: #90caf9;
+      border-color: #90caf9;
+    }
+
+    /* Scrollbar */
+    #tree-container::-webkit-scrollbar { width: 8px; }
+    #tree-container::-webkit-scrollbar-track { background: #f1f1f1; }
+    #tree-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+    #tree-container::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+  </style>
+</head>
+<body>
+  <div class="dialog-header">
+    <h2>Signal Selection</h2>
+    <span class="selected-display" id="selected-display">No selection</span>
+  </div>
+
+  <div id="tree-container"></div>
+
+  <div class="buttons-bar">
+    <button class="btn" onclick="clearSelection()">Clear</button>
+    <button class="btn" onclick="cancelDialog()">Cancel</button>
+    <button class="btn btn-primary" id="btn-ok" onclick="submitSelection()" disabled>OK</button>
+  </div>
+
+  <script>
+    
+    let treeData = [];
+    let selectedSignal = null;
+    let preSelectedValue = null;  // القيمة المختارة مسبقاً
+
+    // استقبال البيانات + التحديد المسبق
+
+     
+document.addEventListener("DOMContentLoaded", () => {
+            window.electron.onSetList((data,preSelected) => {
+                      treeData = data;
+                      console.log("Received data for tree:", treeData);
+      preSelectedValue = preSelected || null;
+      renderTree();
+      
+      // تفعيل/تعطيل OK حسب وجود تحديد مسبق
+      updateOkButton();
+            });
+ });
+
+    function renderTree() {
+      const container = document.getElementById('tree-container');
+      container.innerHTML = '';
+      
+      treeData.forEach((item, index) => {
+        const node = createComponentNode(item, index);
+        container.appendChild(node);
+      });
+    }
+
+    function createComponentNode(item, index) {
+      const div = document.createElement('div');
+      div.className = 'component-node';
+
+      // Component header (collapsible)
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.onclick = () => toggleSection(header, childrenDiv);
+
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.innerHTML = '▼';
+
+      const title = document.createElement('span');
+      title.className = 'section-title';
+      title.textContent = item.name;
+
+      header.appendChild(arrow);
+      header.appendChild(title);
+      div.appendChild(header);
+
+      // Children container
+      const childrenDiv = document.createElement('div');
+      childrenDiv.className = 'children';
+
+      // Voltages sub-group
+      if (item.voltages && item.voltages.length > 0) {
+        childrenDiv.appendChild(createSubGroup(item.name, 'voltages', item.voltages, 'Voltages'));
+      }
+
+      // Currents sub-group
+      if (item.currents && item.currents.length > 0) {
+        childrenDiv.appendChild(createSubGroup(item.name, 'currents', item.currents, 'Currents'));
+      }
+
+      div.appendChild(childrenDiv);
+      return div;
+    }
+
+    function createSubGroup(componentName, groupType, items, labelPrefix) {
+      const subDiv = document.createElement('div');
+      subDiv.className = 'sub-group';
+
+      // Sub-group header
+      const subHeader = document.createElement('div');
+      subHeader.className = 'sub-group-header';
+      subHeader.onclick = (e) => {
+        e.stopPropagation();
+        toggleSection(subHeader, subChildren);
+      };
+
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.innerHTML = '▼';
+
+      const subTitle = document.createElement('span');
+      subTitle.textContent = labelPrefix;
+
+      subHeader.appendChild(arrow);
+      subHeader.appendChild(subTitle);
+      subDiv.appendChild(subHeader);
+
+      const subChildren = document.createElement('div');
+      subChildren.className = 'children';
+
+      items.forEach((value) => {
+        const row = document.createElement('div');
+        row.className = 'signal-row';
+        row.dataset.value = value;
+        row.onclick = (e) => {
+          e.stopPropagation();
+          selectRow(row, value);
+        };
+
+        // تحديد مسبق: إذا كانت القيمة مطابقة
+        if (preSelectedValue && value === preSelectedValue) {
+          row.classList.add('selected');
+          selectedSignal = value;
+          document.getElementById('selected-display').textContent = value;
+        }
+
+        const indicator = document.createElement('div');
+        indicator.className = `type-indicator type-${groupType === 'voltages' ? 'voltage' : 'current'}`;
+
+        const label = document.createElement('span');
+        label.className = 'signal-label';
+        label.textContent = value;
+
+        row.appendChild(indicator);
+        row.appendChild(label);
+        subChildren.appendChild(row);
+      });
+
+      subDiv.appendChild(subChildren);
+      return subDiv;
+    }
+
+    function toggleSection(header, content) {
+      const arrow = header.querySelector('.arrow');
+      content.classList.toggle('collapsed');
+      arrow.classList.toggle('collapsed');
+      arrow.innerHTML = content.classList.contains('collapsed') ? '▶' : '▼';
+    }
+
+    function selectRow(rowElement, value) {
+      // إزالة التحديد من كل الصفوف
+      document.querySelectorAll('.signal-row.selected').forEach(r => {
+        r.classList.remove('selected');
+      });
+
+      // تحديد الصف المضغوط
+      rowElement.classList.add('selected');
+      selectedSignal = value;
+
+      // تحديث العرض
+      document.getElementById('selected-display').textContent = value;
+      
+      // تفعيل زر OK
+      updateOkButton();
+    }
+
+    function clearSelection() {
+      document.querySelectorAll('.signal-row.selected').forEach(r => {
+        r.classList.remove('selected');
+      });
+      selectedSignal = null;
+      document.getElementById('selected-display').textContent = 'No selection';
+      updateOkButton();
+    }
+
+    function updateOkButton() {
+      const btnOk = document.getElementById('btn-ok');
+      btnOk.disabled = !selectedSignal;
+    }
+
+    function submitSelection() {
+
+       window.electron.sendEditedList(selectedSignal);
+    }
+
+    function cancelDialog() {
+      window.electron.sendEditedList(null);
+    }
+  </script>
+</body>
+</html>
+
+    
+
+
+
+

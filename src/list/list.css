@@ -1,0 +1,132 @@
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+    /* Header bar */
+    .dialog-header {
+      padding: 8px 12px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dialog-header h2 {
+
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+    .selected-display {
+      font-size: 12px;
+      color: #2196F3;
+      font-weight: 600;
+      font-family: 'Consolas', monospace;
+    }
+
+    /* Tree container */
+    #tree-container {
+      flex: 1;
+      overflow-y: auto;
+     
+    }
+
+    /* Section header (collapsible group) */
+    .section-header {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid #e0e0e0;
+      background: #f5f5f5;
+    }
+    .section-header:hover { background: #f5f5f5; }
+    .section-header .arrow {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+      font-size: 10px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .section-header .arrow.collapsed { transform: rotate(-90deg); }
+    .section-header .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    /* Children container */
+    
+    /* Children container - with max-height and scrollbar */
+    .children {
+      overflow: hidden;
+      transition: all 0.25s ease;
+      max-height: 400px;           /* max height before scroll */
+      overflow-y: auto;          /* enable scrollbar when needed */
+    }
+    .children.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    /* Custom scrollbar for children */
+    .children::-webkit-scrollbar { width: 6px; }
+    .children::-webkit-scrollbar-track { background: #f1f1f1; }
+    .children::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+    .children::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+
+    /* Node row - CLICKABLE */
+    .node-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px 8px 36px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .node-row:hover {
+      background: #e3f2fd;
+    }
+    .node-row.selected {
+      background: #2196F3 !important;
+      color: #fff !important;
+    }
+    .node-row.selected .node-label {
+      color: #fff;
+    }
+    .node-row.selected .type-indicator {
+      border-color: #fff;
+    }
+
+    /* Type indicator (green=voltage) */
+    .type-indicator {
+      width: 12px;
+      height: 12px;
+      border: 1px solid #bbb;
+      border-radius: 2px;
+      margin-right: 10px;
+      flex-shrink: 0;
+      background: #4CAF50;
+    }
+
+    /* Node label */
+    .node-label {
+      font-size: 12px;
+      color: #444;
+      font-family: 'Consolas', 'Courier New', monospace;
+      flex: 1;
+    }
+
+
+
+    /* Scrollbar */
+    #tree-container::-webkit-scrollbar { width: 8px; }
+    #tree-container::-webkit-scrollbar-track { background: #f1f1f1; }
+    #tree-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+    #tree-container::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }

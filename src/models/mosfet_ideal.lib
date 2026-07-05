@@ -1,0 +1,16 @@
+
+
+* MOS Models
+.model NMOS NMOS (
++ LEVEL=1
++ VTO=0.7
++ KP=120u
++ LAMBDA=0.02
++ W=5u L=1u)
+
+.model PMOS PMOS (
++ LEVEL=1
++ VTO=-0.7
++ KP=40u
++ LAMBDA=0.02
++ W=10u L=1u)

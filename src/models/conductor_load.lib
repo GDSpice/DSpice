@@ -1,0 +1,35 @@
+* ================================================================
+* CONDUCTOR AND LOAD SPICE MODELS
+* Conductor and Load 
+* ================================================================
+* File: conductor_load.lib
+* Description: Library for conductor and load elements
+* ================================================================
+
+* ================================================================
+* CONDUCTOR - CONDUCTANCE ELEMENT
+* ================================================================
+* A conductor is the reciprocal of resistance
+* Conductance G = 1/R (measured in Siemens, S)
+* ================================================================
+.SUBCKT CONDUCTOR NP NM PARAMS: G=1
+* R = 1/G
+R_COND  NP NM  {1/G}
+.ENDS CONDUCTOR
+
+* ================================================================
+* LOAD Power 
+* ================================================================
+* A load element represents a device that consumes power
+* It can be modeled  power load
+* Symbol: power load
+* Parameters:  P (power)
+* ================================================================
+
+.SUBCKT LOAD_Power NP NM PARAMS: P=5W
+* Behavioral model for  power load
+* I = P / V
+B_LOAD  NP NM  I={P/V(NP,NM)}
+.ENDS LOAD_Power
+
+

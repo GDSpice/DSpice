@@ -1,0 +1,115 @@
+* ================================================================
+* SWITCH SPICE MODELS
+* Voltage-Controlled Switch (VCS) and Current-Controlled Switch (CCS)
+* ================================================================
+* File: switches.lib
+* Description: Library for voltage and current controlled switches
+* ================================================================
+
+* ================================================================
+* 1. VOLTAGE-CONTROLLED SWITCH (VCS)
+* ================================================================
+* SPICE Element: S
+* Syntax: S<name> NP NM CP CM <model_name>
+*   NP, NM     : Switch terminals (output)
+*   CP, CM   : Control voltage terminals
+*   model_name : Switch model name
+*
+* Model Syntax: .MODEL <model_name> SW(Ron=<val> Roff=<val> Vt=<val> Vh=<val>)
+*   Ron   : ON resistance (default: 1 Ohm)
+*   Roff  : OFF resistance (default: 1/Gmin, typically 1e12 Ohms)
+*   Vt    : Threshold voltage (default: 0V)
+*   Vh    : Hysteresis voltage (default: 0V)
+*
+* Operation:
+*   - If V(CP, CM) > Vt + Vh : Switch is ON (resistance = Ron)
+*   - If V(CP, CM) < Vt - Vh : Switch is OFF (resistance = Roff)
+*   - Between : Linear transition
+* ================================================================
+
+* --- Voltage-Controlled Switch Model Definitions ---
+.MODEL SW_VCS_0V SW(Ron=0.001 Roff=1e9 Vt=0 Vh=0)
+.MODEL SW_VCS_5V SW(Ron=0.001 Roff=1e9 Vt=5 Vh=0.5)
+.MODEL SW_VCS_2.5V SW(Ron=0.01 Roff=1e6 Vt=2.5 Vh=0.1)
+
+* --- Voltage-Controlled Switch Subcircuit ---
+.SUBCKT VCS NP NM CP CM PARAMS: RON=0.001 ROFF=1E9 VT=0 VH=0
+* NP, NM : Switch terminals
+* CP, CM : Control voltage terminals
+S_VCS  NP NM  CP CM  SW_VCS
+.MODEL SW_VCS SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH})
+.ENDS VCS
+
+
+
+
+* ================================================================
+* 2. CURRENT-CONTROLLED SWITCH (CCS)
+* ================================================================
+* SPICE Element: W
+* Syntax: W<name> N1 N2 V<name> <model_name>
+*   N1, N2     : Switch terminals (output)
+*   V<name>    : Name of voltage source for current sensing
+*   model_name : Switch model name
+*
+* Model Syntax: .MODEL <model_name> ISWITCH(Ron=<val> Roff=<val> It=<val> Ih=<val>)
+*   Ron   : ON resistance (default: 1 Ohm)
+*   Roff  : OFF resistance (default: 1/Gmin, typically 1e12 Ohms)
+*   It    : Threshold current (default: 0A)
+*   Ih    : Hysteresis current (default: 0A)
+*
+* Operation:
+*   - If I(V<name>) > It + Ih : Switch is ON (resistance = Ron)
+*   - If I(V<name>) < It - Ih : Switch is OFF (resistance = Roff)
+*   - Between : Linear transition
+*
+* IMPORTANT: Current must be measured through a voltage source!
+* ================================================================
+
+* --- Current-Controlled Switch Model Definitions ---
+.MODEL SW_CCS_ON ISWITCH(Ron=0.001 Roff=1e9 It=0 Ih=0)
+.MODEL SW_CCS_10MA ISWITCH(Ron=0.01 Roff=1e6 It=10M Ih=1M)
+.MODEL SW_CCS_100MA ISWITCH(Ron=0.001 Roff=1e9 It=100M Ih=5M)
+
+* --- Current-Controlled Switch Subcircuit ---
+.SUBCKT CCS NP NM SP SM PARAMS: RON=0.001 ROFF=1E9 IT=0 IH=0
+* NP, NM : Switch terminals
+* SP, SM : Current sensing terminals (must have voltage source)
+V_SENSE  SP SI  DC 0
+W_CCS    NP NM  V_SENSE  SW_CCS
+.MODEL SW_CCS ISWITCH(Ron={RON} Roff={ROFF} It={IT} Ih={IH})
+.ENDS CCS
+
+
+* ================================================================
+* 3. VOLTAGE-CONTROLLED SWITCH ONE TERMINals (VCSwitch)
+* ================================================================
+* SPICE Element: S
+* Syntax: S<name> NP NM CP <model_name>
+*   NP, NM     : Switch terminals (output)
+*   CP  : Control voltage terminal
+*   model_name : Switch model name
+*
+* Model Syntax: .MODEL <model_name> SW(Ron=<val> Roff=<val> Vt=<val> Vh=<val>)
+*   Ron   : ON resistance (default: 1 Ohm)
+*   Roff  : OFF resistance (default: 1/Gmin, typically 1e12 Ohms)
+*   Vt    : Threshold voltage (default: 0V)
+*   Vh    : Hysteresis voltage (default: 0V)
+*
+* Operation:
+*   - If V(CP) > Vt + Vh : Switch is ON (resistance = Ron)
+*   - If V(CP) < Vt - Vh : Switch is OFF (resistance = Roff)
+*   - Between : Linear transition
+* ================================================================
+
+
+* --- Voltage-Controlled Switch Subcircuit ---
+.SUBCKT VCSwitch NP NM CP  PARAMS: RON=0.001 ROFF=1E9 VT=0 VH=0
+* NP, NM : Switch terminals
+* CP     : Control voltage terminals
+S_VCS  NP NM  CP   SW_VCS
+.MODEL SW_VCS SW(Ron={RON} Roff={ROFF} Vt={VT} Vh={VH})
+.ENDS VCSwitch
+
+
+

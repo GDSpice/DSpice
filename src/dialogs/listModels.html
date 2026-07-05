@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Items</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: #f5f5f5;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .dialog-header {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dialog-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .item-count {
+      font-size: 12px;
+      color: #666;
+      background: #e3f2fd;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .editor-container {
+      flex: 1;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Line numbers gutter */
+    .line-numbers {
+      width: 50px;
+      background: #f0f0f0;
+      border-right: 1px solid #ddd;
+      padding: 10px 0;
+      text-align: right;
+      font-size: 13px;
+      line-height: 22px;
+      color: #999;
+      overflow: hidden;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .line-numbers span {
+      display: block;
+      padding-right: 10px;
+      height: 22px;
+    }
+    .line-numbers span.current {
+      color: #2196F3;
+      font-weight: bold;
+      background: #e3f2fd;
+    }
+
+    /* Textarea editor */
+    .editor-textarea {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 10px 12px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 22px;
+      resize: none;
+      background: #fff;
+      color: #333;
+      white-space: pre;
+      overflow: auto;
+      tab-size: 4;
+    }
+    .editor-textarea::selection {
+      background: #b3d9ff;
+    }
+
+    .preview-bar {
+      background: #fff;
+      border-top: 1px solid #ddd;
+      padding: 10px 20px;
+      max-height: 60px;
+      overflow-y: auto;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .preview-label {
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .preview-text {
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+      color: #2196F3;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    .buttons-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+    .btn {
+      padding: 8px 24px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #f0f0f0;
+      color: #333;
+      transition: all 0.15s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .btn:hover:not(:disabled) {
+      background: #e0e0e0;
+    }
+    .btn-primary {
+      background: #2196F3;
+      border-color: #1976D2;
+      color: #fff;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #1976D2;
+    }
+
+    .editor-textarea::-webkit-scrollbar { width: 8px; }
+    .editor-textarea::-webkit-scrollbar-track { background: #f1f1f1; }
+    .editor-textarea::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+    .editor-textarea::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+  </style>
+<base target="_blank">
+</head>
+<body>
+  <div class="dialog-header">
+    <h2>Edit and add models</h2>
+    <span class="item-count" id="item-count">0 items</span>
+  </div>
+
+  <div class="editor-container">
+    <div class="editor-wrapper">
+      <div class="line-numbers" id="line-numbers"></div>
+      <textarea class="editor-textarea" id="editor" spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <div class="preview-bar">
+    <div class="preview-label">Preview (comma-separated):</div>
+    <div class="preview-text" id="preview-text"></div>
+  </div>
+
+  <div class="buttons-bar">
+    <button class="btn" onclick="cancelDialog()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitResult()">OK</button>
+  </div>
+
+  <script>
+   
+    let originalText = '';
+    const editor = document.getElementById('editor');
+    const lineNumbers = document.getElementById('line-numbers');
+    const previewText = document.getElementById('preview-text');
+    const itemCount = document.getElementById('item-count');
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+            window.electron.onSetList((itemsString,preSelected) => {
+                      // Convert comma-separated to line-separated
+      const lines = itemsString.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      originalText = lines.join('\n');
+      editor.value = originalText;
+      updateLineNumbers();
+      updatePreview();
+      editor.focus();
+            });
+ });
+
+    // Update line numbers
+    function updateLineNumbers() {
+      const lines = editor.value.split('\n');
+      const currentLine = getCurrentLineNumber();
+
+      lineNumbers.innerHTML = '';
+      lines.forEach((_, i) => {
+        const span = document.createElement('span');
+        span.textContent = i + 1;
+        if (i === currentLine) {
+          span.classList.add('current');
+        }
+        lineNumbers.appendChild(span);
+      });
+
+      // Update item count
+      const nonEmpty = lines.filter(s => s.trim().length > 0);
+      itemCount.textContent = nonEmpty.length + ' item' + (nonEmpty.length !== 1 ? 's' : '');
+    }
+
+    // Get current line number from cursor position
+    function getCurrentLineNumber() {
+      const textBeforeCursor = editor.value.substring(0, editor.selectionStart);
+      return textBeforeCursor.split('\n').length - 1;
+    }
+
+    // Update preview
+    function updatePreview() {
+      const lines = editor.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+      previewText.textContent = lines.join(',');
+    }
+
+    // Sync scroll between textarea and line numbers
+    editor.addEventListener('scroll', () => {
+      lineNumbers.scrollTop = editor.scrollTop;
+    });
+
+    // Update on input
+    editor.addEventListener('input', () => {
+      updateLineNumbers();
+      updatePreview();
+    });
+
+    // Update on cursor move
+    editor.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End' || e.key === 'PageUp' || e.key === 'PageDown') {
+        updateLineNumbers();
+      }
+    });
+
+    editor.addEventListener('click', () => {
+      updateLineNumbers();
+    });
+
+    // Handle Tab key (insert spaces instead of changing focus)
+    editor.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 4;
+        updateLineNumbers();
+        updatePreview();
+      }
+    });
+
+    function submitResult() {
+      const lines = editor.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+      window.electron.sendEditedList(lines.join(','));
+    }
+
+    function cancelDialog() {
+     window.electron.sendEditedList(null);
+    }
+  </script>
+</body>
+</html>

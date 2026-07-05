@@ -1,0 +1,67 @@
+{
+    "libs": [
+        "Basic",
+        "Source",
+        "Semiconductor",
+        "Digital"
+    ],
+    "Basic": [
+        "Resistor.sym",
+        "Capacitor.sym",
+        "Inductor.sym",
+        "CapacitorIc.sym",
+        "InductorIc.sym",
+        "Conductor.sym",
+        "CCCS.sym",
+        "VCCS.sym",
+        "CCVS.sym",
+        "VCVS.sym",
+        "Load.sym",
+        "Power Load.sym",
+        "NegativeResistance.sym",
+        "NonlinearResistance.sym",
+        "TransformerIdeal.sym",
+        "Transmission Line.sym",
+        "Transformer sample.sym",
+        "Mutual Inductor.sym",
+        "CCS.sym",
+        "VCS.sym",
+        "VC Switch.sym"
+    ],
+    "Digital": [
+        "AND.sym",
+        "Buffer.sym",
+        "NAND.sym",
+        "NOR.sym",
+        "NOT.sym",
+        "OR.sym",
+        "XNOR.sym",
+        "XOR.sym"
+    ],
+    "Semiconductor": [
+        "DiodeBridge.sym",
+        "DiodeLaser.sym",
+        "DiodeZener.sym",
+        "NMOS.sym",
+        "NPN.sym",
+        "PMOS.sym",
+        "PNP.sym",
+        "Diode FRD.sym",
+        "Diode RD.sym",
+        "Diode Schottky.sym",
+        "NMOS_4_terminal.sym",
+        "PMOS_4_terminal.sym"
+    ],
+    "Source": [
+        "DCCurrent.sym",
+        "DCVoltage.sym",
+        "SinCurrent.sym",
+        "SinVoltage.sym",
+        "TrapezoidCurrent.sym",
+        "TrapezoidVoltage.sym",
+        "ExpCurrent.sym",
+        "ExpVoltage.sym",
+        "PWLCurrent.sym",
+        "PWLVoltage.sym"
+    ]
+}

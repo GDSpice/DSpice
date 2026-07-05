@@ -1,0 +1,53 @@
+
+.SUBCKT AND_IDEAL A B Y
+
+B1 Y 0 V = if(V(A)>2.5 && V(B)>2.5,5,0)
+
+.ENDS
+
+.SUBCKT OR_IDEAL A B Y
+
+B1 Y 0 V = if(V(A)>2.5 || V(B)>2.5,5,0)
+
+.ENDS
+
+.SUBCKT NOT_IDEAL A Y
+
+B1 Y 0 V = if(V(A)>2.5,0,5)
+
+.ENDS
+
+.SUBCKT BUF_IDEAL A Y
+
+B1 Y 0 V = if(V(A)>2.5,5,0)
+
+.ENDS
+
+.SUBCKT NAND_IDEAL A B Y
+
+B1 Y 0 V = if(V(A)>2.5 && V(B)>2.5,0,5)
+
+.ENDS
+
+.SUBCKT NOR_IDEAL A B Y
+
+B1 Y 0 V = if(V(A)>2.5 || V(B)>2.5,0,5)
+
+.ENDS
+
+.SUBCKT XOR_IDEAL A B Y
+
+B1 Y 0 V = if((V(A)>2.5)!=(V(B)>2.5),5,0)
+
+.ENDS
+
+.SUBCKT XNOR_IDEAL A B Y
+
+B1 Y 0 V = if((V(A)>2.5)==(V(B)>2.5),5,0)
+
+.ENDS
+
+
+
+
+

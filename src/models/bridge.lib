@@ -1,0 +1,10 @@
+
+
+.SUBCKT B1N4001 a b c d
+
+D1 a  b 1N4001
+D2 c  b 1N4001
+D3 d  c 1N4001
+D4 d  a 1N4001
+
+.ENDS B1N4001 End
