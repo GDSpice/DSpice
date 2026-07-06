@@ -33,7 +33,7 @@ function getDescription(self,elemSelect){
 function pageSelect() {
 
     defaultData = {
-        header: { title: "Page design", subtitle: "Selected Objects  1" },
+        header: { title: "Page design", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -101,7 +101,7 @@ if (mtable.resize.setElement)
 function rectSelect() {
 
         defaultData = {
-        header: { title: "Rectangle", subtitle: "Selected Objects" },
+        header: { title: "Rectangle", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -144,7 +144,7 @@ function modifiedRect() {
 
 function ellipseSelect() {
         defaultData = {
-        header: { title: "Ellipse", subtitle: "Selected Objects" },
+        header: { title: "Ellipse", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -188,7 +188,7 @@ function modifiedEllipse() {
 
 function arcSelect() {
         defaultData = {
-        header: { title: "Arc", subtitle: "Selected Objects" },
+        header: { title: "Arc", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -230,7 +230,7 @@ function modifiedArc() {
 
 function polylineSelect() {
     defaultData = {
-        header: { title: "Polyline", subtitle: "Selected Objects" },
+        header: { title: "Polyline", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -262,7 +262,7 @@ function polylineModified() {
 
 function polygonSelect() {
     defaultData = {
-        header: { title: "Polygon", subtitle: "Selected Objects" },
+        header: { title: "Polygon", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -344,7 +344,7 @@ function netModified(pos,e) {
 
 function netSelect() {
     defaultData = {
-        header: { title: "Net", subtitle: "Selected Objects" },
+        header: { title: "Net", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -390,7 +390,7 @@ function netModified() {
 function refSelected() {
    
     defaultData = {
-        header: { title: "Reference", subtitle: "Selected Objects" },
+        header: { title: "Reference", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -438,7 +438,7 @@ function refModified() {
 function paramSelected() {
     mtable.select.p = mtable.select.textContent.split("=");
     defaultData = {
-        header: { title: "Parameter", subtitle: "Selected Objects" },
+        header: { title: "Parameter", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -506,7 +506,7 @@ function paramModified() {
 function modelSelected() {
    
     defaultData = {
-        header: { title: "Model", subtitle: "Selected Objects" },
+        header: { title: "Model", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -559,7 +559,7 @@ function pinSelect() {
         if (!mtable.select.childNodes[2].style.fill)
             mtable.select.childNodes[2].style.fill = 'RGB(0,0,0)';
     defaultData = {
-        header: { title: "Pin", subtitle: "Selected Objects" },
+        header: { title: "Pin", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -657,7 +657,7 @@ function modifiedPin() {
 
 function probeSelect() {
     defaultData = {
-        header: { title: "Probe", subtitle: "Selected Objects" },
+        header: { title: "Probe", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -696,7 +696,7 @@ function codeHTMLSelect() {
     var f=mtable.select.firstChild.firstChild.style;
 
     defaultData = {
-        header: { title: "Code HTML", subtitle: "Selected Objects" },
+        header: { title: "Code HTML", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -757,7 +757,7 @@ function setPosText() {
 
 function textSelect(){
     defaultData = {
-        header: { title: "Text", subtitle: "Selected Objects" },
+        header: { title: "Text", subtitle: "Selected" },
         sections: [ {
                 title: "Basic Properties",
                 collapsed: false,
@@ -810,7 +810,7 @@ function modifiedText() {
 function codePySelect() {
 
         defaultData = {
-        header: { title: "CodePy", subtitle: "Selected Objects" },
+        header: { title: "CodePy", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -856,7 +856,7 @@ function partSelect() {
 
     if(mtable.select.getAttribute("directory")=='standard'){
          defaultData = {
-        header: { title: "Part", subtitle: "Selected Objects" },
+        header: { title: "Part", subtitle: "Selected" },
         sections: [
             {
                 title: "Basic Properties",
@@ -871,7 +871,7 @@ function partSelect() {
     };
     }else{
     defaultData = {
-        header: { title: "Part", subtitle: "Selected Objects" },
+        header: { title: "Part", subtitle: "Selected" },
         sections: [
             {
                 title: "Symbol Properties",
@@ -970,7 +970,7 @@ function analysisSelect() {
         var analy=JSON.parse(mtable.select.getAttribute("description"));
         
         defaultData = {
-        header: { title: "Analysis Description", subtitle: "Selected Objects" },
+        header: { title: "Analysis Description", subtitle: "Selected" },
         sections: [
             { title: "Analysis Properties",
               collapsed: false,

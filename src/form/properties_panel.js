@@ -37,8 +37,11 @@
 
         const header = document.createElement('div');
         header.className = 'panel-header';
-        header.innerHTML = `<span>${propertiesData.header.title}</span><span>${propertiesData.header.subtitle}</span>`;
+        header.innerHTML = `<span>${propertiesData.header.title}</span><span class="selected-display">${propertiesData.header.subtitle}</span>`;
         panel.appendChild(header);
+        const asections = document.createElement('div');
+        asections.className = 'panel-sections';
+        panel.appendChild(asections);
 
         propertiesData.sections.forEach((section, sIdx) => {
             const secDiv = document.createElement('div');
@@ -204,7 +207,7 @@
             }*/
 
             secDiv.appendChild(body);
-            panel.appendChild(secDiv);
+            asections.appendChild(secDiv);
         });
     }
 

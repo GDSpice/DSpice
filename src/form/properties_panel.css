@@ -11,7 +11,10 @@
             border: 1px solid #ccc;
             font-size: 13px;
             color: #333;
+            display: flex;
+            flex-direction: column;
         }
+
         .panel-header {
             display: flex;
             justify-content: space-between;
@@ -21,9 +24,23 @@
             border-bottom: 1px solid #ddd;
             font-weight: 600;
         }
-        .psection { border-bottom: 1px solid #e0e0e0; }
+
+        .panel-sections {
+            overflow-y: auto;
+            max-height: 100%;
+            height:42vh;
+            flex: 1;
+        }
+
+            /* Scrollbar */
+    .panel-sections::-webkit-scrollbar { width: 6px; }
+    .panel-sections::-webkit-scrollbar-track { background: #f1f1f1; }
+    .panel-sections::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+    .panel-sections::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+        .psection { border-bottom: 1px solid #e0e0e0;  overflow-y: auto; }
         .psection-header {
-            display: flex;
+           /* display: flex;*/
             align-items: center;
             padding: 6px 12px;
             background: #f5f5f5;

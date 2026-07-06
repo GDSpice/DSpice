@@ -24,8 +24,12 @@ const preSelectedValue = null;
     }
 
     function renderTree(data, preSel) {
-      const container = document.getElementById('tree-container');
-      container.innerHTML = '';
+      const treecontainer = document.getElementById('tree-container');
+      treecontainer.innerHTML = ''; // Clear previous content
+      const container = document.createElement('div');
+      container.className = 'tcontainer';
+      treecontainer.appendChild(container);
+      
 
       data.forEach((group, index) => {
         const groupNode = createGroupNode(group, index, preSel);
@@ -88,7 +92,7 @@ const preSelectedValue = null;
       div.appendChild(childrenDiv);
 
       // Apply collapsed state from treeData
-      const isCollapsed = group.collapsed === true;
+      const isCollapsed = group.collapsed === false;
       if (isCollapsed) {
         childrenDiv.classList.add('collapsed');
         arrow.classList.add('collapsed');

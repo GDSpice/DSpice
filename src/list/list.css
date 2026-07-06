@@ -24,12 +24,20 @@
     }
 
     /* Tree container */
-    #tree-container {
-      flex: 1;
-      overflow-y: auto;
-     
+    .tcontainer {
+            overflow-y: auto;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            height:40vh;
+            flex: 1;
     }
 
+     /* Scrollbar */
+    .tcontainer::-webkit-scrollbar { width: 6px; }
+    .tcontainer::-webkit-scrollbar-track { background: #f1f1f1; }
+    .tcontainer::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+    .tcontainer::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
     /* Section header (collapsible group) */
     .section-header {
       display: flex;
@@ -63,21 +71,17 @@
     
     /* Children container - with max-height and scrollbar */
     .children {
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
       transition: all 0.25s ease;
-      max-height: 400px;           /* max height before scroll */
-      overflow-y: auto;          /* enable scrollbar when needed */
+    /*  overflow-y: auto;*/
+      max-height: 1000px; /* Set a large max-height to allow expansion */
     }
     .children.collapsed {
-      max-height: 0;
-      opacity: 0;
-    }
 
-    /* Custom scrollbar for children */
-    .children::-webkit-scrollbar { width: 6px; }
-    .children::-webkit-scrollbar-track { background: #f1f1f1; }
-    .children::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
-    .children::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+        max-height: 0;
+      display: none;
+    }
 
 
     /* Node row - CLICKABLE */
@@ -125,8 +129,3 @@
 
 
 
-    /* Scrollbar */
-    #tree-container::-webkit-scrollbar { width: 8px; }
-    #tree-container::-webkit-scrollbar-track { background: #f1f1f1; }
-    #tree-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-    #tree-container::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
