@@ -151,7 +151,7 @@ ipcMain.on('open-dialog-about', () => {
   if (!dialogWindow) {
       dialogWindow = new BrowserWindow({
           width: 600,
-          height: 420,
+          height: 500,
           parent: BrowserWindow.getFocusedWindow(),
           icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
           modal: true,

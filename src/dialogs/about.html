@@ -3,124 +3,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <title>About DSpice</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            margin: 0;
-            padding: 5px;
-			overflow: hidden;
-        }
-        .tab-container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            width: 100%;
-            height: 300px;
-            border: 1px solid #aaa;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
+
+        .tab-container {
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Tab Header */
         .tab-header {
             display: flex;
-            border-bottom: 1px solid #aaa;
-            background: #f0f0f0;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            flex-shrink: 0;
         }
-        .tab-header button {
+
+        .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px 20px;
+            background: transparent;
             border: none;
-            background: #f0f0f0;
+            color: #666;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
+            transition: all 0.15s ease;
+            position: relative;
+            outline: none;
+            font-family: inherit;
         }
-        .tab-header button.active {
-            background: white;
-            border-bottom: 2px solid blue;
+
+        .tab-btn:hover {
+            color: #333;
+            background: #f0f0f0;
         }
+
+        .tab-btn.active {
+            color: #2196F3;
+            background: #fff;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #2196F3;
+        }
+
+        /* Tab Content - fixed height with scrollbar */
         .tab-content {
             display: none;
-            padding: 15px;
+            padding: 24px;
+            animation: fadeIn 0.25s ease;
+            height: 320px;
             overflow-y: auto;
-            height: 100%;
         }
+
         .tab-content.active {
             display: block;
         }
-        .ok-button {
-            text-align: right;
-            padding: 10px;
-            border-top: 1px solid #aaa;
-            background: #f0f0f0;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Scrollbar styling */
+        .tab-content::-webkit-scrollbar { width: 8px; }
+        .tab-content::-webkit-scrollbar-track { background: #f1f1f1; }
+        .tab-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .tab-content::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+        /* About Tab */
+        .logo-wrapper {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-wrapper img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .logo-wrapper img:hover {
+            transform: scale(1.05);
+        }
+
+        .app-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #2196F3;
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Consolas', monospace;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 16px;
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* License Tab */
+        .license-text {
+            background: #fafafa;
+            border-radius: 4px;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .license-text pre {
+            color: #555;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .license-text a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+
+        .license-text a:hover {
+            text-decoration: underline;
+        }
+
+        .section-desc {
+            color: #666;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        /* Software Tab */
+        .software-list {
+            list-style: none;
+        }
+
+        .software-list li {
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            background: #fafafa;
+            border-radius: 3px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .software-list li:hover {
+            background: #f0f0f0;
+            border-color: #ddd;
+        }
+
+        .lib-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-family: 'Consolas', monospace;
+        }
+
+        .lib-ngspice { background: #ffebee; color: #c62828; }
+        .lib-electron { background: #e8f5e9; color: #2e7d32; }
+        .lib-node { background: #e3f2fd; color: #1565c0; }
+        .lib-codemirror { background: #fff3e0; color: #ef6c00; }
+        .lib-plotly { background: #f3e5f5; color: #7b1fa2; }
+
+        .lib-info {
+            flex: 1;
+        }
+
+        .lib-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .lib-version {
+            color: #888;
+            font-size: 11px;
+            margin-top: 1px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .lib-license {
+            font-size: 11px;
+            color: #2196F3;
+            background: #e3f2fd;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-family: 'Consolas', monospace;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* OK Button */
+        .ok-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
         .ok-button button {
-            padding: 5px 15px;
+            padding: 8px 32px;
+            background: #2196F3;
+            color: #fff;
+            border: 1px solid #1976D2;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .ok-button button:hover {
+            background: #1976D2;
+            border-color: #1565C0;
+        }
+
+        .ok-button button:active {
+            transform: translateY(0);
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="tab-container">
-        <!-- titls-->
+        <!-- Tab Headers -->
         <div class="tab-header">
             <button class="tab-btn active" onclick="openTab(event, 'about')">About</button>
             <button class="tab-btn" onclick="openTab(event, 'license')">License</button>
             <button class="tab-btn" onclick="openTab(event, 'software')">Software Used</button>
         </div>
 
-        <!-- data-->
+        <!-- About Tab -->
         <div id="about" class="tab-content active">
-            <img src="logo.png" alt="Logo" style="width: 100px; display: block; margin: auto;">
-            <h3>Designing Circuits and Simulating with DSpice</h3>
-            <p>DSpice v 0.0.8</p>
-            <p>© D.Fathi 2024-2026</p>
+            <div class="logo-wrapper">
+                <img src="logo.png" alt="DSpice Logo">
+            </div>
+            <h3 class="app-title">Designing Circuits and Simulating with DSpice</h3>
+            <div style="text-align: center;">
+                <span class="version-badge">DSpice v0.0.8</span>
+            </div>
+            <p class="copyright">&copy; D.Fathi 2024-2026</p>
         </div>
 
+        <!-- License Tab -->
         <div id="license" class="tab-content">
-            <p>The DSpice source code is licensed under the GNU General Public License.</p>
-            <pre>
-GNU GENERAL PUBLIC LICENSE (GPLv3)
-Version 3, 29 June 2007
+            <h3 class="section-title">License</h3>
+            <p class="section-desc">
+                The DSpice source code is licensed under the MIT License.
+            </p>
+            <div class="license-text">
+                <pre>MIT License
 
-This program is free software; you can redistribute 
-it and/or modify it under the terms of the GNU General 
-Public License as published by the Free Software Foundation; 
-either version 3 of the License, or at your option any later 
-version. This program is distributed in the hope that it will 
-be useful, but WITHOUT ANY WARRANTY;  without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details. You should 
-have received a copy of the GNU General Public License along with
-this program. If not, see <https://www.gnu.org/licenses/>
-</pre>
+Copyright (c) 2024-2026 DSpice
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+            </div>
         </div>
 
+        <!-- Software Tab -->
         <div id="software" class="tab-content">
-            <h3><b>DSpice was built with the following libraries:</b></h3>
-            <ul>
-                <li><b>ngspice:</b> 46.0.0 (License: BSD)</li>
-                <li><b>ElectronJs:</b> 34.2.0 (License: MIT)</li>
-                <li><b>NodeJs:</b> 22.13.1  (License: MIT)</li>
-                <li><b>Codemirror:</b> 5.65.14 (License: MIT)</li>
-                <li><b>PlotlyJs:</b> 1.58.5 (License: MIT)</li>
+            <h3 class="section-title">Libraries &amp; Dependencies</h3>
+            <ul class="software-list">
+                <li>
+                    <div class="lib-icon lib-ngspice">N</div>
+                    <div class="lib-info">
+                        <div class="lib-name">ngspice</div>
+                        <div class="lib-version">46.0.0</div>
+                    </div>
+                    <span class="lib-license">BSD</span>
+                </li>
+                <li>
+                    <div class="lib-icon lib-electron">E</div>
+                    <div class="lib-info">
+                        <div class="lib-name">Electron</div>
+                        <div class="lib-version">34.2.0</div>
+                    </div>
+                    <span class="lib-license">MIT</span>
+                </li>
+                <li>
+                    <div class="lib-icon lib-node">N</div>
+                    <div class="lib-info">
+                        <div class="lib-name">Node.js</div>
+                        <div class="lib-version">22.13.1</div>
+                    </div>
+                    <span class="lib-license">MIT</span>
+                </li>
+                <li>
+                    <div class="lib-icon lib-codemirror">C</div>
+                    <div class="lib-info">
+                        <div class="lib-name">CodeMirror</div>
+                        <div class="lib-version">5.65.14</div>
+                    </div>
+                    <span class="lib-license">MIT</span>
+                </li>
+                <li>
+                    <div class="lib-icon lib-plotly">P</div>
+                    <div class="lib-info">
+                        <div class="lib-name">Plotly.js</div>
+                        <div class="lib-version">1.58.5</div>
+                    </div>
+                    <span class="lib-license">MIT</span>
+                </li>
             </ul>
         </div>
+    </div>
 
-</div>
-
-    <!-- OK -->
+    <!-- OK Button -->
     <div class="ok-button">
         <button onclick="window.close()">OK</button>
     </div>
 
     <script>
         function openTab(event, tabName) {
-        
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-         
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-
             document.getElementById(tabName).classList.add('active');
             event.currentTarget.classList.add('active');
         }

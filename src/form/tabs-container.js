@@ -5,7 +5,7 @@
 # Name:        tabs-container.js
 # Author:      d.fathi
 # Created:     2026-04-29
-# Copyright:  (c) PyAMS 2026
+# Copyright:  (c) DSpice 2026
 # Licence:
 #-------------------------------------------------------------------------------
 */
