@@ -7,7 +7,7 @@ const { startEditor } = require('./handleEditor');
 const { setupHandlersParam } = require('./handleParam');
 const { handlersListSignalsParams } = require('./handleListSignalsParams');
 const handleExecSpice = require('./handleExecSpice');
-const handleGestionLibrary = require('./handleGestionLibrary');
+const handleGestionSymbols = require('./handleGestionSymbols');
 
 const path = require('path');
 const fs = require('fs');
@@ -179,19 +179,19 @@ function findValidFolders(basePath) {
   return validFolders;
 }
 
-ipcMain.handle('read-library-file', async () => {
+ipcMain.handle('read-symbols-file', async () => {
 
   const libraryPath = path.join(config.folderPath, 'symbols');
   const dataFilePath = path.join(config.folderPath,'symbols','data.json');
 
 
   let data =JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
-  let newData = { libs: [] };
+  let newData = { dirs: [] };
    
   console.log(libraryPath);
   const validFolders = findValidFolders(libraryPath);
 
-  newData.libs = [...new Set([...data.libs, ...validFolders])].filter(folder => validFolders.includes(folder)); // Keep order and delete empty ones
+  newData.dirs = [...new Set([...data.dirs, ...validFolders])].filter(folder => validFolders.includes(folder)); // Keep order and delete empty ones
 
   // تحديث محتويات كل مجلد مع الاحتفاظ بترتيب الملفات
   validFolders.forEach(folder => {

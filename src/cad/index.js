@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }, {
                 "title": "Tools",
                 "items": [
-                    { "label": "Symbols management", "icon": images.updown, "shortcut": " ", "action": "libraryManagement", "description": "Symbols management" },
+                    { "label": "Symbols management", "icon": images.updown, "shortcut": " ", "action": "symbolsManagement", "description": "Symbols management" },
                     { "label": "Library editor", "icon": images.editor, "shortcut": " ", "action": "libraryEditor", "description": "Library editor" },
                     { "label": "Show netlist ", "icon": images.netlist, "shortcut": " ", "action": "showNetlist", "description": "Show netlist" }
                 ]

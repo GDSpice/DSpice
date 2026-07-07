@@ -14,17 +14,17 @@ async function openFile(pageType){
 
 
 
-async function loadLibrary() {
-const data = await window.electron.readLibraryFile();
+async function loadSymbols() {
+const data = await window.electron.readSymbolsFile();
 drawing.newPage('dcs');
 drawing.dirLibrary=[];
-data['libs'].forEach(item => drawing.dirLibrary.push(item));
+data['dirs'].forEach(item => drawing.dirLibrary.push(item));
 user={fileName:'New file',fileExtension:'dcs',baseName:'New file'};
 document.getElementById("ItProject").firstChild.checked =false;
-const libraryName=data['libs'][0];
+const libraryName=data['dirs'][0];
 const files=data[libraryName];
 const files_ = await window.electron.getLibraryFiles(libraryName,files);
-addItemsToPageLibs(data['libs']);
+addItemsToPageLibs(data['dirs']);
 addListSymbToPageLibs(files_.fileContents);
 displayByPageType();
 }
@@ -39,10 +39,10 @@ displayByPageType();
 async function importSymbols(pos){
 
 if(pos!=9999){
-  const data = await window.electron.readLibraryFile();
-  var libraryName=data['libs'][pos];
-  var files=data[libraryName];
-  const files_ = await window.electron.getLibraryFiles(libraryName,files);
+  const data = await window.electron.readSymbolsFile();
+  var symbolName=data['dirs'][pos];
+  var files=data[symbolName];
+  const files_ = await window.electron.getLibraryFiles(symbolName,files);
   addListSymbToPageLibs(files_.fileContents);
 }
  else{
@@ -54,7 +54,7 @@ if(pos!=9999){
 
 
 function newCircuit(){
-   loadLibrary();
+   loadSymbols();
    
 }
 

@@ -159,8 +159,8 @@ function setAction(value){
       window.electron.newFileNetList(getNetlistSpice());
     break;
 
-    case "libraryManagement":
-       openLibraryManagement();
+    case "symbolsManagement":
+       openSymbolsManagement();
     break;
 
     case "help":

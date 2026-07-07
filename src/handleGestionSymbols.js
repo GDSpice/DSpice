@@ -3,11 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const config = require('./config');
 
-let libraryManagementWindow;
+let symbolsManagementWindow;
 
-async function createLibraryManagementWindow(data) {
+async function createSymbolsManagementWindow(data) {
     return new Promise((resolve) => {
-        libraryManagementWindow = new BrowserWindow({
+        symbolsManagementWindow = new BrowserWindow({
             width: 480,
             height: 410,
             parent: BrowserWindow.getFocusedWindow(), // ⬅️ Make it a sub-window
@@ -25,19 +25,19 @@ async function createLibraryManagementWindow(data) {
             }
         });
        
-        var pathIntarface=path.join(__dirname,"dialogs","library.html")
-        libraryManagementWindow.loadFile(pathIntarface);
-        libraryManagementWindow.webContents.once('did-finish-load', () => {
-           libraryManagementWindow.webContents.send('set-data-library',data);
+        var pathIntarface=path.join(__dirname,"dialogs","symbolsManagement.html")
+        symbolsManagementWindow.loadFile(pathIntarface);
+        symbolsManagementWindow.webContents.once('did-finish-load', () => {
+           symbolsManagementWindow.webContents.send('set-data-symbols',data);
         });
        
        
 
-        libraryManagementWindow.on("close", (event) => {
+        symbolsManagementWindow.on("close", (event) => {
       
         event.preventDefault();
-        libraryManagementWindow.destroy();
-        libraryManagementWindow= null;
+        symbolsManagementWindow.destroy();
+        symbolsManagementWindow= null;
        });
 
 
@@ -45,9 +45,9 @@ async function createLibraryManagementWindow(data) {
         resolve(true);
         const dataFilePath = path.join(config.folderPath,'symbols','data.json');
         fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 4), 'utf-8');
-        if (libraryManagementWindow) {
-        libraryManagementWindow.close();
-        libraryManagementWindow= null;
+        if (symbolsManagementWindow) {
+        symbolsManagementWindow.close();
+        symbolsManagementWindow= null;
         }
         
                
@@ -59,9 +59,9 @@ async function createLibraryManagementWindow(data) {
 }
 
 
-ipcMain.handle('library-management', async (event) => {
+ipcMain.handle('symbols-management', async (event) => {
       const dataFilePath = path.join(config.folderPath,'symbols','data.json');
       let data =JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
 
-    return await createLibraryManagementWindow(data);
+    return await createSymbolsManagementWindow(data);
 });

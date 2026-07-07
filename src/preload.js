@@ -5,7 +5,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
     openFileDialog: (pageType) => ipcRenderer.invoke('open-file-dialog', pageType),
-    readLibraryFile: () => ipcRenderer.invoke('read-library-file'),
+    readSymbolsFile: () => ipcRenderer.invoke('read-symbols-file'),
     getLibraryFiles: (libraryName,files) => ipcRenderer.invoke('get-library-files', libraryName,files),
     getLibraryPath: () => ipcRenderer.invoke('get-library-path'),
     showConfirmationDialog: (message) => ipcRenderer.invoke('show-confirmation-dialog', message),
@@ -22,8 +22,8 @@ contextBridge.exposeInMainWorld('electron', {
     getLibraryFilesFromProject: (projectFile) => ipcRenderer.invoke('get-library-files-from-project', projectFile),
     //ُEditor of python------------------------------------------------------------------------
     editText: (filePath, linePos) => ipcRenderer.invoke('edit-text', filePath, linePos),
-    onSetDataLibrary: (callback) => ipcRenderer.on('set-data-library', (event,data) => callback(data)),
-    libraryManagement:() => ipcRenderer.invoke('library-management'),
+    onSetDataSymbols: (callback) => ipcRenderer.on('set-data-symbols', (event,data) => callback(data)),
+    symbolsManagement:() => ipcRenderer.invoke('symbols-management'),
     sendLibrary: (newData) => ipcRenderer.send('save-library-json', newData),
     newFileNetList: (data) => ipcRenderer.invoke('new-file-netlist', data),
     editFileNetList: (fileSpiceLib) => ipcRenderer.invoke('edit-file-netlist', fileSpiceLib),

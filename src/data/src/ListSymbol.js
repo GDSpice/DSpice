@@ -321,12 +321,12 @@ function changeListSym(){
 
 async function updateLibrary() {
    getPageLibDesc();
-   const data = await window.electron.readLibraryFile();
-   const libraryName=data['libs'][0];
+   const data = await window.electron.readSymbolsFile();
+   const libraryName=data['dirs'][0];
    const files=data[libraryName];
    const files_ = await window.electron.getLibraryFiles(libraryName,files);
-   addItemsToPageLibs(data['libs']);
-   console.log(data['libs'])
+   addItemsToPageLibs(data['dirs']);
+   console.log(data['dirs'])
    addListSymbToPageLibs(files_.fileContents);
    return true;
 }

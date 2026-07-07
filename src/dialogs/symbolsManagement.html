@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbols Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .dialog-header {
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .dialog-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Main Content */
+        .container {
+            flex: 1;
+            display: flex;
+            gap: 16px;
+            padding: 16px 20px;
+            overflow: hidden;
+        }
+
+        /* List Container */
+        .list-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        .list-container h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Select styling */
+        select {
+            flex: 1;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 6px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            background: #fff;
+            color: #333;
+            outline: none;
+            overflow-y: auto;
+        }
+        select:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
+        }
+        select option {
+            padding: 6px 8px;
+            cursor: pointer;
+        }
+        select option:checked,
+        select option:hover {
+            background: #e3f2fd;
+            color: #1976D2;
+        }
+        select::-webkit-scrollbar { width: 8px; }
+        select::-webkit-scrollbar-track { background: #f1f1f1; }
+        select::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        select::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background: #f0f0f0;
+            color: #555;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+        .btn-icon:hover:not(:disabled) {
+            background: #e0e0e0;
+            border-color: #bbb;
+            color: #333;
+        }
+        .btn-icon:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Buttons Bar */
+        .buttons-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+        .btn {
+            padding: 8px 24px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            min-width: 80px;
+        }
+        .btn:hover {
+            background: #e0e0e0;
+            border-color: #bbb;
+        }
+        .btn-primary {
+            background: #2196F3;
+            border-color: #1976D2;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #1976D2;
+            border-color: #1565C0;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="dialog-header">
+        <h2>Symbols Management</h2>
+    </div>
+
+    <div class="container">
+        <div class="list-container">
+            <h3>Directory</h3>
+            <select id="directory" size="10" onchange="updateSymbols(); updateDirectoryButtons();">
+            </select>
+            <div class="button-group">
+                <button id="dirUpButton" class="btn-icon" onclick="moveDirectoryUp()" disabled title="Move Up">▲</button>
+                <button id="dirDownButton" class="btn-icon" onclick="moveDirectoryDown()" disabled title="Move Down">▼</button>
+            </div>
+        </div>
+        <div class="list-container">
+            <h3>Symbols</h3>
+            <select id="symbols" size="10" onchange="updateSymbolButtons();">
+            </select>
+            <div class="button-group">
+                <button id="upButton" class="btn-icon" onclick="moveSymbolUp()" disabled title="Move Up">▲</button>
+                <button id="downButton" class="btn-icon" onclick="moveSymbolDown()" disabled title="Move Down">▼</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons-bar">
+        <button class="btn" onclick="window.close()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmSelection()">OK</button>
+    </div>
+
+    <script>
+        let data = { 'dirs': [] };
+
+        const directorySelect = document.getElementById('directory');
+        const symbolsSelect = document.getElementById('symbols');
+        const dirUpButton = document.getElementById('dirUpButton');
+        const dirDownButton = document.getElementById('dirDownButton');
+        const upButton = document.getElementById('upButton');
+        const downButton = document.getElementById('downButton');
+
+        function populateDirectories() {
+            directorySelect.innerHTML = '';
+            data.dirs.forEach(function(dir) {
+                let option = new Option(dir, dir);
+                directorySelect.add(option);
+            });
+            directorySelect.selectedIndex = 0;
+            updateSymbols();
+            updateDirectoryButtons();
+            updateSymbolButtons();
+        }
+
+        function updateSymbols() {
+            const selectedDir = directorySelect.value;
+            symbolsSelect.innerHTML = '';
+            if (data[selectedDir]) {
+                data[selectedDir].forEach(function(symbol) {
+                    let option = new Option(symbol, symbol);
+                    symbolsSelect.add(option);
+                });
+            }
+            updateSymbolButtons();
+        }
+
+        function moveDirectoryUp() {
+            let index = directorySelect.selectedIndex;
+            if (index > 0) {
+                let temp = data.dirs[index - 1];
+                data.dirs[index - 1] = data.dirs[index];
+                data.dirs[index] = temp;
+                refreshDirectory();
+                directorySelect.selectedIndex = index - 1;
+                updateSymbols();
+                updateDirectoryButtons();
+            }
+        }
+
+        function moveDirectoryDown() {
+            let index = directorySelect.selectedIndex;
+            if (index < data.dirs.length - 1) {
+                let temp = data.dirs[index + 1];
+                data.dirs[index + 1] = data.dirs[index];
+                data.dirs[index] = temp;
+                refreshDirectory();
+                directorySelect.selectedIndex = index + 1;
+                updateSymbols();
+                updateDirectoryButtons();
+            }
+        }
+
+        function moveSymbolUp() {
+            let index = symbolsSelect.selectedIndex;
+            let selectedDir = directorySelect.value;
+            if (index > 0 && data[selectedDir]) {
+                let temp = data[selectedDir][index - 1];
+                data[selectedDir][index - 1] = data[selectedDir][index];
+                data[selectedDir][index] = temp;
+                updateSymbols();
+                symbolsSelect.selectedIndex = index - 1;
+                updateSymbolButtons();
+            }
+        }
+
+        function moveSymbolDown() {
+            let index = symbolsSelect.selectedIndex;
+            let selectedDir = directorySelect.value;
+            if (index < data[selectedDir].length - 1 && data[selectedDir]) {
+                let temp = data[selectedDir][index + 1];
+                data[selectedDir][index + 1] = data[selectedDir][index];
+                data[selectedDir][index] = temp;
+                updateSymbols();
+                symbolsSelect.selectedIndex = index + 1;
+                updateSymbolButtons();
+            }
+        }
+
+        function refreshDirectory() {
+            directorySelect.innerHTML = '';
+            data.dirs.forEach(function(dir) {
+                let option = new Option(dir, dir);
+                directorySelect.add(option);
+            });
+        }
+
+        function updateDirectoryButtons() {
+            dirUpButton.disabled = directorySelect.selectedIndex <= 0;
+            dirDownButton.disabled = directorySelect.selectedIndex >= data.dirs.length - 1;
+        }
+
+        function updateSymbolButtons() {
+            upButton.disabled = symbolsSelect.selectedIndex <= 0;
+            downButton.disabled = symbolsSelect.selectedIndex >= symbolsSelect.options.length - 1;
+        }
+
+        function confirmSelection() {
+            window.electron.sendLibrary(data);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            window.electron.onSetDataSymbols(function(dataJson) {
+                data = dataJson;
+                populateDirectories();
+            });
+        });
+    </script>
+</body>
+</html>

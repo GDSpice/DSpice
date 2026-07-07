@@ -209,8 +209,8 @@
     });
 
 
-    async function openLibraryManagement() {
-          const result = await window.electron.libraryManagement();
+    async function openSymbolsManagement() {
+          const result = await window.electron.symbolsManagement();
           if(result){
             if(drawing.pageType!="sym")
                updateLibrary();
