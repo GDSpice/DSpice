@@ -357,8 +357,8 @@ let solveData= null;
 async function createAnalysisWindow(spiceCode) {
     return new Promise((resolve) => {
         analysisWindow = new BrowserWindow({
-            width: 400,
-            height: 495,
+            width: 450,
+            height: 555,
             parent: BrowserWindow.getFocusedWindow(), 
             modal: true,
             icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo

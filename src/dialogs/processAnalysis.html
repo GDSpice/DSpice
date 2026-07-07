@@ -1,99 +1,307 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis</title>
     <style>
-        #progress-container {
-            width: 100%;
-            background-color: #ddd;
-            margin-top: 20px;
-        }
-        #progress-bar {
-            width: 0%;
-            height: 30px;
-            background-color: #4caf50;
-            text-align: center;
-            line-height: 30px;
-            color: white;
-        }
-        .buttons {
-            padding: 10px;
-            margin-top: 10px;
-            text-align: left;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .buttons button {
-            padding: 5px 15px;
+        /* Header */
+        .dialog-header {
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .dialog-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ccc;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+        .status-indicator.running { background: #4CAF50; box-shadow: 0 0 6px rgba(76,175,80,0.4); }
+        .status-indicator.stopped { background: #f44336; }
+        .status-indicator.done { background: #2196F3; }
+
+        /* Log Container */
+        .log-container {
+            flex: 1;
+            padding: 16px 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .log-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .log-box {
+            flex: 1;
+            background: #fff;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
             font-size: 12px;
+            line-height: 1.6;
+            color: #444;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .log-box::-webkit-scrollbar { width: 8px; }
+        .log-box::-webkit-scrollbar-track { background: #f1f1f1; }
+        .log-box::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .log-box::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+        .log-box .log-time {
+            color: #999;
+            font-size: 11px;
+        }
+        .log-box .log-info { color: #2196F3; }
+        .log-box .log-success { color: #4CAF50; }
+        .log-box .log-error { color: #f44336; }
+        .log-box .log-warn { color: #FF9800; }
+
+        /* Progress Section */
+        .progress-section {
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 16px 20px;
+            flex-shrink: 0;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+        }
+        .elapsed-time {
+            font-size: 12px;
+            color: #888;
+            font-family: 'Consolas', monospace;
+        }
+        .elapsed-time span {
+            color: #2196F3;
+            font-weight: 600;
         }
 
-    .container {
-        height: calc(100vh - 250px); /* Set max height */
-        overflow-y: auto; /* Enable vertical scrolling */
-        border: 1px solid #6e6c6c;
-        font-size: 11px;
-    }
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #2196F3;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+        .progress-fill.complete {
+            background: #4CAF50;
+        }
+        .progress-fill.error {
+            background: #f44336;
+        }
+        .progress-percent {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2196F3;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* Buttons Bar */
+        .buttons-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+        .btn {
+            padding: 8px 24px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            min-width: 80px;
+        }
+        .btn:hover:not(:disabled) {
+            background: #e0e0e0;
+            border-color: #bbb;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background: #2196F3;
+            border-color: #1976D2;
+            color: #fff;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #1976D2;
+            border-color: #1565C0;
+        }
+        .btn-danger {
+            background: #f44336;
+            border-color: #d32f2f;
+            color: #fff;
+        }
+        .btn-danger:hover:not(:disabled) {
+            background: #d32f2f;
+            border-color: #b71c1c;
+        }
+        .btn-success {
+            background: #4CAF50;
+            border-color: #388e3c;
+            color: #fff;
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #388e3c;
+            border-color: #2e7d32;
+        }
     </style>
+<base target="_blank">
 </head>
 <body>
-    <h2>Start Analysis</h2>
-
-    
-    <div class="container" id="process"></div>
-
-    <div id="progress-container">
-        <div id="progress-bar">0%</div>
+    <div class="dialog-header">
+        <div class="status-indicator" id="status-dot"></div>
+        <h2>Start Analysis</h2>
     </div>
-    <p>Elapsed Time: <span id="elapsed-time">0:00</span></p>
-<div class="buttons" >
-    <button id="start-button">Start</button>
-    <button id="stop-button">Stop</button>
-    <button id="ok-button">Ok</button>
-</div>
 
-    
+    <div class="log-container">
+        <div class="log-label">Process Log</div>
+        <div class="log-box" id="process"></div>
+    </div>
 
+    <div class="progress-section">
+        <div class="progress-header">
+            <span class="progress-label">Progress</span>
+            <span class="elapsed-time">Elapsed: <span id="elapsed-time">0:00</span></span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+        <div class="progress-percent" id="progress-text">0%</div>
+    </div>
+
+    <div class="buttons-bar">
+        <button class="btn btn-success" id="start-button">▶ Start</button>
+        <button class="btn btn-danger" id="stop-button">⏹ Stop</button>
+        <button class="btn btn-primary" id="ok-button" disabled>✓ OK</button>
+    </div>
 
     <script>
+        const statusDot = document.getElementById("status-dot");
+        const processLog = document.getElementById("process");
+        const progressBar = document.getElementById("progress-bar");
+        const progressText = document.getElementById("progress-text");
+        const elapsedTime = document.getElementById("elapsed-time");
+        const startBtn = document.getElementById("start-button");
+        const stopBtn = document.getElementById("stop-button");
+        const okBtn = document.getElementById("ok-button");
 
-      document.getElementById("ok-button").disabled =true;
+        function appendLog(message, type = "info") {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+            const span = document.createElement("span");
+            span.className = "log-" + type;
+            span.innerHTML = '<span class="log-time">[' + timeStr + ']</span> ' + message + '\n';
+            processLog.appendChild(span);
+            processLog.scrollTop = processLog.scrollHeight;
+        }
 
-
-        document.getElementById("start-button").addEventListener("click", () => {
+        startBtn.addEventListener("click", () => {
             window.electron.startProgress();
-            document.getElementById("process").innerText ="Start Spice process...\n"
+            statusDot.className = "status-indicator running";
+            appendLog("Starting ngspice simulation process...", "info");
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            okBtn.disabled = true;
         });
 
-        document.getElementById("stop-button").addEventListener("click", () => {
+        stopBtn.addEventListener("click", () => {
             window.electron.stopProgress();
-            document.getElementById("process").innerText +="Stop Spice process...\n"
+            statusDot.className = "status-indicator stopped";
+            appendLog("Simulation process stopped by user.", "warn");
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
         });
 
-        document.getElementById("ok-button").addEventListener("click", () => {
-            sendSpiceData();
+        okBtn.addEventListener("click", () => {
+            window.electron.sendSpiceData();
         });
 
-        var result;
         window.electron.onProgressUpdate((data) => {
             let percent = data.progress;
-            document.getElementById("progress-bar").style.width = percent + "%";
-            document.getElementById("progress-bar").innerText = percent + "%";
-            document.getElementById("elapsed-time").innerText = data.elapsed_time;
+            progressBar.style.width = percent + "%";
+            progressText.innerText = percent + "%";
+            elapsedTime.innerText = data.elapsed_time;
+            if (percent >= 100) {
+                progressBar.classList.add("complete");
+                statusDot.className = "status-indicator done";
+            }
         });
-
-    
 
         window.electron.onRandomData((data) => {
-            document.getElementById("ok-button").disabled =false;
-            document.getElementById("process").innerText ="End Spice process...\n"
-            document.getElementById("process").innerText += data.stdout + '\n' + data.stderr
+            okBtn.disabled = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            statusDot.className = "status-indicator done";
+            progressBar.style.width = "100%";
+            progressBar.classList.add("complete");
+            progressText.innerText = "100%";
+            appendLog("Simulation completed successfully.", "success");
+            if (data.stdout) appendLog(data.stdout, "info");
+            if (data.stderr) appendLog(data.stderr, "error");
         });
-
-        function sendSpiceData() {
-            window.electron.sendSpiceData(); // ⬅️ transfer to `main.js`
-        }
     </script>
 </body>
 </html>
