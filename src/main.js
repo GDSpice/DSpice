@@ -84,10 +84,10 @@ app.on('focus', () => {
 
 
 
-// مسار ملف الإعدادات
+// define the path for storing last used paths
 const settingsPath = path.join(config.folderPath, 'lastPaths.json');  
 
-// تحميل المسارات المحفوظة
+// Load the last used paths from the JSON file
 function loadLastPaths() {
     try {
         if (fs.existsSync(settingsPath)) {
@@ -97,10 +97,12 @@ function loadLastPaths() {
     } catch (error) {
         console.error('Error loading last paths:', error);
     }
-    return { dcs: '', sym: '' };
+    const defaultPaths = { dcs: path.join(config.folderPath, 'demo'), sym: path.join(config.folderPath, 'symbols'), lib: path.join(config.folderPath, 'lib') };
+    fs.writeFileSync(settingsPath, JSON.stringify(defaultPaths, null, 2), 'utf8');
+    return defaultPaths; // Default paths if the file doesn't exist or an error occurs
 }
 
-// حفظ المسارات
+// Save the last used paths to the JSON file
 function saveLastPaths(paths) {
     try {
         fs.writeFileSync(settingsPath, JSON.stringify(paths, null, 2), 'utf8');
@@ -109,7 +111,7 @@ function saveLastPaths(paths) {
     }
 }
 
-// تحميل المسارات عند البدء
+// Load the last used paths when the application starts
 let lastPaths = loadLastPaths();
 
 
@@ -194,22 +196,22 @@ ipcMain.handle('read-symbols-file', async () => {
 
   newData.dirs = [...new Set([...data.dirs, ...validFolders])].filter(folder => validFolders.includes(folder)); // Keep order and delete empty ones
 
-  // تحديث محتويات كل مجلد مع الاحتفاظ بترتيب الملفات
+  // Update the data for each valid folder
   validFolders.forEach(folder => {
       const folderPath = path.join(libraryPath, folder);
       const files = fs.readdirSync(folderPath).filter(file => file.endsWith('.sym'));
 
       if (!data[folder]) {
-          newData[folder] = files; // مجلد جديد، أضفه كما هو
+          newData[folder] = files; // If the folder is new, add all its files
       } else {
           let oldFiles = data[folder] || [];
-          let updatedFiles = [...new Set([...oldFiles, ...files])]; // الحفاظ على ترتيب القديم وإضافة الجديد
-          newData[folder] = updatedFiles.filter(file => files.includes(file)); // حذف الملفات غير الموجودة
+          let updatedFiles = [...new Set([...oldFiles, ...files])]; // Combine old and new files, ensuring uniqueness
+          newData[folder] = updatedFiles.filter(file => files.includes(file)); // Keep only the files that still exist in the folder
       }
   });
 
   
-  // حفظ البيانات في JSON
+  // Write the updated data to the JSON file
   fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 4), 'utf-8');
 
   return newData;
