@@ -58,6 +58,8 @@ contextBridge.exposeInMainWorld('electron', {
     editParams: (params, modelName) => ipcRenderer.invoke('edit-params', params, modelName),
     onSetParams: (callback) => ipcRenderer.on('set-params', (event, params, modelName) => callback(params, modelName)),
     sendEditedParams: (newParams) => ipcRenderer.send('save-edited-params', newParams),
+    //Library Manager
+    openLibraryManager: () => ipcRenderer.invoke('open-library-manager'),
 
     //In out signals/params-------------------------------------------------------------------
     listElemParams: (data,select) => ipcRenderer.invoke('list-elem-params', data,select),

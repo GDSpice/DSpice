@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Manager</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .dialog-header {
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .dialog-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .dialog-header p {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Path Bar */
+        .path-bar {
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 20px;
+            font-size: 12px;
+            color: #666;
+            font-family: 'Consolas', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-shrink: 0;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            align-items: center;
+        }
+        .toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            background: #fff;
+            color: #333;
+            transition: all 0.15s;
+            font-family: inherit;
+            font-weight: 500;
+        }
+        .toolbar-btn:hover:not(:disabled) {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+        .toolbar-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .toolbar-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        /* Add - Green */
+        .toolbar-btn.btn-add {
+            background: #4CAF50;
+            border-color: #388e3c;
+            color: #fff;
+        }
+        .toolbar-btn.btn-add:hover {
+            background: #388e3c;
+            border-color: #2e7d32;
+        }
+        /* Remove - Red */
+        .toolbar-btn.btn-remove {
+            background: #f44336;
+            border-color: #d32f2f;
+            color: #fff;
+        }
+        .toolbar-btn.btn-remove:hover:not(:disabled) {
+            background: #d32f2f;
+            border-color: #b71c1c;
+        }
+        .toolbar-sep {
+            width: 1px;
+            height: 20px;
+            background: #ddd;
+            margin: 0 4px;
+        }
+
+        /* List Container */
+        .list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            background: #fff;
+        }
+        .list-container::-webkit-scrollbar { width: 8px; }
+        .list-container::-webkit-scrollbar-track { background: #f1f1f1; }
+        .list-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .list-container::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+        /* List Item */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .list-item:hover {
+            background: #f5f5f5;
+        }
+        .list-item.selected {
+            background: #e3f2fd !important;
+        }
+        .list-item.selected .item-index {
+            color: #2196F3;
+            font-weight: 600;
+        }
+
+        .item-index {
+            width: 30px;
+            color: #999;
+            font-size: 11px;
+            font-family: 'Consolas', monospace;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .item-path {
+            flex: 1;
+            font-size: 13px;
+            color: #444;
+            font-family: 'Consolas', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 12px;
+        }
+
+        .item-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge-local {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        .badge-external {
+            background: #fff3e0;
+            color: #ef6c00;
+            border: 1px solid #ffe0b2;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #aaa;
+            padding: 40px;
+            text-align: center;
+        }
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            stroke: #ccc;
+        }
+        .empty-state p {
+            font-size: 13px;
+            color: #888;
+        }
+        .empty-state p:last-child {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background: #fafafa;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            flex-shrink: 0;
+        }
+        .status-ok { color: #4CAF50; font-weight: 600; }
+        .status-error { color: #f44336; font-weight: 600; }
+        .status-dirty { color: #ff9800; font-weight: 600; }
+        .item-count {
+            font-size: 12px;
+            color: #888;
+            font-family: 'Consolas', monospace;
+        }
+        .item-count span {
+            color: #2196F3;
+            font-weight: 600;
+        }
+
+        /* Buttons Bar */
+        .buttons-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+        .btn {
+            padding: 8px 24px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            transition: all 0.15s;
+            font-family: inherit;
+            min-width: 80px;
+        }
+        .btn:hover {
+            background: #e0e0e0;
+            border-color: #bbb;
+        }
+        .btn-primary {
+            background: #2196F3;
+            border-color: #1976D2;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #1976D2;
+            border-color: #1565C0;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="dialog-header">
+        <div>
+            <h2>Library Manager</h2>
+            <p>Edit library.lib include directives</p>
+        </div>
+    </div>
+
+    <div class="path-bar" id="pathBar">Loading...</div>
+
+    <div class="toolbar">
+        <button class="toolbar-btn btn-add" onclick="addLibrary()">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add Library
+        </button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-remove" onclick="removeSelected()" id="btnRemove" disabled>
+            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            Remove
+        </button>
+        <button class="toolbar-btn" onclick="moveUp()" id="btnUp" disabled>
+            <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+            Up
+        </button>
+        <button class="toolbar-btn" onclick="moveDown()" id="btnDown" disabled>
+            <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+            Down
+        </button>
+    </div>
+
+    <div class="list-container" id="listContainer">
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <p>Loading library file...</p>
+        </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+        <span id="statusLeft">Ready</span>
+        <span class="item-count" id="statusRight"><span>0</span> items</span>
+    </div>
+
+    <div class="buttons-bar">
+        <button class="btn" onclick="cancelDialog()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveLibrary()" id="btnOK">OK</button>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        let libraryData = [];
+        let selectedIndex = -1;
+        let modelsDir = '';
+        let isDirty = false;
+
+        // Expose dirty state to main process via executeJavaScript
+        Object.defineProperty(window, 'isDirtyState', {
+            get: function() { return isDirty; }
+        });
+
+        ipcRenderer.on('init-data', function(event, data) {
+            modelsDir = data.modelsDir;
+            document.getElementById('pathBar').textContent = data.libPath;
+            libraryData = data.includes.map(function(item, idx) {
+                return { path: item.path, isExternal: item.isExternal, id: idx };
+            });
+            selectedIndex = -1;
+            isDirty = false;
+            updateDirtyState();
+            renderList();
+            updateButtons();
+        });
+
+        ipcRenderer.on('file-picked', function(event, data) {
+            if (data.error) {
+                showStatus(data.error, 'error');
+                return;
+            }
+
+            libraryData.push({
+                path: data.path,
+                isExternal: data.isExternal,
+                id: Date.now()
+            });
+
+            setDirty(true);
+            selectedIndex = libraryData.length - 1;
+            renderList();
+            updateButtons();
+
+            var type = data.isExternal ? 'External' : 'Local';
+            showStatus(type + ' library added', 'ok');
+        });
+
+        ipcRenderer.on('save-result', function(event, result) {
+            if (result.success) {
+                setDirty(false);
+                showStatus('Saved successfully', 'ok');
+                // Close after successful save (triggered from confirm-save-and-close)
+                setTimeout(function() { ipcRenderer.send('force-close'); }, 400);
+            } else {
+                showStatus('Save failed: ' + result.error, 'error');
+            }
+        });
+
+        // Handle save-and-close request from main process (after dialog confirmation)
+        ipcRenderer.on('confirm-save-and-close', function() {
+            var includes = libraryData.map(function(item) {
+                return { path: item.path, isExternal: item.isExternal };
+            });
+            ipcRenderer.send('save-library', { includes: includes });
+        });
+
+        function setDirty(dirty) {
+            isDirty = dirty;
+            updateDirtyState();
+        }
+
+        function updateDirtyState() {
+            var statusEl = document.getElementById('statusLeft');
+            if (isDirty) {
+                statusEl.textContent = 'Modified';
+                statusEl.className = 'status-dirty';
+            } else {
+                statusEl.textContent = 'Ready';
+                statusEl.className = '';
+            }
+        }
+
+        function addLibrary() {
+            var currentPaths = libraryData.map(function(item) {
+                return item.path.toLowerCase();
+            });
+            ipcRenderer.send('pick-library-file', currentPaths);
+        }
+
+        function renderList() {
+            var container = document.getElementById('listContainer');
+
+            if (libraryData.length === 0) {
+                container.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>No includes in library</p><p style="font-size: 11px; margin-top: 4px;">Click Add Library to include library files</p></div>';
+            } else {
+                container.innerHTML = libraryData.map(function(item, index) {
+                    var selectedClass = index === selectedIndex ? 'selected' : '';
+                    var badgeClass = item.isExternal ? 'badge-external' : 'badge-local';
+                    var badgeText = item.isExternal ? 'External' : 'Local';
+                    return '<div class="list-item ' + selectedClass + '" onclick="selectItem(' + index + ')">' +
+                        '<div class="item-index">' + (index + 1) + '</div>' +
+                        '<div class="item-path">' + escapeHtml(item.path) + '</div>' +
+                        '<div class="item-badge ' + badgeClass + '">' + badgeText + '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            document.getElementById('statusRight').innerHTML =
+                '<span>' + libraryData.length + '</span> items';
+        }
+
+        function selectItem(index) {
+            selectedIndex = index;
+            renderList();
+            updateButtons();
+        }
+
+        function updateButtons() {
+            var hasSelection = selectedIndex !== -1;
+            var canMoveUp = hasSelection && selectedIndex > 0;
+            var canMoveDown = hasSelection && selectedIndex < libraryData.length - 1;
+
+            document.getElementById('btnRemove').disabled = !hasSelection;
+            document.getElementById('btnUp').disabled = !canMoveUp;
+            document.getElementById('btnDown').disabled = !canMoveDown;
+        }
+
+        function removeSelected() {
+            if (selectedIndex === -1) return;
+            libraryData.splice(selectedIndex, 1);
+            selectedIndex = -1;
+            setDirty(true);
+            renderList();
+            updateButtons();
+            showStatus('Item removed', 'ok');
+        }
+
+        function moveUp() {
+            if (selectedIndex <= 0) return;
+            var temp = libraryData[selectedIndex];
+            libraryData[selectedIndex] = libraryData[selectedIndex - 1];
+            libraryData[selectedIndex - 1] = temp;
+            selectedIndex--;
+            setDirty(true);
+            renderList();
+            updateButtons();
+        }
+
+        function moveDown() {
+            if (selectedIndex === -1 || selectedIndex >= libraryData.length - 1) return;
+            var temp = libraryData[selectedIndex];
+            libraryData[selectedIndex] = libraryData[selectedIndex + 1];
+            libraryData[selectedIndex + 1] = temp;
+            selectedIndex++;
+            setDirty(true);
+            renderList();
+            updateButtons();
+        }
+
+        function saveLibrary() {
+            var includes = libraryData.map(function(item) {
+                return { path: item.path, isExternal: item.isExternal };
+            });
+            ipcRenderer.send('save-library', { includes: includes });
+        }
+
+        function cancelDialog() {
+            ipcRenderer.send('cancel-dialog');
+        }
+
+        function showStatus(msg, type) {
+            var el = document.getElementById('statusLeft');
+            el.textContent = msg;
+            el.className = type === 'ok' ? 'status-ok' : 'status-error';
+            setTimeout(function() {
+                if (isDirty) {
+                    el.textContent = 'Modified';
+                    el.className = 'status-dirty';
+                } else {
+                    el.textContent = 'Ready';
+                    el.className = '';
+                }
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            var d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Delete' && selectedIndex !== -1 && !e.target.matches('input')) {
+                removeSelected();
+            }
+        });
+    </script>
+</body>
+</html>

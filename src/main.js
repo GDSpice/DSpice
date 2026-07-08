@@ -8,6 +8,7 @@ const { setupHandlersParam } = require('./handleParam');
 const { handlersListSignalsParams } = require('./handleListSignalsParams');
 const handleExecSpice = require('./handleExecSpice');
 const handleGestionSymbols = require('./handleGestionSymbols');
+const handleLibraryManager = require('./handleLibraryManager');
 
 const path = require('path');
 const fs = require('fs');
@@ -17,7 +18,7 @@ const config = require('./config');
 
 
 
-//Creat PyAMS Interface--------------------------------------------------------------------
+//Creat DSpice Interface--------------------------------------------------------------------
 let mainWindow;
 
 

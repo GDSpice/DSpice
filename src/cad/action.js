@@ -163,6 +163,10 @@ function setAction(value){
        openSymbolsManagement();
     break;
 
+    case "openLibraryManager":
+       window.electron.openLibraryManager();
+    break;
+
     case "help":
     case "webPage":
     case  "elements":
