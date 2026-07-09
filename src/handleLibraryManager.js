@@ -8,8 +8,8 @@ let mainWindow;
 // ============================================
 // CONFIGURATION - Update this path
 // ============================================
-const MODELS_DIR = path.join(config.folderPath,'models');
-const LIB_FILE = path.join(MODELS_DIR, 'library.lib');
+const LIB_DIR = path.join(config.folderPath,'lib');
+const LIB_FILE = path.join(LIB_DIR, 'library.lib');
 
  function createWindow() {
     mainWindow = new BrowserWindow({
@@ -103,7 +103,7 @@ function loadLibraryData() {
         }
 
         mainWindow.webContents.send('init-data', {
-            modelsDir: MODELS_DIR,
+            libDir: LIB_DIR,
             libPath: LIB_FILE,
             includes: includes
         });
@@ -119,7 +119,7 @@ ipcMain.on('pick-library-file', async (event, currentPaths) => {
     try {
         const result = await dialog.showOpenDialog(mainWindow, {
             title: 'Select Library File',
-            defaultPath: MODELS_DIR,
+            defaultPath: LIB_DIR,
             properties: ['openFile'],
             filters: [
                 { name: 'Library Files', extensions: ['lib'] },
@@ -141,7 +141,7 @@ ipcMain.on('pick-library-file', async (event, currentPaths) => {
             }
 
             // Check if already exists in current list
-            const isExternal = selectedDir.toLowerCase() !== MODELS_DIR.toLowerCase();
+            const isExternal = selectedDir.toLowerCase() !== LIB_DIR.toLowerCase();
             const storedPath = isExternal ? selectedPath : fileName;
 
             if (currentPaths.includes(storedPath.toLowerCase())) {

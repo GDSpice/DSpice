@@ -324,7 +324,7 @@ function getCodeSpiceByProbe(name) {
   }
 
 
- var code = '*\n\n.include "D:\\Project_Spice\\DSpice\\models\\library.lib"\n\n';
+ var  code = `*\n\n.include "${libarayPath}"\n\n`;;
 
   netListData.forEach(el => {
     code += `${el.ref}   ${el.pins.join(' ')}   ${el.params.join('  ')}\n`;

@@ -228,7 +228,7 @@ ipcMain.handle('read-symbols-file', async () => {
 });
 
 ipcMain.handle('get-library-path', async () => {
-  const libraryPath = path.join(config.folderPath, 'models', 'library.lib');
+  const libraryPath = path.join(config.folderPath, 'lib', 'library.lib');
  // const folderPath = path.dirname(libraryPath);
   return  {libraryPath} ;
 });

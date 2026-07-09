@@ -338,7 +338,7 @@
 
         let libraryData = [];
         let selectedIndex = -1;
-        let modelsDir = '';
+        let libDir = '';
         let isDirty = false;
 
         // Expose dirty state to main process via executeJavaScript
@@ -347,7 +347,7 @@
         });
 
         ipcRenderer.on('init-data', function(event, data) {
-            modelsDir = data.modelsDir;
+            libDir = data.libDir;
             document.getElementById('pathBar').textContent = data.libPath;
             libraryData = data.includes.map(function(item, idx) {
                 return { path: item.path, isExternal: item.isExternal, id: idx };
