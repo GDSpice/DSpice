@@ -5,3 +5,10 @@
 + Ikf=.2847 Br=6.092 Mje=.377 Mjc=.3416 Vaf=74.03 
 + Isc=0 Ise=14.34f Xtf=3 Vje=.75 Is=14.34f 
 + Itf=.6 Eg=1.14 )
+
+*----------------------------------------------------------------------- 
+.model BC549C   NPN(Bf=490 Br=2.9 Cjc=5.5p Cje=12p Eg=1.1 Fc=.5 IkF=.1500 Ikr=6
++               Is=8f Isc=7p Ise=100f Itf=1.4 Mjc=.31 Mje=.7 Nc=1.5 Ne=1.8 
++               Nk=.63 Rc=1.12 Tf=420p Tr=10n Vaf=24 Vjc=.5 Vje=.5 Vtf=12
++               Xtb=1.5  Xtf=50 Xti=3)
+*
