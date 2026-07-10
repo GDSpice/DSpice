@@ -351,33 +351,38 @@ function ioSetPosProbe(name) {
 
 layout.xaxis.title.text=xNameAnalysis;
 
+ 
+var xAxe=analy.xAxe;
+var setX=[];
+
+if(xAxe.used){
+  var xpos=list.length-1;
+  layout.xaxis.title.text=spice.outputs[xpos].name +' ['+spice.outputs[xpos].unit+']';
+     for(var j=0; j< list[xpos].data.length; j++){
+     setX.push(list[xpos].data[j][1]);
+    }
+} else {
+  var xpos=list.length;
+}
+
 
 //Plot data------------------------------------------------------------------------------------------
   
   var data=[];
-  for (var i = 0; i < list.length; i++) {
+  for (var i = 0; i < xpos; i++) {
 
     var x=[];
     var y=[];
 
-
+   if(xAxe.used)
+    x=setX;
 
    for(var j=0; j< list[i].data.length; j++){
+    if(!xAxe.used)
      x.push(list[i].data[j][0]);
      y.push(list[i].data[j][1]);
     }
-/*
-    var xaxis= 'x'+spice.outputs[i].pos;
-    var yaxis= 'y'+spice.outputs[i].pos;
-    if(xaxis=='x1') xaxis='x';
-    if(yaxis=='y1') yaxis='y';
-    var setXpos='xaxis'+spice.outputs[i].pos;
 
-    console.log(setXpos);
-
-    if(setXpos!='xaxis1')
-      layout[setXpos].title.text=xNameAnalysis;
-*/
   
     data.push({
                   type: 'scatter',
@@ -391,6 +396,20 @@ layout.xaxis.title.text=xNameAnalysis;
                   yaxis: 'y'
               });
   }
+
+
+  /*
+    var xaxis= 'x'+spice.outputs[i].pos;
+    var yaxis= 'y'+spice.outputs[i].pos;
+    if(xaxis=='x1') xaxis='x';
+    if(yaxis=='y1') yaxis='y';
+    var setXpos='xaxis'+spice.outputs[i].pos;
+
+    console.log(setXpos);
+
+    if(setXpos!='xaxis1')
+      layout[setXpos].title.text=xNameAnalysis;
+*/
 
  /*console.log(row+','+col);
  console.log(temp)

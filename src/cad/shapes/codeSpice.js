@@ -424,6 +424,7 @@ function getNewStruct(name,nodes,index,netListData,color)
 
     var r=analy.yAxe.outputs;
 
+    
     for(var i=0; i<r.length; i++){
       var data=getNewStruct(r[i].name,nodes,i,netListData,r[i].color);
       data.pos=r[i].pos;

@@ -1012,7 +1012,7 @@ function analysisSelect() {
 
     defaultData.sections.push({ title: "X axe property", collapsed: false, showReset: true, rows: [] });
     if(x.used)defaultData.sections[3].rows.push({ label: x.name, type: "axeproperty", value: x.color, color: x.color, setChange: 'colorOutput(-1,this)' , setClick: 'removeOutput(-1)' });
-    defaultData.sections[3].rows.push({ label: 'Add X axe', type: "Button", value: 'Add', setClick: 'getParamAnalysis(1,0)' });
+    defaultData.sections[3].rows.push({ label: 'Add X axe', type: "Button", value: x.used?'Modify':'Add', setClick: 'getParamAnalysis(1,0)' });
 
     var elem= mtable.select.lastChild.firstChild;
     var layout = JSON.parse(elem.getAttribute("layout"));
