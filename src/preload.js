@@ -61,10 +61,11 @@ contextBridge.exposeInMainWorld('electron', {
     //Library Manager
     openLibraryManager: () => ipcRenderer.invoke('open-library-manager'),
 
+    
     //In out signals/params-------------------------------------------------------------------
     listElemParams: (data,select) => ipcRenderer.invoke('list-elem-params', data,select),
     listSignalsParams: (data,select) => ipcRenderer.invoke('list-signals-params', data,select),
-    listModels: (data,select) => ipcRenderer.invoke('list-models', data,select),
+    listModels: (data) => ipcRenderer.invoke('list-models', data),
     onSetList: (callback) => ipcRenderer.on('set-list', (event, data,select) => callback(data,select)),
     sendEditedList: (newSelect) => ipcRenderer.send('save-list-value', newSelect),
     //Execut Script python-------------------------------------------------------------------

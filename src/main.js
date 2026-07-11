@@ -9,6 +9,7 @@ const { handlersListSignalsParams } = require('./handleListSignalsParams');
 const handleExecSpice = require('./handleExecSpice');
 const handleGestionSymbols = require('./handleGestionSymbols');
 const handleLibraryManager = require('./handleLibraryManager');
+const handleListModels = require('./handleListModels');
 
 const path = require('path');
 const fs = require('fs');

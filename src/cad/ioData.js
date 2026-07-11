@@ -302,13 +302,21 @@ function ioSetPosProbe(name) {
   
   }
 
-  async function openEditorListModels(listModels){
-    console.log(listModels);
+  async function openEditorListModels(){
+
     try {
+
+
+      var lastDialogResult = {
+        file: mtable.select.getAttribute("modelfile"),
+        items: mtable.select.getAttribute("modellist")
+      };
       
-        const result = await window.electron.listModels(listModels,'');
+        const result = await window.electron.listModels(lastDialogResult);
+        console.log('Result:', result);
         if(result){
-            mtable.select.setAttribute("modellist",result);
+            mtable.select.setAttribute("modellist",result.items);
+            mtable.select.setAttribute("modelfile",result.file);
             modelSelected();
         }
       }

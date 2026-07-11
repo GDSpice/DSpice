@@ -842,28 +842,16 @@ function getPartModel(part) {
     for (var i = 0; i < collection.length; i++)
                {
                    if (collection[i].getAttribute("name") == "modelSpice") {
-                       return [true,collection[i].textContent, collection[i].getAttribute("modellist").split(',')]
+                       return collection[i]
                    }
                 }
                
-    return [false];
+    return null;
               
 }
 
 
-function setPartModel(part,model) {
 
-    var collection = part.children;
-
-    for (var i = 0; i < collection.length; i++)
-               {
-                   if (collection[i].getAttribute("name") == "model") {
-                       collection[i].textContent=model;
-                       break;
-                   }
-                }            
-
-}
 
 function controlPartRef(part) {
    

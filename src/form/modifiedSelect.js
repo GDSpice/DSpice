@@ -518,14 +518,13 @@ function modelSelected() {
                     { label: 'Pos.x', type: "number", value: parseInt(mtable.select.getAttribute("x")) },
                     { label: 'Pos.y', type: "number", value: parseInt(mtable.select.getAttribute("y")) },
                     { label: 'Fill', type: "color", value: rgb2hex(mtable.select.style.fill), color: rgb2hex(mtable.select.style.fill) },
-                    { label: 'Model.name', type: "text", value: mtable.select.getAttribute("modelname") },
-                    { label: 'Model.file', type: "text", value: mtable.select.getAttribute("modelfile") },
-                    { label: 'Model.list', type: "Button", value: 'Edit List', setClick:'openEditorListModels("'+mtable.select.getAttribute("modellist")+'")' },
+                    { label: 'Model.name', type: "dropdownedit", value: mtable.select.getAttribute("modelname"),options: mtable.select.getAttribute("modellist").split(',')},
+                    { label: 'Model.list', type: "Button", value: 'Add similar', setClick:'openEditorListModels()' },
                 ]
             }
         ]
     };  
- // openEditorListModels("dhiabi");
+ 
     mtable.type = "modelSpice";
     propertiesData = JSON.parse(JSON.stringify(defaultData));
     buildPanel();
@@ -539,10 +538,7 @@ function modelModified() {
     mtable.select.setAttribute("y", propertiesData.sections[0].rows[3].value);
     mtable.select.style.fill = propertiesData.sections[0].rows[4].color;
     mtable.select.textContent = propertiesData.sections[0].rows[5].value;
-
     mtable.select.setAttribute("modelname",propertiesData.sections[0].rows[5].value);
-    mtable.select.setAttribute("modelfile",propertiesData.sections[0].rows[6].value);
-  //  mtable.select.setAttribute("modellist",propertiesData.sections[0].rows[7].value);
 
    // if(controlRefPart(mtable.select))
     //    refSelected();
@@ -899,11 +895,11 @@ function partSelect() {
     };
     }
 
-    var data=getPartModel(part);
+    var elem=getPartModel(part);
 
-    if(data[0]){
+    if(elem){
          defaultData.sections[1].rows.push(
-            {label: "Model", type: "dropdown", value: data[1], options: data[2]}
+            {label: "Model", type: "dropdownedit", value: elem.getAttribute("modelname"), options: elem.getAttribute("modellist").split(',')}
          );
     }
 
@@ -921,8 +917,13 @@ function modifiedPart() {
     part.setAttribute("sref", propertiesData.sections[0].rows[4].value);
 
     if(mtable.model){
-        setPartModel(part,propertiesData.sections[1].rows[1].value);
+            var elem=getPartModel(part);
+
+    if(elem){
+        elem.setAttribute("modelname", propertiesData.sections[1].rows[1].value);
+        elem.textContent=propertiesData.sections[1].rows[1].value;
     }
+}
     
     if( controlPartRef(part)){
         partSelect();

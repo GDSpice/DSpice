@@ -229,3 +229,7 @@ ipcMain.on('force-close', () => {
 ipcMain.handle('open-library-manager', async (event) => {
       return createWindow();
   });
+
+
+
+  

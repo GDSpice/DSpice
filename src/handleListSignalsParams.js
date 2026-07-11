@@ -14,11 +14,6 @@ function handlersListSignalsParams(mainWindow) {
         return await createListWindow(data,select,'list.html');
     });
 
-    ipcMain.handle('list-models', async (event, data,select) => {
-        return await createListWindow(data,select,'listModels.html');
-    });
-
-
 
 }
 

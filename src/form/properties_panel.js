@@ -30,6 +30,150 @@
     let defaultData = null;
     let propertiesData = JSON.parse(JSON.stringify(defaultData));
 
+    /* ===== Editable Dropdown Component ===== */
+    function createDropdownEdit(options, value, onChange) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'pedit-wrap';
+
+        const inputWrap = document.createElement('div');
+        inputWrap.className = 'pedit-input-wrap';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'pedit-input';
+        input.value = value;
+        input.autocomplete = 'off';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'pedit-btn';
+        btn.innerHTML = '▼';
+
+        inputWrap.appendChild(input);
+        inputWrap.appendChild(btn);
+        wrapper.appendChild(inputWrap);
+
+        const list = document.createElement('div');
+        list.className = 'pedit-list';
+
+        options.forEach(opt => {
+            const item = document.createElement('div');
+            item.className = 'pedit-item';
+            item.dataset.value = opt;
+            item.textContent = opt;
+            list.appendChild(item);
+        });
+
+        wrapper.appendChild(list);
+
+        let isOpen = false;
+        let activeIndex = -1;
+        const items = Array.from(list.querySelectorAll('.pedit-item'));
+
+        function show() {
+            isOpen = true;
+            list.classList.add('show');
+            btn.innerHTML = '▲';
+            jumpToMatch();
+        }
+
+        function hide() {
+            isOpen = false;
+            list.classList.remove('show');
+            btn.innerHTML = '▼';
+            activeIndex = -1;
+            items.forEach(i => i.classList.remove('active', 'matched'));
+        }
+
+        function toggle() {
+            isOpen ? hide() : show();
+        }
+
+        function jumpToMatch() {
+            const val = input.value.trim();
+            items.forEach(i => i.classList.remove('active', 'matched'));
+            if (!val) { activeIndex = -1; return; }
+            const idx = items.findIndex(item => item.textContent.toLowerCase().startsWith(val.toLowerCase()));
+            if (idx !== -1) {
+                activeIndex = idx;
+                items[idx].classList.add('active', 'matched');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            } else {
+                activeIndex = -1;
+            }
+        }
+
+        function select(item) {
+            input.value = item.dataset.value;
+            hide();
+            onChange(item.dataset.value);
+        }
+
+        input.addEventListener('input', () => {
+            if (!isOpen) show(); else jumpToMatch();
+            onChange(input.value);
+        });
+
+        input.addEventListener('focus', () => { if (!isOpen) show(); });
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggle();
+            if (isOpen) input.focus();
+        });
+
+        items.forEach(item => {
+            item.addEventListener('click', () => select(item));
+        });
+
+        input.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    if (!isOpen) show();
+                    items.forEach(i => i.classList.remove('active'));
+                    if (activeIndex < items.length - 1) activeIndex++;
+                    items[activeIndex].classList.add('active');
+                    items[activeIndex].scrollIntoView({ block: 'nearest' });
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    if (activeIndex > 0) {
+                        items.forEach(i => i.classList.remove('active'));
+                        activeIndex--;
+                        items[activeIndex].classList.add('active');
+                        items[activeIndex].scrollIntoView({ block: 'nearest' });
+                    }
+                    break;
+                case 'Enter':
+                    e.preventDefault();
+                    if (isOpen && activeIndex >= 0 && items[activeIndex]) {
+                        select(items[activeIndex]);
+                    } else {
+                        hide();
+                        onChange(input.value);
+                    }
+                    break;
+                case 'Escape':
+                    hide();
+                    break;
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) hide();
+        });
+
+        input.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (!list.matches(':hover') && !btn.matches(':hover')) hide();
+            }, 150);
+        });
+
+        return wrapper;
+    }
+/* =====  End of Editable Dropdown Component ===== */
+
     function buildPanel() {
         if(!propertiesData) return;
         const panel = document.getElementById('propertiesPanel1');
@@ -99,6 +243,13 @@
                         updatePreview();
                     };
                     valueDiv.appendChild(select);
+                }  else if (row.type === 'dropdownedit') {
+                    // Editable dropdown with input + button + list
+                    const combo = createDropdownEdit(row.options, row.value, (newValue) => {
+                        propertiesData.sections[sIdx].rows[rIdx].value = newValue;
+                        updatePreview();
+                    });
+                    valueDiv.appendChild(combo);
                 } else if (row.type === 'color') {
                     const colorBox = document.createElement('div');
                     colorBox.className = 'pcolor-box';

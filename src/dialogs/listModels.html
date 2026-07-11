@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Items</title>
+  <title>Add similar models list</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,9 +23,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
     .dialog-header h2 {
-      font-size: 16px;
+      font-size: 12px;
       font-weight: 600;
       color: #333;
       font-family: 'Segoe UI', sans-serif;
@@ -37,6 +38,70 @@
       padding: 4px 10px;
       border-radius: 12px;
       font-family: 'Segoe UI', sans-serif;
+    }
+
+    .lib-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: #fafafa;
+      border-bottom: 1px solid #e0e0e0;
+      flex-shrink: 0;
+    }
+    .lib-selector-bar label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      font-family: 'Segoe UI', sans-serif;
+      white-space: nowrap;
+    }
+    .lib-select {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: 'Consolas', monospace;
+      background: #fff;
+      color: #333;
+      outline: none;
+      cursor: pointer;
+    }
+    .lib-select:focus {
+      border-color: #2196F3;
+      box-shadow: 0 0 0 2px rgba(33,150,243,0.15);
+    }
+    .lib-select option {
+      font-family: 'Consolas', monospace;
+    }
+
+    .editor-tabs {
+      display: flex;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      flex-shrink: 0;
+    }
+    .editor-tab {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #888;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .editor-tab.active {
+      color: #2196F3;
+      background: #fff;
+      border-bottom-color: #2196F3;
+    }
+    .editor-tab:hover:not(.active) {
+      color: #555;
+      background: #eee;
     }
 
     .editor-container {
@@ -54,7 +119,6 @@
       overflow: hidden;
     }
 
-    /* Line numbers gutter */
     .line-numbers {
       width: 50px;
       background: #f0f0f0;
@@ -79,7 +143,6 @@
       background: #e3f2fd;
     }
 
-    /* Textarea editor */
     .editor-textarea {
       flex: 1;
       border: none;
@@ -98,6 +161,10 @@
     .editor-textarea::selection {
       background: #b3d9ff;
     }
+    .editor-textarea.readonly {
+      background: #fafafa;
+      color: #666;
+    }
 
     .preview-bar {
       background: #fff;
@@ -106,6 +173,7 @@
       max-height: 60px;
       overflow-y: auto;
       font-family: 'Segoe UI', sans-serif;
+      flex-shrink: 0;
     }
     .preview-label {
       font-size: 11px;
@@ -129,6 +197,7 @@
       padding: 12px 20px;
       background: #fff;
       border-top: 1px solid #ddd;
+      flex-shrink: 0;
     }
     .btn {
       padding: 8px 24px;
@@ -140,6 +209,7 @@
       color: #333;
       transition: all 0.15s;
       font-family: 'Segoe UI', sans-serif;
+      font-weight: 600;
     }
     .btn:hover:not(:disabled) {
       background: #e0e0e0;
@@ -162,8 +232,20 @@
 </head>
 <body>
   <div class="dialog-header">
-    <h2>Edit and add models</h2>
+    <h2>Edit Models List</h2>
     <span class="item-count" id="item-count">0 items</span>
+  </div>
+
+  <div class="lib-selector-bar">
+    <label>Library File:</label>
+    <select class="lib-select" id="lib-select" onchange="onLibFileChange()">
+      <option value="">-- Select a library file --</option>
+    </select>
+  </div>
+
+  <div class="editor-tabs">
+    <button class="editor-tab active" id="tab-items" onclick="switchTab('items')">Models</button>
+    <button class="editor-tab" id="tab-raw" onclick="switchTab('raw')">Raw</button>
   </div>
 
   <div class="editor-container">
@@ -173,10 +255,10 @@
     </div>
   </div>
 
-  <div class="preview-bar">
+  <!--div class="preview-bar">
     <div class="preview-label">Preview (comma-separated):</div>
     <div class="preview-text" id="preview-text"></div>
-  </div>
+  </div-->
 
   <div class="buttons-bar">
     <button class="btn" onclick="cancelDialog()">Cancel</button>
@@ -184,27 +266,196 @@
   </div>
 
   <script>
-   
-    let originalText = '';
+    const { ipcRenderer } = require('electron');
+
+    // State
+    let currentTab = 'items';
+    let itemsContent = '';
+    let rawContent = '';
+    let selectedFileName = '';
+    let selectedFilePath = '';
+    let libFiles = [];
+    let isLoading = false;
+    let previousFileIndex = -1; // remember previous selection
+
+    // DOM refs
     const editor = document.getElementById('editor');
     const lineNumbers = document.getElementById('line-numbers');
     const previewText = document.getElementById('preview-text');
     const itemCount = document.getElementById('item-count');
+    const libSelect = document.getElementById('lib-select');
 
+    // ============================================
+    // INIT - receives previous result
+    // ============================================
+    ipcRenderer.on('init-data', (event, data) => {
+      libFiles = data.libFiles || [];
+      const previous = data.previousResult || { file: '', items: '' };
 
-    document.addEventListener("DOMContentLoaded", () => {
-            window.electron.onSetList((itemsString,preSelected) => {
-                      // Convert comma-separated to line-separated
-      const lines = itemsString.split(',').map(s => s.trim()).filter(s => s.length > 0);
-      originalText = lines.join('\n');
-      editor.value = originalText;
+      populateLibSelect();
+
+      // Set initial items from previous result
+      const lines = previous.items.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      itemsContent = lines.join('\n');
+      selectedFileName = previous.file || '';
+
+      // Find and select previous file in dropdown
+      if (selectedFileName) {
+        const fileIndex = libFiles.findIndex(f => f.name === selectedFileName);
+        if (fileIndex >= 0) {
+          previousFileIndex = fileIndex;
+          libSelect.value = fileIndex;
+          // Load models/subckts for this file
+          const file = libFiles[fileIndex];
+          selectedFilePath = file.fullPath;
+         // ipcRenderer.send('get-spice-models', file.fullPath);
+        }
+      }
+
+      // Show items tab
+      currentTab = 'items';
+      updateTabUI();
+      editor.value = itemsContent;
+      editor.readOnly = false;
+      editor.classList.remove('readonly');
       updateLineNumbers();
       updatePreview();
       editor.focus();
-            });
- });
+    });
 
-    // Update line numbers
+    // Handle models result from main process
+    ipcRenderer.on('spice-models-result', (event, data) => {
+      isLoading = false;
+
+      if (data.error) {
+        rawContent = '// Error: ' + data.error;
+      } else {
+        rawContent = data.rawContent || '// No content';
+      }
+
+      // Only update items if this is a NEW file selection (not init restore)
+      // If we restored from previous, keep the user's edited items
+      if (data.error) {
+        // Don't overwrite items on error
+      }
+
+      // If we're on raw tab, refresh it
+      if (currentTab === 'raw') {
+        editor.value = rawContent;
+        updateLineNumbers();
+      }
+    });
+
+    // Populate library file select
+    function populateLibSelect() {
+      libSelect.innerHTML = '<option value="">-- Select a library file --</option>';
+      libFiles.forEach((file, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = file.name;
+        libSelect.appendChild(opt);
+      });
+    }
+
+    // ============================================
+    // LIBRARY FILE SELECTION
+    // ============================================
+    function onLibFileChange() {
+      const index = parseInt(libSelect.value);
+
+      if (isNaN(index) || index < 0) {
+        selectedFileName = '';
+        selectedFilePath = '';
+        return;
+      }
+
+      const file = libFiles[index];
+      selectedFileName = file.name;
+      selectedFilePath = file.fullPath;
+      previousFileIndex = index;
+
+      // Request models/subckts from main process
+      isLoading = true;
+      ipcRenderer.send('get-spice-models', file.fullPath);
+
+      // Load models+subckts into items (replace)
+      // We need to wait for the result, but for now we can also
+      // directly set a loading message
+      itemsContent = '// Loading...';
+      if (currentTab === 'items') {
+        editor.value = itemsContent;
+        updateLineNumbers();
+      }
+    }
+
+    // Override the models result to update items when user selects a NEW file
+    const originalModelsHandler = ipcRenderer.listeners('spice-models-result')[0];
+    ipcRenderer.removeAllListeners('spice-models-result');
+    ipcRenderer.on('spice-models-result', (event, data) => {
+      isLoading = false;
+
+      if (data.error) {
+        rawContent = '// Error: ' + data.error;
+        itemsContent = '// Error: ' + data.error;
+      } else {
+        rawContent = data.rawContent || '// No content';
+
+        // Combine models + subckts into Items (for NEW selection)
+        const allItems = [];
+        if (data.models && data.models.length > 0) {
+          allItems.push(...data.models);
+        }
+        if (data.subckts && data.subckts.length > 0) {
+          allItems.push(...data.subckts);
+        }
+        itemsContent = allItems.length > 0 ? allItems.join('\n') : '// No models or subcircuits found';
+      }
+
+      // Update display if on items tab
+      if (currentTab === 'items') {
+        editor.value = itemsContent;
+        updateLineNumbers();
+        updatePreview();
+      } else if (currentTab === 'raw') {
+        editor.value = rawContent;
+        updateLineNumbers();
+      }
+    });
+
+    // ============================================
+    // TABS
+    // ============================================
+    function switchTab(tab) {
+      // Save current items content before switching
+      if (currentTab === 'items') {
+        itemsContent = editor.value;
+      }
+
+      currentTab = tab;
+      updateTabUI();
+
+      if (tab === 'items') {
+        editor.value = itemsContent;
+        editor.readOnly = false;
+        editor.classList.remove('readonly');
+        updateLineNumbers();
+        updatePreview();
+      } else if (tab === 'raw') {
+        editor.value = rawContent || '// Select a library file to view raw content';
+        editor.readOnly = true;
+        editor.classList.add('readonly');
+        updateLineNumbers();
+      }
+    }
+
+    function updateTabUI() {
+      document.getElementById('tab-items').classList.toggle('active', currentTab === 'items');
+      document.getElementById('tab-raw').classList.toggle('active', currentTab === 'raw');
+    }
+
+    // ============================================
+    // EDITOR FUNCTIONS
+    // ============================================
     function updateLineNumbers() {
       const lines = editor.value.split('\n');
       const currentLine = getCurrentLineNumber();
@@ -219,37 +470,42 @@
         lineNumbers.appendChild(span);
       });
 
-      // Update item count
-      const nonEmpty = lines.filter(s => s.trim().length > 0);
-      itemCount.textContent = nonEmpty.length + ' item' + (nonEmpty.length !== 1 ? 's' : '');
+      // Update item count (only for items tab)
+      if (currentTab === 'items') {
+        const nonEmpty = lines.filter(s => s.trim().length > 0 && !s.startsWith('//'));
+        itemCount.textContent = nonEmpty.length + ' item' + (nonEmpty.length !== 1 ? 's' : '');
+      }
     }
 
-    // Get current line number from cursor position
     function getCurrentLineNumber() {
       const textBeforeCursor = editor.value.substring(0, editor.selectionStart);
       return textBeforeCursor.split('\n').length - 1;
     }
 
-    // Update preview
     function updatePreview() {
-      const lines = editor.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-      previewText.textContent = lines.join(',');
+      //const lines = editor.value.split('\n').map(s => s.trim()).filter(s => s.length > 0 && !s.startsWith('//'));
+      //previewText.textContent = lines.join(',');
     }
 
-    // Sync scroll between textarea and line numbers
+    // Sync scroll
     editor.addEventListener('scroll', () => {
       lineNumbers.scrollTop = editor.scrollTop;
     });
 
-    // Update on input
+    // Input
     editor.addEventListener('input', () => {
+      if (currentTab === 'items') {
+        itemsContent = editor.value;
+      }
       updateLineNumbers();
-      updatePreview();
+      if (currentTab === 'items') {
+        updatePreview();
+      }
     });
 
-    // Update on cursor move
+    // Cursor move
     editor.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End' || e.key === 'PageUp' || e.key === 'PageDown') {
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Home','End','PageUp','PageDown'].includes(e.key)) {
         updateLineNumbers();
       }
     });
@@ -258,7 +514,7 @@
       updateLineNumbers();
     });
 
-    // Handle Tab key (insert spaces instead of changing focus)
+    // Tab key
     editor.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
         e.preventDefault();
@@ -266,18 +522,39 @@
         const end = editor.selectionEnd;
         editor.value = editor.value.substring(0, start) + '    ' + editor.value.substring(end);
         editor.selectionStart = editor.selectionEnd = start + 4;
+        if (currentTab === 'items') {
+          itemsContent = editor.value;
+        }
         updateLineNumbers();
-        updatePreview();
+        if (currentTab === 'items') {
+          updatePreview();
+        }
       }
     });
 
+    // ============================================
+    // SUBMIT / CANCEL
+    // ============================================
     function submitResult() {
-      const lines = editor.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-      window.electron.sendEditedList(lines.join(','));
+      // Ensure items content is current
+      if (currentTab === 'items') {
+        itemsContent = editor.value;
+      }
+
+      const lines = itemsContent.split('\n').map(s => s.trim()).filter(s => s.length > 0 && !s.startsWith('//'));
+      const itemsString = lines.join(',');
+
+      // Return: { file: "selectedFileName", items: "item1,item2,..." }
+      const result = {
+        file: selectedFileName,
+        items: itemsString
+      };
+
+      ipcRenderer.send('dialog-result', result);
     }
 
     function cancelDialog() {
-     window.electron.sendEditedList(null);
+      ipcRenderer.send('dialog-result', null);
     }
   </script>
 </body>
