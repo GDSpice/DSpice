@@ -439,6 +439,7 @@ function information(self) {
     case '.param':
 		case 'label':
 		case 'ref':
+        case 'modelSpice':
         cratInfoText(self);
         break;
 	case 'pin':

@@ -121,6 +121,7 @@ function creatLimiteOfSelect(self) {
         case '.param':
         case 'label':
         case 'ref':
+        case 'modelSpice':
 
             var p = getRectOfText(elem);
             for (var j = 0; j < p.length; j++)
@@ -222,6 +223,7 @@ function itElemSelectByRect(x, y, xo, yo, elem) {
     case '.param':
     case 'label':
     case 'ref':
+    case 'modelSpice':
 
         var p = getRectOfText(elem);
         for (var j = 0; j < p.length; j++)
@@ -263,6 +265,7 @@ function saveInArrayElemSelectByRect(self, elem) {
 	case 'probe':
     case 'label':
     case 'ref':
+    case 'modelSpice':
         self.lsg.oldPos.push({
             x: parseInt(elem.getAttribute("x")),
             y: parseInt(elem.getAttribute("y"))
@@ -350,6 +353,7 @@ function moveElemGroup(self) {
             case '.param':
             case 'label':
             case 'ref':
+            case 'modelSpice':
                 elem.setAttribute("x", pos.x + dx);
                 elem.setAttribute("y", pos.y + dy);
                 var r = elem.getAttribute("r");
@@ -387,6 +391,7 @@ function upElemGroup(self) {
             case '.param':
             case 'label':
             case 'ref':
+            case 'modelSpice':
                 self.lsg.oldPos[i].x = parseInt(elem.getAttribute("x"));
                 self.lsg.oldPos[i].y = parseInt(elem.getAttribute("y"));
                 break;
