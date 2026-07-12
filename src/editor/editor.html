@@ -5,43 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPICE Netlist Editor</title>
     <style>
-body {
-    margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 13px;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.editor {
-    flex: 1;
-    padding-bottom: 0px;
-    border: 1px solid #ddd;
-    margin: 3px;
-    margin-bottom: 30px;
-    overflow: hidden;
-}
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
 
+        /* Menu Bar */
         .menu-bar {
             background-color: #f8f9fa;
             border-bottom: 1px solid #ddd;
             display: flex;
             padding: 0;
             font-size: 12px;
+            user-select: none;
+            flex-shrink: 0;
         }
+
         .menu-item {
             position: relative;
             padding: 5px 10px;
             cursor: pointer;
             white-space: nowrap;
         }
+
         .menu-item:hover {
             background-color: #e9ecef;
         }
+
         .menu-item:hover .dropdown {
             display: block;
         }
+
         .dropdown {
             display: none;
             position: absolute;
@@ -52,46 +58,211 @@ body {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             font-size: 12px;
+            min-width: 180px;
         }
+
         .dropdown-item {
-            padding: 4px 8px;
+            padding: 6px 12px;
             white-space: nowrap;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #333;
         }
-        .dropdown-item img {
-            margin-right: 8px;
-            width: 16px;
-            height: 16px;
-        }
+
         .dropdown-item span.shortcut {
             color: #888;
             margin-left: auto;
             padding-left: 10px;
             text-align: right;
+            font-size: 11px;
         }
+
         .dropdown-item:hover {
             background-color: #f1f1f1;
         }
+
+        .dropdown-item.disabled {
+            color: #aaa;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Toolbar */
         .toolbar {
             background-color: #f8f9fa;
             border-bottom: 1px solid #ddd;
             padding: 5px;
             display: flex;
             align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
         }
+
         .toolbar button {
-            background-color: white;
-            border: 1px solid #ddd;
-            padding: 5px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 4px 6px;
             cursor: pointer;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            min-height: 28px;
         }
+
+        .toolbar button:hover:not(:disabled) {
+            background-color: #e3e3e3;
+            border-color: #bbb;
+        }
+.toolbar-button.disabled {
+    opacity: 0.4;
+    pointer-events: none; /* يمنع تمرير أحداث النقر أو التمرير فوقه */
+    cursor: not-allowed;
+    color: #888; /* لون باهت للنص */
+}
+
+/* منع تغيير لون الخلفية عند تمرير الماوس على الزر المعطل */
+.toolbar-button.disabled:hover{
+    background-color: transparent !important;
+    color: #888 !important;
+}
+
         .toolbar button img {
             width: 16px;
             height: 16px;
+            display: block;
+            pointer-events: none;
         }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background-color: #ccc;
+            margin: 0 6px;
+        }
+
+        /* Editor Container */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            background-color: #ffffff;
+            margin: 3px;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        /* Line Numbers */
+        .line-numbers {
+            width: 50px;
+            background-color: #f5f5f5;
+            border-right: 1px solid #ddd;
+            padding: 10px 5px;
+            text-align: right;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 14px;
+            line-height: 21px;
+            color: #666;
+            overflow: hidden;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .line-numbers .line-num {
+            height: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .line-numbers .line-num.current {
+            background-color: #e8e8e8;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Editor Wrapper */
+        .editor-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Shared styles for textarea and highlight layer */
+        .editor, .highlight-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 10px;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 14px;
+            line-height: 21px;
+            white-space: pre;
+            word-wrap: normal;
+            overflow-wrap: normal;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            border: none;
+            overflow: auto;
+        }
+
+        /* Highlight Layer */
+        .highlight-layer {
+            color: #000000;
+            background: #ffffff;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Syntax Highlighting Colors */
+        .highlight-layer .comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        .highlight-layer .directive {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        .highlight-layer .component {
+            color: #800080;
+            font-weight: bold;
+        }
+
+        .highlight-layer .text {
+            color: #000000;
+        }
+
+        /* Textarea */
+        .editor {
+            color: transparent;
+            background: transparent;
+            caret-color: #000000;
+            z-index: 2;
+            resize: none;
+            outline: none;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .editor::selection {
+            background-color: rgba(0, 120, 215, 0.3);
+            color: transparent;
+        }
+
+        .editor::-moz-selection {
+            background-color: rgba(0, 120, 215, 0.3);
+            color: transparent;
+        }
+
+        /* Description Bar */
         .description-bar {
             position: fixed;
             bottom: 0;
@@ -99,153 +270,143 @@ body {
             width: 100%;
             background-color: #f8f9fa;
             border-top: 1px solid #ddd;
-            padding: 5px;
+            padding: 5px 10px;
             font-size: 12px;
             color: #333;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            flex-shrink: 0;
         }
 
+        .description-bar .info-section {
+            display: flex;
+            gap: 0;
+        }
 
-.disabled {
-    color: #aaa;
-    cursor: not-allowed;
-    pointer-events: none;
-    z-index: 1;
-}
+        .description-bar .info-item {
+            padding: 2px 10px;
+            border-right: 1px solid #ddd;
+            min-width: 60px;
+        }
 
-.disabled .icon {
-    filter: grayscale(100%);
-    opacity: 0.5;
-}
+        .description-bar .info-item:last-child {
+            border-right: none;
+        }
 
-/* SPICE-specific syntax highlighting colors */
-/* Directives (.TITLE, .SUBCKT, etc.) - Pink */
-.cm-s-dracula .cm-keyword { color: #ff79c6; font-weight: bold; }
-/* Element names (R1, C2, V3, etc.) - Blue */
-.cm-s-dracula .cm-variable-2 { color: #4da6ff; }
-/* Model names (NMOS, PMOS, etc.) - Blue */
-.cm-s-dracula .cm-variable-3 { color: #4da6ff; }
-/* Node names and identifiers - White */
-.cm-s-dracula .cm-variable { color: #f8f8f2; }
-/* Numbers and values - Light Red */
-.cm-s-dracula .cm-number { color: #ff6b6b; }
-/* Parameter names + values (NAME=VALUE, {expr}) - Light Red */
-.cm-s-dracula .cm-property { color: #ff6b6b; }
-/* Comments - Gray */
-.cm-s-dracula .cm-comment { color: #6272a4; font-style: italic; }
-/* Title line - Yellow */
-.cm-s-dracula .cm-string { color: #f1fa8c; }
-/* Operators - Orange */
-.cm-s-dracula .cm-operator { color: #ffb86c; }
-/* Brackets {} () [] - Cyan */
-.cm-s-dracula .cm-bracket { color: #8be9fd; }
-/* Functions V() I() - Light Red */
-.cm-s-dracula .cm-def { color: #ff6b6b; }
+        .description-bar .description-text {
+            flex: 1;
+            text-align: center;
+            padding: 2px 10px;
+        }
 
+        /* Scrollbar styling */
+        .editor::-webkit-scrollbar,
+        .highlight-layer::-webkit-scrollbar {
+            width: 14px;
+            height: 14px;
+        }
+
+        .editor::-webkit-scrollbar-track,
+        .highlight-layer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .editor::-webkit-scrollbar-thumb,
+        .highlight-layer::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 7px;
+            border: 2px solid #f1f1f1;
+        }
+
+        .editor::-webkit-scrollbar-thumb:hover,
+        .highlight-layer::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        .editor::-webkit-scrollbar-corner,
+        .highlight-layer::-webkit-scrollbar-corner {
+            background: #f1f1f1;
+        }
     </style>
-
-    <!-- CodeMirror CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/theme/dracula.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldgutter.min.css">
-
-    <!-- CodeMirror JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.js"></script>
-
-    <!-- SPICE Mode using simplemode addon -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/mode/simple.min.js"></script>
-    <script>
-    // Define SPICE netlist syntax highlighting mode
-    CodeMirror.defineSimpleMode("spice", {
-        // State: start - only the first line (title)
-        start: [
-          /*  {regex: /./, token: "string", next: "body"}*/
-        ],
-        // State: body - rest of the file
-        body: [
-            // 1. Comments (highest priority)
-          /*  {regex: /^\*.*$/, token: "comment"},
-            {regex: /;.*$/, token: "comment"},*/
-
-            // 2. SPICE directives (start with .)
-       /*     {regex: /\.(TITLE|SUBCKT|ENDS|INCLUDE|MODEL|PARAM|OPTION|OPTIONS|OP|DC|AC|TRAN|PZ|SENS|NOISE|DISTO|TF|FOUR|PRINT|PLOT|PROBE|SAVE|WIDTH|TEMP|STEP|ALTER|GLOBAL|IC|NODESET|END|MEAS|MEASURE|LET|SET|UNSET|SHOW|SHOWMOD|SHOWDEV|HARD|SOFT|RESET|RUN|RUNS|OPPOINT|LOAD|DSP|FFT|STATUS|STOP|WRITE|WRITEDATA|WRITESPICE|WRITECIR|WRITENETLIST|SOURCE|RESTART|RESUME|SHELL|SPAWN|CD|PWD|RND|RNDN|UNIF|GAUSS|AGAUSS|AUNIF|LIMIT|PWR|PWRS|SIGN|STP|TABLE|URAMP|IF|THEN|ELSE|ENDIF|WHILE|ENDWHILE|REPEAT|UNTIL|ENDREPEAT|DOWHILE|ENDDOWHILE|FOR|ENDFOR|BREAK|CONTINUE|LABEL|GOTO|ELSEIF|CONTROL|ENDC)\b/i, token: "keyword"}
-*/
-      
-        ],
-        meta: {
-            lineComment: "*"
-        }
-    });
-    </script>
-
-    <!-- CodeMirror Add-ons for Code Folding -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldgutter.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/indent-fold.min.js"></script>
-<base target="_blank">
-<base target="_blank">
+    <base target="_blank">
 </head>
 <body>
     <!-- Menu Bar -->
     <div class="menu-bar"></div>
 
-    <!-- Editor  -->
-    <div class="editor">
-      <textarea id="code"></textarea>
+    <!-- Toolbar -->
+    <div class="toolbar"></div>
+
+    <!-- Editor Container -->
+    <div class="editor-container">
+        <div class="line-numbers" id="lineNumbers"></div>
+        <div class="editor-wrapper">
+            <pre id="highlightLayer" class="highlight-layer"></pre>
+            <textarea id="editor" class="editor" spellcheck="false"></textarea>
+        </div>
     </div>
 
     <!-- Description Bar -->
-    <div class="description-bar" id="description-bar">Hover over an item for details.</div>
+    <div class="description-bar" id="description-bar">
+        <div class="info-section">
+            <div class="info-item" id="lineInfo">Ln: 1</div>
+            <div class="info-item" id="colInfo">Col: 1</div>
+        </div>
+        <div class="description-text" id="description-text">Hover over an item for details.</div>
+    </div>
+
     <script src="editor.js"></script>
 
     <script>
-    async function confirmAction(type_) {
-        const result = await window.electron.showConfirmationEditDialog('You have unsaved changes. Do you want to save before closing?');
+        async function confirmAction(type_) {
+            const result = await window.electron.showConfirmationEditDialog('You have unsaved changes. Do you want to save before closing?');
 
-        if(type_==1){
-            if(result==1) 
-                window.electron.closeWindowEditor();
-            if(result==2) 
-                window.electron.saveCloseWindowEditor(editor.getValue(),setFile,1);
-        } else{
-            if(result==1) {
-            if(type_==2)
-                newFile();
-            else if(type_==3)
-                openFile();
+            if (type_ == 1) {
+                if (result == 1)
+                    window.electron.closeWindowEditor();
+                if (result == 2)
+                    window.electron.saveCloseWindowEditor(editor.getValue(), setFile, 1);
+            } else {
+                if (result == 1) {
+                    if (type_ == 2)
+                        newFile();
+                    else if (type_ == 3)
+                        openFile();
+                }
+                if (result == 2) {
+                    const result = await window.electron.saveCloseWindowEditor(editor.getValue(), setFile, 2);
+                    if (result.saved) {
+                        if (type_ == 2)
+                            newFile();
+                        else if (type_ == 3) {
+                            setFile = result.path;
+                            initialValue = editor.getValue();
+                            editor.clearHistory();
+                            start();
+                            openFile();
+                        }
+                    }
+                }
             }
-            if(result==2){
-                const result= await window.electron.saveCloseWindowEditor(editor.getValue(),setFile,2);
-               if(result.saved){
-                  if(type_==2)
-                     newFile();
-                  else if(type_==3){           
-                     setFile=result.path;
-                     initialValue=editor.getValue();
-                     editor.clearHistory();
-                     start();
-                     openFile();
-                  }
-               }
-            }
-        } 
-    }
+        }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        window.electron.onSetText((filePath,data) => {
-            setFile=filePath;
-            editor.setValue(data);
-            initialValue=editor.getValue();
-            editor.clearHistory();
-            start();
+        document.addEventListener("DOMContentLoaded", () => {
+            window.electron.onSetText((filePath, data) => {
+                setFile = filePath;
+                editor.setValue(data);
+                initialValue = editor.getValue();
+                editor.clearHistory();
+                start();
+            });
         });
-    });
 
-    window.electron.closeEditor(() => {
-          if(isTextChanged()) {
-            confirmAction(1);
-          } else {
-            window.electron.closeWindowEditor();
-          }
+        window.electron.closeEditor(() => {
+            if (isTextChanged()) {
+                confirmAction(1);
+            } else {
+                window.electron.closeWindowEditor();
+            }
         });
     </script>
 </body>

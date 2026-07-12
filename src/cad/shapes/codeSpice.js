@@ -192,10 +192,10 @@ function getListParams(part) {
       var paramList = [];
       var collection = part.children;
 
-      var data=getPartModel(part);
+      var elem=getPartModel(part);
 
-      if(data[0]){
-        return [data[1]];
+      if(elem){
+        return [elem.getAttribute("modelname")];
       }
         for (var i = 0; i < collection.length; i++)
             if (collection[i].getAttribute("name") == "param")
