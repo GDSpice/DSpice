@@ -96,6 +96,33 @@ ipcMain.handle('save-close-window-editor', async (event, data,filepath,type_) =>
 
 });
 
+//load and save last paths for the editor---------------------------------------------------------
+
+function loadLastPathsLib() {
+    const settingsPath = path.join(config.folderPath, 'lastPaths.json'); 
+    try {
+        if (fs.existsSync(settingsPath)) {
+            const data = fs.readFileSync(settingsPath, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (error) {
+        console.error('Error loading last paths:', error);
+    }
+    const defaultPaths = { dcs: path.join(config.folderPath, 'demo'), sym: path.join(config.folderPath, 'symbols'), lib: path.join(config.folderPath, 'lib') };
+    fs.writeFileSync(settingsPath, JSON.stringify(defaultPaths, null, 2), 'utf8');
+    return defaultPaths; // Default paths if the file doesn't exist or an error occurs
+}
+
+function saveLastPathsLib(paths) {
+    try {
+        fs.writeFileSync(settingsPath, JSON.stringify(paths, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Error saving last paths:', error);
+    }
+}
+
+let lastPathsLib = loadLastPathsLib();
+
 //Save as editor---------------------------------------------------------------------
 ipcMain.handle('save-as-window-editor', async (event, data,filepath) => {
 
@@ -106,6 +133,10 @@ ipcMain.handle('save-as-window-editor', async (event, data,filepath) => {
   });
 
 if (filePath) {
+
+    lastPathsLib['lib'] = path.dirname(filePath);
+    saveLastPathsLib(lastPathsLib);
+
     try {
         fs.writeFileSync(filePath, data, 'utf-8');
         return {saved:true,path:filePath};
@@ -120,14 +151,15 @@ return {saved:false};
 
 });
 
-
 //open file editor-----------------------------------------------------------------------
 ipcMain.handle('open-file-dialog-editor', async () => {
+
   const result = await dialog.showOpenDialog( editWindow, {
       title: 'Select a File',
       buttonLabel: 'Open',
       properties: ['openFile'],
-      filters: [{ name: 'Spice lib' , extensions: ['lib'] },{ name: 'Spice net list' , extensions: ['net'] }]
+      filters: [{ name: 'Spice lib' , extensions: ['lib'] },{ name: 'Spice net list' , extensions: ['net'] }],
+      defaultPath: lastPathsLib['lib'] || undefined
   });
 
   if (!result.canceled && result.filePaths.length > 0) {
@@ -138,6 +170,8 @@ ipcMain.handle('open-file-dialog-editor', async () => {
                 fileContent = fileContent.slice(1);
             }
       const fileName= path.basename(filePath);
+      lastPathsLib['lib'] = path.dirname(filePath);
+       saveLastPathsLib(lastPathsLib);
       return { filePath, fileContent, fileName};
   }
   return null;

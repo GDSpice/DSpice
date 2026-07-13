@@ -394,9 +394,9 @@
         document.addEventListener("DOMContentLoaded", () => {
             window.electron.onSetText((filePath, data) => {
                 setFile = filePath;
-                editor.setValue(data);
-                initialValue = editor.getValue();
-                editor.clearHistory();
+              //  document.getElementById("editor").value = data;
+               // initialValue = data;
+                editorAPI.setValue(data);
                 start();
             });
         });
