@@ -29,7 +29,7 @@ app.whenReady().then(() => {
     height: 600,
     maximized: true,
     icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
-    autoHideMenuBar: false, // Hide the menu bar
+    autoHideMenuBar: true, // Hide the menu bar
     webPreferences: {
       preload:path.join(__dirname,'preload.js'), 
       contextIsolation: true,

@@ -114,6 +114,7 @@ function loadLastPathsLib() {
 }
 
 function saveLastPathsLib(paths) {
+    const settingsPath = path.join(config.folderPath, 'lastPaths.json'); 
     try {
         fs.writeFileSync(settingsPath, JSON.stringify(paths, null, 2), 'utf8');
     } catch (error) {

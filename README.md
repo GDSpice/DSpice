@@ -13,7 +13,7 @@ DSpice: Design and Simulation of Circuits using Spice
 <p align="center">
  
  <a href="#News">
-    <img src="https://img.shields.io/badge/Version-0.0.8-blue" alt="v0.0.8">
+    <img src="https://img.shields.io/badge/Version-0.0.9-blue" alt="v0.0.9">
  </a>
 
     
