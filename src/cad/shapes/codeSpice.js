@@ -422,31 +422,43 @@ function getNewStruct(name,nodes,index,netListData,color)
     var elem=drawing.resize.setElement;
     var analy=JSON.parse(elem.getAttribute("description"));
 
-    var r=analy.yAxe.outputs;
+    if(analy.type=='DC Sweep'){
+      var dc=analy.dcsweep;
+      var r=dc.yAxe.outputs;
+	    var x=dc.xAxe;
+      var cmd=`.dc   ${dc.param}  ${dc.start} ${dc.stop} ${dc.step}`;
+
+    } else if(analy.type=='Time Domain') {
+        var tr=analy.time
+        var r=tr.yAxe.outputs;
+        var x=tr.xAxe;
+        var cmd=`.tran   ${tr.step}  ${tr.stop}  ${tr.start}  uic\n`;
+
+    } else if(analy.type=='AC Analysis') {
+        var ac=analy.ac;
+        var r=ac.yAxe.outputs;
+        var x=ac.xAxe; 
+        var cmd=`.ac   ${ac.type} ${ac.points} ${ac.start}  ${ac.stop}`; 
+    }
 
     
     for(var i=0; i<r.length; i++){
       var data=getNewStruct(r[i].name,nodes,i,netListData,r[i].color);
       data.pos=r[i].pos;
+      if(r[i].func) data.func=r[i].func;
       outputs.push(data);
     }
+   
     var index=r.length+1;
-    var r=analy.xAxe;
     
-    if (r.used) {
-      const outputName = r.name;
-      outputs.push(getNewStruct(r.name,nodes,index,netListData,'none'));
+    if (x.used) {
+      const outputName = x.name;
+      var data=getNewStruct(x.name,nodes,index,netListData,'none');
+      if(x.func) data.func=x.func;
+      outputs.push(data);
      };
 
 
-   if(analy.type === "DC Sweep"){
-    var r=analy.dcsweep;
-    var cmd=`.dc   ${r.param}  ${r.start} ${r.stop} ${r.step}`;
-   }
-   else {
-    var r=analy.time;
-    var cmd=`.tran   ${r.step}  ${r.stop}  ${r.start}  uic\n`;
-   }
 
    var code = `*\n\n.include "${libarayPath}"\n\n`;
 
@@ -458,7 +470,10 @@ function getNewStruct(name,nodes,index,netListData,color)
    
    var print='';
    for(var i=0; i<outputs.length; i++){
-    print+='  '+outputs[i].out;
+    if(outputs[i].func)
+      print+='  '+outputs[i].func+'('+outputs[i].out+')';
+    else
+      print+='  '+outputs[i].out+'';
    }
 
    

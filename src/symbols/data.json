@@ -62,6 +62,7 @@
         "ExpCurrent.sym",
         "ExpVoltage.sym",
         "PWLCurrent.sym",
-        "PWLVoltage.sym"
+        "PWLVoltage.sym",
+        "ACVoltage.sym"
     ]
 }

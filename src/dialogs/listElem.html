@@ -219,7 +219,7 @@
     let preSelectedValue = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-            window.electron.onSetList((data,preSelected) => {
+            window.electron.onSetList((data,preSelected,acUsed) => {
                       treeData = data;
                       console.log("Received data for tree:", treeData);
       preSelectedValue = preSelected || null;

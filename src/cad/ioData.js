@@ -159,18 +159,16 @@ function setPropValue(val){
 
 //--------------------------------actions of Analysis--------------------//
 
-async function ioPosParamAnalysis(type) {
-  
+async function ioPosParamAnalysis(type,acUsed) {
+ 
     var str =''
-
 
     try {
        
-
         const result = getElementListSpice();
-        const result_ = await window.electron.listSignalsParams(result,str);
+        const result_ = await window.electron.listSignalsParams(result,str,acUsed);
         if(result_)
-          ioSetPosProbe(result_);       
+          ioSetPosProbe(result_.selectedSignal,result_.selectedFunction);       
 
       } catch (error) {
         
@@ -199,6 +197,7 @@ function getParamAnalysis(type,name)
   mtable.typeUsedXOutput=false;
   mtable.typeUsedYOutput=false;
   mtable.typeUsedSOutput=false;
+  var analy=JSON.parse(mtable.select.getAttribute("description"));
 
   if(type=="dc")
   {
@@ -206,13 +205,13 @@ function getParamAnalysis(type,name)
     ioPosParamAnalysisDC(name);
   } else if(type==0){
     mtable.typeUsedYOutput=true; 
-    ioPosParamAnalysis(type);
+    ioPosParamAnalysis(type,analy.type=='AC Analysis');
   } else if(type==1){
     mtable.typeUsedXOutput=true;
-    ioPosParamAnalysis(type);
+    ioPosParamAnalysis(type,analy.type=='AC Analysis');
   } else if(type==2){
     mtable.typeUsedSOutput=true;
-    ioPosParamAnalysis(type);
+    ioPosParamAnalysis(type,analy.type=='AC Analysis');
   }
 }
 
@@ -230,15 +229,36 @@ function ioSetPosDCAnalysis(name) {
       
  }
 
-function ioSetPosProbe(name) {
+function ioSetPosProbe(name,func) {
 
     var nodes=getNetRefs();
     var probe=parseSignal(name, nodes);
 
+    if(mtable.type=='analysis'){
+      var analy=JSON.parse(mtable.select.getAttribute("description"));
+      if(analy.type=='DC Sweep'){
+         var dc=analy.dcsweep;
+         var r=dc.yAxe.outputs;
+	       var x=dc.xAxe;
+       } else if(analy.type=='Time Domain') {
+         var tr=analy.time
+         var r=tr.yAxe.outputs;
+         var x=tr.xAxe;
+      } else if(analy.type=='AC Analysis') {
+         var ac=analy.ac;
+         var r=ac.yAxe.outputs;
+         var x=ac.xAxe;  
+       }
+
+    }
+
+   // if(func) name=func+'('+name+')';
+
     if(mtable.typeUsedYOutput)
     {
-      var analy=JSON.parse(mtable.select.getAttribute("description"));
-      analy.yAxe.outputs.push({name:name,unit:probe.unit,type:probe.type,color:'#000000',pos:1})
+      var output={name:name,unit:probe.unit,type:probe.type,color:'#000000',pos:1};
+      if(func &&  (analy.type=='AC Analysis')) output.func=func;
+      r.push(output);
       mtable.select.setAttribute("description", JSON.stringify(analy));
       mtable.typeUsedYOutput=null;
       analysisSelect();
@@ -248,11 +268,13 @@ function ioSetPosProbe(name) {
   
     if(mtable.typeUsedXOutput)
     {
-      var analy=JSON.parse(mtable.select.getAttribute("description"));
-      analy.xAxe.name=name;
-      analy.xAxe.unit=probe.unit;
-      analy.xAxe.type=probe.type;
-      analy.xAxe.used=true;
+       x.name=name;
+       x.unit=probe.unit;
+       x.type=probe.type;
+       x.used=true;
+
+      if(func &&  (analy.type=='AC Analysis')) x.func=func;
+
       mtable.select.setAttribute("description", JSON.stringify(analy));
       mtable.typeUsedXOutput=null;
       analysisSelect();
@@ -263,20 +285,20 @@ function ioSetPosProbe(name) {
     if(mtable.typeUsedSOutput)
     {
       var analy=JSON.parse(mtable.select.getAttribute("description"));
-      analy.secondsweep.param=pos;
-      analy.secondsweep.unit=unit_;
+      var output={name:name,unit:probe.unit,type:probe.type,color:'#000000',pos:1};
+      if(func &&  (analy.type=='AC Analysis')) output.func=func;
+      analy.secondsweep.outputs.push(output);
       mtable.select.setAttribute("description", JSON.stringify(analy));
       mtable.typeUsedSOutput=null;
       analysisSelect();
       mtable.parent.creat();
       return;
     }
-    console.log(mtable.typeUsedDC);
-     if(mtable.typeUsedDC)
+   
+    if(mtable.typeUsedDC)
      {
        var analy=JSON.parse(mtable.select.getAttribute("description"));
        analy.dcsweep.param=name;
-       console.log(name);
        analy.dcsweep.unit='V';
        mtable.select.setAttribute("description", JSON.stringify(analy));
        mtable.typeUsedDC=null;
@@ -352,15 +374,31 @@ function ioSetPosProbe(name) {
  
     if(analy.type === "DC Sweep"){
      var xNameAnalysis=analy.dcsweep.param
-   }
-   else {
+   } else if(analy.type === "AC Analysis"){
+     var xNameAnalysis='Frequency[Hz]'
+   } else {
      var xNameAnalysis='Time[sec]'
    }
+
+      var analy=JSON.parse(mtable.select.getAttribute("description"));
+      if(analy.type=='DC Sweep'){
+         var dc=analy.dcsweep;
+         var r=dc.yAxe.outputs;
+	       var xa=dc.xAxe;
+       } else if(analy.type=='Time Domain') {
+         var tr=analy.time
+         var r=tr.yAxe.outputs;
+         var xa=tr.xAxe;
+      } else if(analy.type=='AC Analysis') {
+         var ac=analy.ac;
+         var r=ac.yAxe.outputs;
+         var xa=ac.xAxe;  
+       }
 
 layout.xaxis.title.text=xNameAnalysis;
 
  
-var xAxe=analy.xAxe;
+var xAxe=xa;
 var setX=[];
 
 if(xAxe.used){
@@ -390,11 +428,15 @@ if(xAxe.used){
      x.push(list[i].data[j][0]);
      y.push(list[i].data[j][1]);
     }
-
-  
+   
+    if(spice.outputs[i].func)
+      var func=spice.outputs[i].func;
+    else
+      var func='';
+    
     data.push({
                   type: 'scatter',
-                  name: spice.outputs[i].name +' ['+spice.outputs[i].unit+']',
+                  name: spice.outputs[i].name +' '+func+'['+spice.outputs[i].unit+']',
                   line: {
                       color: spice.outputs[i].color
                   },

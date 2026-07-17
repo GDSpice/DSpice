@@ -61,8 +61,14 @@ function modifedSizeAnalysis(element) {
 
 
 
-function addAnalysis(elem,type){
-  var analy={type:'DC Sweep',title:'',dcsweep:{param:'Non',unit:'',start:'0',stop:'0',step:'0'},time:{start:'0s',stop:'0s',step:'0s'},yAxe:{outputs:[],logarithmic:false},xAxe:{name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false},secondsweep:{used:false,type:'List',param:'Non',unit:'',list:'',start:'0',stop:'0',step:'0'}};
+function addAnalysis(elem){
+  var analy={type:'DC Sweep',title:'',dcsweep:{param:'Non',unit:'',start:'0',stop:'0',step:'0'},time:{start:'0s',stop:'0s',step:'0s'},ac:{start: '1', stop: '1000', points: '100', sweep: 'decade' , type: 'de'}}
+  analy.dcsweep.yAxe={outputs:[],logarithmic:false};
+  analy.time.yAxe={outputs:[],logarithmic:false};
+  analy.ac.yAxe={outputs:[],logarithmic:false};
+  analy.dcsweep.xAxe={name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false};
+  analy.time.xAxe={name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false};
+  analy.ac.xAxe={name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false};
 	elem.setAttribute("description", JSON.stringify(analy));
 }
 

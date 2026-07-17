@@ -64,10 +64,10 @@ contextBridge.exposeInMainWorld('electron', {
     
     //In out signals/params-------------------------------------------------------------------
     listElemParams: (data,select) => ipcRenderer.invoke('list-elem-params', data,select),
-    listSignalsParams: (data,select) => ipcRenderer.invoke('list-signals-params', data,select),
+    listSignalsParams: (data,select,acUsed) => ipcRenderer.invoke('list-signals-params', data,select,acUsed),
     listModels: (data) => ipcRenderer.invoke('list-models', data),
-    onSetList: (callback) => ipcRenderer.on('set-list', (event, data,select) => callback(data,select)),
-    sendEditedList: (newSelect) => ipcRenderer.send('save-list-value', newSelect),
+    onSetList: (callback) => ipcRenderer.on('set-list', (event, data,select,acUsed) => callback(data,select,acUsed)),
+    sendEditedList: (newSelect, functionSelect) => ipcRenderer.send('save-list-value', newSelect, functionSelect),
     //Execut Script python-------------------------------------------------------------------
     executOP: (spiceCode) => ipcRenderer.invoke('show-exec-op', spiceCode),
     //Analysis-------------------------------------------------------------------------------

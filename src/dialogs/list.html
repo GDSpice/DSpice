@@ -209,11 +209,25 @@
 </head>
 <body>
   <div class="dialog-header">
-    <h2>Signal Selection</h2>
+    <h2>Signal selection</h2>
     <span class="selected-display" id="selected-display">No selection</span>
   </div>
 
-  <div id="tree-container"></div>
+
+
+<div id="tree-container"></div>
+<div id="function-selection">
+ <div class="dialog-header">
+ <h2>Function selection</h2>
+  <select  id="functionSelect" style="width: 50%; padding: 6px; font-size: 12px; border-radius: 3px; border: 1px solid #ccc;">
+    <option value="mag" selected>Linear magnitude</option>
+    <option value="db">Decibels</option>
+    <option value="ph">Phase</option>
+    <option value="re">Real</option>
+    <option value="im">Imaginary</option>
+  </select>
+  </div>
+</div>
 
   <div class="buttons-bar">
     <button class="btn" onclick="clearSelection()">Clear</button>
@@ -231,7 +245,8 @@
 
      
 document.addEventListener("DOMContentLoaded", () => {
-            window.electron.onSetList((data,preSelected) => {
+            window.electron.onSetList((data,preSelected,acUsed) => {
+                      document.getElementById('function-selection').style.display = acUsed ? 'block' : 'none';
                       treeData = data;
                       console.log("Received data for tree:", treeData);
       preSelectedValue = preSelected || null;
@@ -388,8 +403,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function submitSelection() {
-
-       window.electron.sendEditedList(selectedSignal);
+      const selectedFunction = document.getElementById('functionSelect').value; // Get the selected signal function
+       window.electron.sendEditedList({selectedSignal, selectedFunction});
     }
 
     function cancelDialog() {

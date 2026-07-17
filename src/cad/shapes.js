@@ -535,7 +535,7 @@ function fshapes(svg, setDrawing, width, height) {
             newElement.setAttribute("height", 145);
             newElement.setAttribute("class", "analysis");
             newElement.setAttribute("name", "analysis");
-			addAnalysis(newElement,'TR');
+			addAnalysis(newElement);
             addPlotAnalysis(newElement);
             svg.appendChild(newElement);
 			newPlots(newElement);

@@ -7,11 +7,11 @@ const handleExecSpice = require('./handleExecSpice');
 
 function handlersListSignalsParams(mainWindow) {
     ipcMain.handle('list-elem-params', async (event, data,select) => {
-        return await createListWindow(data,select,'listElem.html');
+        return await createListWindow(data,select,false,'listElem.html');
     });
 
-    ipcMain.handle('list-signals-params', async (event, data,select) => {
-        return await createListWindow(data,select,'list.html');
+    ipcMain.handle('list-signals-params', async (event, data,select,acUsed) => {
+        return await createListWindow(data,select,acUsed,'list.html');
     });
 
 
@@ -21,7 +21,7 @@ function handlersListSignalsParams(mainWindow) {
 
 let listWindow;
 
-async function createListWindow(data,select,fileHtml) {
+async function createListWindow(data,select,acUsed,fileHtml) {
     return new Promise((resolve) => {
         listWindow = new BrowserWindow({
             width: 400,
@@ -43,12 +43,12 @@ async function createListWindow(data,select,fileHtml) {
         var pathpage=path.join(__dirname,'dialogs',fileHtml)
         listWindow.loadFile(pathpage);
         listWindow.webContents.once('did-finish-load', () => {
-            listWindow.webContents.send('set-list', data, select);
+            listWindow.webContents.send('set-list', data, select, acUsed);
         });
 
-        ipcMain.once('save-list-value', (event, newSelect) => {
-            console.log(newSelect);
-            resolve(newSelect);
+        ipcMain.once('save-list-value', (event, select) => {
+            console.log(select);
+            resolve(select);
             if (listWindow) {
                 listWindow.close();
                 listWindow = null;
