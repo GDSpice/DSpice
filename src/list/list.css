@@ -23,21 +23,25 @@
       font-family: 'Consolas', monospace;
     }
 
+        #tree-container {
+      height: 40vh;
+      overflow-y: auto;
+    }
+
+
     /* Tree container */
     .tcontainer {
-            overflow-y: auto;
-            max-height: 100%;
-            display: flex;
+       
+           
             flex-direction: column;
-            height:40vh;
-            flex: 1;
+          
     }
 
      /* Scrollbar */
-    .tcontainer::-webkit-scrollbar { width: 6px; }
-    .tcontainer::-webkit-scrollbar-track { background: #f1f1f1; }
-    .tcontainer::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-    .tcontainer::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+    #tree-container::-webkit-scrollbar { width: 6px; }
+    #tree-container::-webkit-scrollbar-track { background: #f1f1f1; }
+    #tree-container::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+    #tree-container::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
     /* Section header (collapsible group) */
     .section-header {
       display: flex;

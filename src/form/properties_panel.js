@@ -177,6 +177,7 @@
     function buildPanel() {
         if(!propertiesData) return;
         const panel = document.getElementById('propertiesPanel1');
+        panel.className='panel1';
         panel.innerHTML = '';
 
         const header = document.createElement('div');
