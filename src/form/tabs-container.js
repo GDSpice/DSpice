@@ -204,12 +204,15 @@ function switchTab(id) {
             statusFile.textContent = activeFile.name;
            statusLang.textContent = getLang(activeFile.type);
 
-           drawing=creatPage("contentArea");
-           window_load();
+       
+
            document.querySelectorAll('.space-work').forEach(el => {
             if(el.style.display !== 'flex')
             el.style.display = 'flex';
           });
+
+           drawing=creatPage("contentArea");
+           window_load();
            
            if(activeFile.content){
             importAllDrawingData(activeFile.content, drawing);

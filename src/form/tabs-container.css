@@ -230,8 +230,10 @@
         .content-area {
             flex: 1;
             background: #1e1e1e00;
+            overflow-y: hidden;
            /* overflow: auto;*/
-           position: relative;
+            position: relative;
+           height: 100%;
         }
 
         .tab-content {
@@ -314,7 +316,7 @@
 /*================= Welcome Page=================== */
 .welcome-page {
   flex: 1;
-  overflow: scroll;
+  overflow-x: hidden;
   padding: 40px 80px;
   flex-direction: column;
   left: 0;

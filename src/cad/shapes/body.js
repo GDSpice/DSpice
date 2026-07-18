@@ -3,8 +3,8 @@
 # Name:        body.js
 # Author:      d.fathi
 # Created:     05/07/2021
-# Update:      05/08/2024
-# Copyright:   (c) PyAMS 2024
+# Update:      18/07/2026
+# Copyright:   (c) DSpice 2026
 # Licence:     free
 #---------------------------------------------------------------------------------------------------
  */
@@ -39,7 +39,10 @@ function createBody(self) {
   height: 800px;
   overflow-y: scroll;
   user-select: none;
+  scrollbar-width: thin; 
 }
+
+
 
 
 .setFont {

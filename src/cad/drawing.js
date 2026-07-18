@@ -540,7 +540,8 @@ function creatPage(div) {
     function resizeCanvas() {
     var w = document.getElementById(div).offsetWidth - 20;
     var h = document.getElementById(div).offsetHeight - 20;
-    d.setSize(w,h-10);
+
+    d.setSize(w,h);
     }
 
     d = new fdrawing(div);

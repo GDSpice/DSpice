@@ -309,9 +309,8 @@ function dataToInterface() {
       <div style="width: 70px; float: left; border:#eeeeee solid 0.5px;">y:${ioDic.y }</div>
       <div style="width: 150px; float: left; border:#eeeeee solid 0.5px;">${ioDic.undoPos }</div>
       <div style="width: 150px; float: left; border:#eeeeee solid 0.5px;">Zoom: ${ioDic.zoom }</div>
-      <div style="width: 450px; float: left; border:#eeeeee solid 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-      title="Python version: ${ioDic.spiceVersion}">Spice version: ${ioDic.spiceVersion}</div>
       `;
+      //<div style="width: 450px; float: left; border:#eeeeee solid 0.5px;">Spice version: ${ioDic.spiceVersion}</div>
      caption();
 
           
