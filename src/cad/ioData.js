@@ -4,7 +4,7 @@
 # Description: In and Out data
 # Author:      d.fathi
 # Created:     29/08/2021
-# Update:      24/06/2026
+# Update:      20/07/2026
 # Copyright:   (c) DSpice 2026
 # Licence:     free 
 #-------------------------------------------------------------------------------
@@ -238,15 +238,15 @@ function ioSetPosProbe(name,func) {
       var analy=JSON.parse(mtable.select.getAttribute("description"));
       if(analy.type=='DC Sweep'){
          var dc=analy.dcsweep;
-         var r=dc.yAxe.outputs;
+         var r=dc.yAxe;
 	       var x=dc.xAxe;
        } else if(analy.type=='Time Domain') {
          var tr=analy.time
-         var r=tr.yAxe.outputs;
+         var r=tr.yAxe;
          var x=tr.xAxe;
       } else if(analy.type=='AC Analysis') {
          var ac=analy.ac;
-         var r=ac.yAxe.outputs;
+         var r=ac.yAxe;
          var x=ac.xAxe;  
        }
 
@@ -364,36 +364,32 @@ function ioSetPosProbe(name,func) {
   
 	var elem=drawing.resize.setElement;
   var analy=JSON.parse(elem.getAttribute("description"));
-	var title=analy.title;
-  var secondsweep=analy.secondsweep;
-  var elem0= drawing.resize.setElement.lastChild.firstChild;
-  var layout = JSON.parse(elem0.getAttribute("layout"));
-  var nList=list.length-1;
+      if(analy.type=='DC Sweep'){
+         var dc=analy.dcsweep;
+         var r=dc.yAxe;
+	       var xa=dc.xAxe;
+         var layout=dc.layout;
+         var xNameAnalysis=analy.dcsweep.param
+       } else if(analy.type=='Time Domain') {
+         var tr=analy.time
+         var r=tr.yAxe;
+         var xa=tr.xAxe;
+         var layout=tr.layout;
+         var xNameAnalysis='Time[sec]'
+      } else if(analy.type=='AC Analysis') {
+         var ac=analy.ac;
+         var r=ac.yAxe;
+         var xa=ac.xAxe;  
+         var layout=ac.layout;
+         var xNameAnalysis='Frequency[Hz]'
+
+       }
 
 // X Axe descriptio---------------------------------------------------------------------------------
  
-    if(analy.type === "DC Sweep"){
-     var xNameAnalysis=analy.dcsweep.param
-   } else if(analy.type === "AC Analysis"){
-     var xNameAnalysis='Frequency[Hz]'
-   } else {
-     var xNameAnalysis='Time[sec]'
-   }
 
-      var analy=JSON.parse(mtable.select.getAttribute("description"));
-      if(analy.type=='DC Sweep'){
-         var dc=analy.dcsweep;
-         var r=dc.yAxe.outputs;
-	       var xa=dc.xAxe;
-       } else if(analy.type=='Time Domain') {
-         var tr=analy.time
-         var r=tr.yAxe.outputs;
-         var xa=tr.xAxe;
-      } else if(analy.type=='AC Analysis') {
-         var ac=analy.ac;
-         var r=ac.yAxe.outputs;
-         var xa=ac.xAxe;  
-       }
+
+
 
 layout.xaxis.title.text=xNameAnalysis;
 
@@ -433,6 +429,11 @@ if(xAxe.used){
       var func=spice.outputs[i].func;
     else
       var func='';
+
+    if(spice.outputs[i].pos==1)
+      var pos='';
+    else
+      var pos=spice.outputs[i].pos;
     
     data.push({
                   type: 'scatter',
@@ -442,8 +443,8 @@ if(xAxe.used){
                   },
                   y: y,
                   x: x,
-                  xaxis: 'x',
-                  yaxis: 'y'
+                  xaxis: 'x'+pos,
+                  yaxis: 'y'+pos
               });
   }
 
@@ -482,6 +483,54 @@ var elem=drawing.resize.setElement.lastChild.firstChild;
 //elem.innerHTML = "<div name='plots' style='border-style: double;zoom:60%'  ondblclick='showPlotInModel(this)'></div>";
 Plotly.newPlot(elem, data, layout, plotConfig);
 Plotly.update(elem);
+}
+
+//-------Modified layout------------------------------------------------------
+async function modifiedLayout(){
+
+      var analy=JSON.parse(mtable.select.getAttribute("description"));
+      if(analy.type=='DC Sweep'){
+         var dc=analy.dcsweep;
+         var r=dc.yAxe;
+	       var x=dc.xAxe;
+         var layout=dc.layout;
+       } else if(analy.type=='Time Domain') {
+         var tr=analy.time
+         var r=tr.yAxe;
+         var x=tr.xAxe;
+         var layout=tr.layout;
+      } else if(analy.type=='AC Analysis') {
+         var ac=analy.ac;
+         var r=ac.yAxe;
+         var x=ac.xAxe;  
+         var layout=ac.layout;
+
+       }
+
+       const data = {layout:layout,outputs:r};
+       const result = await window.electron.layoutDialog(data);
+       console.log(result);
+
+       for(var i=0; i<r.length; i++){
+        r[i].pos=result.outputs[i].pos;
+       }
+
+        if(analy.type=='DC Sweep'){
+         var dc=analy.dcsweep;
+         dc.yAxe=r;
+         dc.layout=result.layout;
+       } else if(analy.type=='Time Domain') {
+         var tr=analy.time
+         tr.yAxe=r;
+         tr.layout=result.layout;
+      } else if(analy.type=='AC Analysis') {
+         var ac=analy.ac;
+         ac.yAxe=r;
+         ac.layout=result.layout;
+       }
+
+       mtable.select.setAttribute("description", JSON.stringify(analy));
+
 }
 
 //---------------------------------get Spice  version-------------------------//

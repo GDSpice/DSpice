@@ -10,6 +10,7 @@ const handleExecSpice = require('./handleExecSpice');
 const handleGestionSymbols = require('./handleGestionSymbols');
 const handleLibraryManager = require('./handleLibraryManager');
 const handleListModels = require('./handleListModels');
+const {handlersLayout}= require('./handleLayout');
 
 const path = require('path');
 const fs = require('fs');
@@ -63,6 +64,7 @@ mainWindow.on('focus', () => {
   startEditor(mainWindow);
   setupHandlersParam(mainWindow);
   handlersListSignalsParams(mainWindow);
+  handlersLayout(mainWindow);
 });
 
 app.on('window-all-closed', () => {

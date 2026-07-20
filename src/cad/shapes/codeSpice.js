@@ -424,21 +424,21 @@ function getNewStruct(name,nodes,index,netListData,color)
 
     if(analy.type=='DC Sweep'){
       var dc=analy.dcsweep;
-      var r=dc.yAxe.outputs;
+      var r=dc.yAxe;
 	    var x=dc.xAxe;
       var cmd=`.dc   ${dc.param}  ${dc.start} ${dc.stop} ${dc.step}`;
 
     } else if(analy.type=='Time Domain') {
         var tr=analy.time
-        var r=tr.yAxe.outputs;
+        var r=tr.yAxe;
         var x=tr.xAxe;
         var cmd=`.tran   ${tr.step}  ${tr.stop}  ${tr.start}  uic\n`;
 
     } else if(analy.type=='AC Analysis') {
         var ac=analy.ac;
-        var r=ac.yAxe.outputs;
+        var r=ac.yAxe;
         var x=ac.xAxe; 
-        var cmd=`.ac   ${ac.type} ${ac.points} ${ac.start}  ${ac.stop}`; 
+        var cmd=`.ac  ${ac.sweep.slice(0, 3)} ${ac.points} ${ac.start}  ${ac.stop}`; 
     }
 
     

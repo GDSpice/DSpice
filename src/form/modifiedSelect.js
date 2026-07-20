@@ -945,17 +945,17 @@ function colorOutput(n,e){
 
     if(analy.type=='DC Sweep'){
       var dc=analy.dcsweep;
-      var r=dc.yAxe.outputs;
+      var r=dc.yAxe;
 	  var x=dc.xAxe;
 
     } else if(analy.type=='Time Domain') {
         var tr=analy.time
-        var r=tr.yAxe.outputs;
+        var r=tr.yAxe;
         var x=tr.xAxe;
 
     } else if(analy.type=='AC Analysis') {
         var ac=analy.ac;
-        var r=ac.yAxe.outputs;
+        var r=ac.yAxe;
         var x=ac.xAxe;  
     }
 
@@ -973,17 +973,17 @@ function removeOutput(n){
 	var analy=JSON.parse(mtable.select.getAttribute("description"));
     if(analy.type=='DC Sweep'){
       var dc=analy.dcsweep;
-      var r=dc.yAxe.outputs;
+      var r=dc.yAxe;
 	  var x=dc.xAxe;
 
     } else if(analy.type=='Time Domain') {
         var tr=analy.time
-        var r=tr.yAxe.outputs;
+        var r=tr.yAxe;
         var x=tr.xAxe;
 
     } else if(analy.type=='AC Analysis') {
         var ac=analy.ac;
-        var r=ac.yAxe.outputs;
+        var r=ac.yAxe;
         var x=ac.xAxe;  
     }
 
@@ -1028,7 +1028,7 @@ function analysisSelect() {
       defaultData.sections[1].rows.push( { label: 'Step', type: "text", value: dc.step });
       defaultData.sections[1].rows.push( { label: 'Stop', type: "text", value: dc.stop });
 
-      var r=dc.yAxe.outputs;
+      var r=dc.yAxe;
 	  var x=dc.xAxe;
 
     } else if(analy.type=='Time Domain') {
@@ -1038,7 +1038,7 @@ function analysisSelect() {
         defaultData.sections[1].rows.push( { label: 'Step', type: "text", value: tr.step });
         defaultData.sections[1].rows.push( { label: 'Stop', type: "text", value: tr.stop });
 
-        var r=tr.yAxe.outputs;
+        var r=tr.yAxe;
         var x=tr.xAxe;
 
     } else if(analy.type=='AC Analysis') {
@@ -1049,17 +1049,21 @@ function analysisSelect() {
         defaultData.sections[1].rows.push( { label: 'Points', type: "text", value: ac.points });
         defaultData.sections[1].rows.push( { label: 'Sweep', type: "dropdown", value: ac.sweep, options: ['linear', 'decade', 'octave'] });
 
-        var r=ac.yAxe.outputs;
+        var r=ac.yAxe;
         var x=ac.xAxe;
 
     }
 
 
+   if(ac.sweep=='linear') var  d='lin'
+if(ac.sweep=='decade') var  d='dec'
+if(ac.sweep=='octave') var  d='oct'
+
    
 
 	
     // Y axe property-----------------------------------------------------------------------------------
-    defaultData.sections.push({ title: "Y axe property", collapsed: false, showReset: true, rows: [] });
+    defaultData.sections.push({ title: "Y axe outputs", collapsed: false, showReset: true, rows: [] });
     for(var i=0;i<r.length;i++){
         if(r[i].func)
             var func='  :' +r[i].func;
@@ -1070,7 +1074,7 @@ function analysisSelect() {
     defaultData.sections[2].rows.push({ label: 'Add output', type: "Button", value: 'Add', setClick: 'getParamAnalysis(0,0)' });
     
     // X axe prpperty-----------------------------------------------------------------------------------
-    defaultData.sections.push({ title: "X axe property", collapsed: false, showReset: true, rows: [] });
+    defaultData.sections.push({ title: "X axe output", collapsed: false, showReset: true, rows: [] });
      if(x.func)
             var func='  :' +x.func;
      else
@@ -1078,9 +1082,13 @@ function analysisSelect() {
     if(x.used)defaultData.sections[3].rows.push({ label: x.name+ func, type: "axeproperty", value: x.color, color: x.color, setChange: 'colorOutput(-1,this)' , setClick: 'removeOutput(-1)' });
     defaultData.sections[3].rows.push({ label: 'Add X axe', type: "Button", value: x.used?'Modify':'Add', setClick: 'getParamAnalysis(1,0)' });
 
-    
-    var elem= mtable.select.lastChild.firstChild;
-    var layout = JSON.parse(elem.getAttribute("layout"));
+    // Layout property-----------------------------------------------------------------------------------
+    defaultData.sections.push({ title: "Layout property", collapsed: false, showReset: true, rows: [] });
+    defaultData.sections[4].rows.push({ label: 'Layout', type: "Button", value: 'Modify', setClick: 'modifiedLayout()' });
+
+   // var elem= mtable.select.lastChild.firstChild;
+ //   var layout = JSON.parse(elem.getAttribute("layout"));
+
     //alert(layout.yaxis.showgrid);
 /*
     defaultData.sections.push({ title: "Layout", collapsed: true, showReset: true, rows: [] });
@@ -1150,17 +1158,17 @@ function modifiedAnalysis() {
 
     if(analy.type=='DC Sweep'){
       var dc=analy.dcsweep;
-      var r=dc.yAxe.outputs;
+      var r=dc.yAxe;
 	  var x=dc.xAxe;
 
     } else if(analy.type=='Time Domain') {
         var tr=analy.time
-        var r=tr.yAxe.outputs;
+        var r=tr.yAxe;
         var x=tr.xAxe;
 
     } else if(analy.type=='AC Analysis') {
         var ac=analy.ac;
-        var r=ac.yAxe.outputs;
+        var r=ac.yAxe;
         var x=ac.xAxe;  
     }
 

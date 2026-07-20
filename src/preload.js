@@ -77,8 +77,13 @@ contextBridge.exposeInMainWorld('electron', {
     onProgressUpdate: (callback) => ipcRenderer.on("progress-update", (event, data) => callback(data)),
     onRandomData: (callback) => ipcRenderer.on("random-data", (event, data) => callback(data)),
     sendSpiceData: () => ipcRenderer.send('send-spice-data'),
+    //Layout of Analysis---------------------------------------------------------------------
+    layoutDialog: (data,select) => ipcRenderer.invoke('layout-dialog', data,select),
+    onSetLayout: (callback) => ipcRenderer.on('set-data-layout', (event, data) => callback(data)),
+    sendEditedLayout: (data) => ipcRenderer.send('get-data-layout', data),
     //Help------------------------------------------------------------------------------------
     openBrowserWindow:(event, data)=> ipcRenderer.send('open-browser-window',event,  data),
+
 });
 
 

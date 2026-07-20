@@ -59,16 +59,52 @@ function modifedSizeAnalysis(element) {
     }
 }
 
+function setLayout_() {
+  return   {
+    title: { text: 'Chart Title' },
+    font: { color: '#333333', size: 14, family: 'Arial' },
+    paper_bgcolor: '#ffffff',
+    plot_bgcolor: '#f8f8f8',
+    bordercolor: '#cccccc',
+    yaxis: { 
+      type: 'linear', 
+      title: { text: 'Y Axis' }, 
+      gridcolor: '#e0e0e0', 
+      showgrid: true 
+    },
+    xaxis: { 
+      type: 'linear', 
+      title: { text: 'X Axis' }, 
+      gridcolor: '#e0e0e0', 
+      showgrid: true 
+    },
+    showlegend: true,
+    grid: { rows: 1, columns: 1 }
+  }
+}
 
 
 function addAnalysis(elem){
   var analy={type:'DC Sweep',title:'',dcsweep:{param:'Non',unit:'',start:'0',stop:'0',step:'0'},time:{start:'0s',stop:'0s',step:'0s'},ac:{start: '1', stop: '1000', points: '100', sweep: 'decade' , type: 'de'}}
-  analy.dcsweep.yAxe={outputs:[],logarithmic:false};
-  analy.time.yAxe={outputs:[],logarithmic:false};
-  analy.ac.yAxe={outputs:[],logarithmic:false};
-  analy.dcsweep.xAxe={name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false};
-  analy.time.xAxe={name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false};
-  analy.ac.xAxe={name:'None',unit:'',type:'',color:"#000000",logarithmic:false, used:false};
+ 
+  analy.dcsweep.yAxe=[];
+  analy.time.yAxe=[];
+  analy.ac.yAxe=[];
+
+  analy.dcsweep.xAxe={name:'None',unit:'',type:'',color:"#000000", used:false};
+  analy.time.xAxe={name:'None',unit:'',type:'',color:"#000000", used:false};
+  analy.ac.xAxe={name:'None',unit:'',type:'',color:"#000000", used:false};
+
+  analy.dcsweep.layout=setLayout_();
+  analy.time.layout=setLayout_();
+  analy.ac.layout=setLayout_();
+  
+
+
+  analy.dcsweep.modified=false;
+  analy.time.modified=false;
+  analy.ac.modified=false;
+
 	elem.setAttribute("description", JSON.stringify(analy));
 }
 
