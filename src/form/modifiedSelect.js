@@ -1055,9 +1055,6 @@ function analysisSelect() {
     }
 
 
-   if(ac.sweep=='linear') var  d='lin'
-if(ac.sweep=='decade') var  d='dec'
-if(ac.sweep=='octave') var  d='oct'
 
    
 
@@ -1085,38 +1082,6 @@ if(ac.sweep=='octave') var  d='oct'
     // Layout property-----------------------------------------------------------------------------------
     defaultData.sections.push({ title: "Layout property", collapsed: false, showReset: true, rows: [] });
     defaultData.sections[4].rows.push({ label: 'Layout', type: "Button", value: 'Modify', setClick: 'modifiedLayout()' });
-
-   // var elem= mtable.select.lastChild.firstChild;
- //   var layout = JSON.parse(elem.getAttribute("layout"));
-
-    //alert(layout.yaxis.showgrid);
-/*
-    defaultData.sections.push({ title: "Layout", collapsed: true, showReset: true, rows: [] });
-    defaultData.sections[4].rows.push( { label: 'Title', type: "text", value: layout.title.text });
-    defaultData.sections[4].rows.push( { label: 'Font.color', type: "color", value: layout.font.color, color: layout.font.color });
-    defaultData.sections[4].rows.push( { label: 'Font.size', type: "number", value: layout.font.size });
-    defaultData.sections[4].rows.push( { label: 'Font.family', type: "dropdown", value: layout.font.family, options: fontAvailable });
-    defaultData.sections[4].rows.push( { label: 'Background (Tab)', type: "color", value: layout.paper_bgcolor, color: layout.paper_bgcolor });
-    defaultData.sections[4].rows.push( { label: 'Background (Plot)', type: "color", value: layout.plot_bgcolor, color: layout.plot_bgcolor });
-    defaultData.sections[4].rows.push( { label: 'Bordercolor', type: "color", value: layout.bordercolor, color: layout.bordercolor });
-    defaultData.sections[4].rows.push( { label: 'Axis.grid.color', type: "color", value: layout.yaxis.gridcolor, color: layout.yaxis.gridcolor });
-    defaultData.sections[4].rows.push( { label: 'Axis.grid.show', type: "dropdown", value: layout.yaxis.showgrid+"", options: ['false', 'true'] });
-    defaultData.sections[4].rows.push( { label: 'Legend.show', type: "dropdown", value: layout.showlegend+"", options: ['false', 'true']});
-
-    defaultData.sections.push({ title: "Grid rows", collapsed: true, showReset: true, rows: [] });
-
-    defaultData.sections[5].rows.push( { label: 'Rows' , type: "dropdown", value:  layout.grid.rows+"", options: ['1', '2', '3', '4', '5', '6']});
-    defaultData.sections[5].rows.push( { label: 'Cols' , type: "dropdown", value:  layout.grid.cols+"", options: ['1', '2', '3', '4', '5', '6']});
-
-    var pos=['1'];
-    for(var i=2; i<=layout.grid.rows*layout.grid.cols; i++){
-        pos.push(i+'');
-    }
-
-    for(var i=0;i<r.length;i++){
-        defaultData.sections[5].rows.push( { label: 'Pos ['+r[i].name+']' , type: "dropdown", value: r[i].pos, options:pos});
-    }
-  */
 
 
     mtable.type = "analysis";
@@ -1177,51 +1142,8 @@ function modifiedAnalysis() {
          r[i].color=propertiesData.sections[2].rows[i].color;
     }
 
-/*
-        var elem= mtable.select.lastChild.firstChild;
-        var data = JSON.parse(elem.getAttribute("data"));
-        var layout = JSON.parse(elem.getAttribute("layout"));
-        layout.title.text=propertiesData.sections[4].rows[0].value;
-        layout.font.color=propertiesData.sections[4].rows[1].value;
-        layout.font.size=propertiesData.sections[4].rows[2].value;
-        layout.font.family=propertiesData.sections[4].rows[3].value;
-        layout.paper_bgcolor=propertiesData.sections[4].rows[4].value;
-        layout.plot_bgcolor=propertiesData.sections[4].rows[5].value;
-        layout.bordercolor=propertiesData.sections[4].rows[6].value;
-        layout.yaxis.gridcolor=propertiesData.sections[4].rows[7].value;
-        layout.xaxis.gridcolor=propertiesData.sections[4].rows[7].value;
-        layout.yaxis.showgrid=propertiesData.sections[4].rows[8].value=='true';
-        layout.xaxis.showgrid=propertiesData.sections[4].rows[8].value=='true';
-        layout.showlegend=propertiesData.sections[4].rows[9].value=='true';
 
-       var p=propertiesData.sections[5];
-       if((layout.grid.rows!=p.rows[0].value)||(layout.grid.columns!=p.rows[1].value)){
-         layout.grid.rows=p.rows[0].value*1;
-         layout.grid.columns=p.rows[1].value*1;
-
-         elem.setAttribute("layout", JSON.stringify(layout));
-         elem.setAttribute("data", JSON.stringify(data));
-         Plotly.newPlot(elem, data, layout, plotConfig);
-          mtable.select.setAttribute("description", JSON.stringify(analy));
-          analysisSelect();
-       }
-
-
-
-        var r=analy.yAxe.outputs;
-     
-        for(var i=0; i<r.length; i++){
-            r[i].pos=propertiesData.sections[5].rows[i+2].value;
-        }
-
-        for(var i=2; i<=layout.grid.rows*layout.grid.cols; i++){
-            layout['yaxis'+i]={gridcolor:layout.yaxis.gridcolor,showgrid:layout.yaxis.showgrid};
-            layout['xaxis'+i]={gridcolor:layout.xaxis.gridcolor,showgrid:layout.xaxis.showgrid,title:{'text':''}};
-        }
-*/
-   //     elem.setAttribute("layout", JSON.stringify(layout));
-   //     elem.setAttribute("data", JSON.stringify(data));
-   //     Plotly.newPlot(elem, data, layout, plotConfig);
+    
         mtable.select.setAttribute("description", JSON.stringify(analy));
     
 }

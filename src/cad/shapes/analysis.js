@@ -4,15 +4,13 @@
 # Description: Analysis circuit
 # Author:      d.fathi
 # Created:     29/04/2021
-# Update:      17/08/2024
-# Copyright:   (c) DSpice 2024
+# Update:      21/07/2026
+# Copyright:   (c) DSpice 2026
 # Licence:     free 
 #-------------------------------------------------------------------------------
 */
 //https://www.multisim.com/help/simulation/grapher/dc-sweep/
 //https://knowledge.ni.com/KnowledgeArticleDetails?id=kA03q000000YH7vCAG&l=en-US
-
-xNameAnalysis='';
 
 
 //--------------------------------------------Creat Analysis----------------------------------------------------//
@@ -61,25 +59,29 @@ function modifedSizeAnalysis(element) {
 
 function setLayout_() {
   return   {
-    title: { text: 'Chart Title' },
-    font: { color: '#333333', size: 14, family: 'Arial' },
+   /* title: {text:''},*/
+    margin: {
+          l: 35,
+          r: 25,
+          b: 80,
+          t: 35
+      },
+    font: { color: '#333333', size: 11, family: 'Arial' },
     paper_bgcolor: '#ffffff',
     plot_bgcolor: '#f8f8f8',
     bordercolor: '#cccccc',
     yaxis: { 
       type: 'linear', 
-      title: { text: 'Y Axis' }, 
       gridcolor: '#e0e0e0', 
       showgrid: true 
     },
     xaxis: { 
       type: 'linear', 
-      title: { text: 'X Axis' }, 
       gridcolor: '#e0e0e0', 
       showgrid: true 
     },
-    showlegend: true,
-    grid: { rows: 1, columns: 1 }
+    showlegend: true, 
+    grid: { rows: 1, columns: 1,    pattern: 'independent',  roworder: 'bottom to top'}
   }
 }
 

@@ -391,7 +391,7 @@ function ioSetPosProbe(name,func) {
 
 
 
-layout.xaxis.title.text=xNameAnalysis;
+layout.xaxis.title=xNameAnalysis;
 
  
 var xAxe=xa;
@@ -400,6 +400,7 @@ var setX=[];
 if(xAxe.used){
   var xpos=list.length-1;
   layout.xaxis.title.text=spice.outputs[xpos].name +' ['+spice.outputs[xpos].unit+']';
+   //layout.xaxis.automargin: true
      for(var j=0; j< list[xpos].data.length; j++){
      setX.push(list[xpos].data[j][1]);
     }
@@ -448,34 +449,10 @@ if(xAxe.used){
               });
   }
 
-
-  /*
-    var xaxis= 'x'+spice.outputs[i].pos;
-    var yaxis= 'y'+spice.outputs[i].pos;
-    if(xaxis=='x1') xaxis='x';
-    if(yaxis=='y1') yaxis='y';
-    var setXpos='xaxis'+spice.outputs[i].pos;
-
-    console.log(setXpos);
-
-    if(setXpos!='xaxis1')
-      layout[setXpos].title.text=xNameAnalysis;
-*/
-
- /*console.log(row+','+col);
- console.log(temp)
-  
- layout.grid = {
-    rows: row,
-    columns: col,
-    pattern: 'independent',
-    roworder: 'bottom to top'
-  };
-
-for(var i=2; i<=temp.length;i++){
-
-}*/
-
+  var n= layout.grid.rows*layout.grid.columns;
+  for(var i=2; i<=n; i++)
+    layout['xaxis'+i].title=layout.xaxis.title;
+    
 
 
   
@@ -483,6 +460,7 @@ var elem=drawing.resize.setElement.lastChild.firstChild;
 //elem.innerHTML = "<div name='plots' style='border-style: double;zoom:60%'  ondblclick='showPlotInModel(this)'></div>";
 Plotly.newPlot(elem, data, layout, plotConfig);
 Plotly.update(elem);
+ modifedSizeAnalysis(drawing.resize.setElement);
 }
 
 //-------Modified layout------------------------------------------------------

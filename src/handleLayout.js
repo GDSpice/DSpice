@@ -25,7 +25,7 @@ async function createListWindow(data) {
             resizable: true,
             minimizable: false,
             maximizable: false,
-            autoHideMenuBar: true,
+            autoHideMenuBar: false,
             icon: path.join(__dirname, 'build', 'logo.ico'), 
             webPreferences: {
                 preload: path.join(__dirname, 'preload.js'),

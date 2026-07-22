@@ -534,10 +534,6 @@
       updatePreview();
     });
   });
-
-  function updatePreview(){
-
-  }
     // ============================================
     // ENSURE DEFAULTS (add missing properties)
     // ============================================
@@ -574,13 +570,13 @@
         const xKey = 'xaxis' + i;
         if (!layoutData[yKey]) layoutData[yKey] = {};
         if (layoutData[yKey].type === undefined) layoutData[yKey].type = 'linear';
-                
+                if (layoutData[yKey].title.text === undefined) layoutData[yKey].title.text = 'Y Axis ' + i;
         if (layoutData[yKey].gridcolor === undefined) layoutData[yKey].gridcolor = '#e0e0e0';
         if (layoutData[yKey].showgrid === undefined) layoutData[yKey].showgrid = true;
 
         if (!layoutData[xKey]) layoutData[xKey] = {};
         if (layoutData[xKey].type === undefined) layoutData[xKey].type = 'linear';
-                
+                if (layoutData[xKey].title.text === undefined) layoutData[xKey].title.text = 'X Axis ' + i;
         if (layoutData[xKey].gridcolor === undefined) layoutData[xKey].gridcolor = '#e0e0e0';
         if (layoutData[xKey].showgrid === undefined) layoutData[xKey].showgrid = true;
       }
@@ -653,13 +649,13 @@
         const xKey = 'xaxis' + i;
         if (!layoutData[yKey]) layoutData[yKey] = {};
         if (layoutData[yKey].type === undefined) layoutData[yKey].type = 'linear';
-                
+                if (layoutData[yKey].title.text === undefined) layoutData[yKey].title.text = 'Y Axis ' + i;
         if (layoutData[yKey].gridcolor === undefined) layoutData[yKey].gridcolor = '#e0e0e0';
         if (layoutData[yKey].showgrid === undefined) layoutData[yKey].showgrid = true;
 
         if (!layoutData[xKey]) layoutData[xKey] = {};
         if (layoutData[xKey].type === undefined) layoutData[xKey].type = 'linear';
-                
+                if (layoutData[xKey].title.text === undefined) layoutData[xKey].title.text = 'X Axis ' + i;
         if (layoutData[xKey].gridcolor === undefined) layoutData[xKey].gridcolor = '#e0e0e0';
         if (layoutData[xKey].showgrid === undefined) layoutData[xKey].showgrid = true;
       }
@@ -856,12 +852,6 @@
       const total = rows * cols;
 
       const layout = {
-            margin: {
-          l: 35,
-          r: 25,
-          b: 80,
-          t: 35
-      },
         font: {
           color: getColor('layout-font-color'),
           size: getInt('layout-font-size', 1),
@@ -881,7 +871,7 @@
           showgrid: getBool('layout-xaxis-showgrid')
         },
         showlegend: getBool('layout-showlegend'),
-        grid: { rows: rows, columns: cols, pattern: 'independent',  roworder: 'bottom to top' }
+        grid: { rows: rows, columns: cols }
       };
 
       // Add dynamic axes
