@@ -601,24 +601,6 @@ function fshapes(svg, setDrawing, width, height) {
             newElement.setAttribute("class", "polyline");
             newElement.setAttribute("name", element);
             svg.appendChild(newElement);
-/*
-             const lines = document.querySelectorAll('.polyline');
-
-           lines.forEach(line => {
-            // عند دخول الفأرة
-            line.addEventListener('mouseenter', function() {
-                this.style.stroke = '#e94560';        // تغيير للون الأحمر
-                this.style.filter = 'drop-shadow(0 0 8px rgba(233, 69, 96, 0.6))';
-            });
-
-            // عند خروج الفأرة
-            line.addEventListener('mouseleave', function() {
-                // العودة للون الأصلي (من data attribute أو القيمة الافتراضية)
-                const originalColor = this.getAttribute('data-color') || '#0f3460';
-                this.style.stroke = originalColor;
-                this.style.filter = 'none';
-            });
-        });*/
             break;
 
         case 'polygon':

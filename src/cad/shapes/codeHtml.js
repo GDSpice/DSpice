@@ -5,7 +5,7 @@ function addCodeHtml(elem) {
     newElement.setAttribute("y", 0);
     newElement.setAttribute("width", 222);
     newElement.setAttribute("height", 200);
-	  newElement.innerHTML ='<div  name="htmlCode" style="margin: 0; padding: 10; font-size: 8px; background-color: #444;    margin-top:0px; color: #ffffff;  font-family: Arial;" code="<h1>Hellow word</h1>\n <p>Here write the text in HTML</p>"> <h1>Hellow word</h1>\n <p> Here write the text in HTML</p> </div>';
+	  newElement.innerHTML ='<div  name="htmlCode"  style="zoom:60%;" code="<h1>Hellow word</h1>\n <p>Here write the text in HTML</p>"> <h1>Hellow word</h1>\n <p> Here write the text in HTML</p> </div>';
     newElement.firstChild.style.height =200+'px';
     newElement.firstChild.style.width =222+'px';
     elem.appendChild(newElement);
@@ -13,11 +13,12 @@ function addCodeHtml(elem) {
 
 
 function modifedSizeCodeHtml(element) {
+  var a=100/60;
     if (element.getAttribute("name") == "codeHTML") {
         var x = parseInt(element.getAttribute("x"));
         var y = parseInt(element.getAttribute("y"));
-        var w = parseInt(element.getAttribute("width"));
-        var h = parseInt(element.getAttribute("height"));
+        var w = parseInt(element.getAttribute("width"))*a;
+        var h = parseInt(element.getAttribute("height"))*a;
 
         element.setAttribute('transform', "translate(" + x + "," + y + ")");
         
@@ -49,10 +50,6 @@ function setHtmlCode(text){
 
 async function openEditHtml() {
   const originalText = mtable.select.firstChild.firstChild.getAttribute("code");
-  if(!drawing.electronjs){
-    window.foo.getHtmlCode(originalText);
-    return;
-  }
   const editedText = await window.electron.editTextHtml(originalText,'HTML Code Editor');
   setHtmlCode(editedText);
 }

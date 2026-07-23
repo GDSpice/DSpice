@@ -703,10 +703,6 @@ function codeHTMLSelect() {
                     { label: "Pos.y", type: "number", value: parseInt(mtable.select.getAttribute("y")) },
                     { label: "Width  (px)", type: "number", value: parseInt(mtable.select.getAttribute("width")) },
                     { label: "Height (px)", type: "number", value: parseInt(mtable.select.getAttribute("height")) },
-                    { label: "Font.size", type: "number", value: parseInt(f.fontSize) },
-                    { label: "Font.family", type: "dropdown", value: f.fontFamily, options: fontAvailable },
-                    { label: "Font.color", type: "color", value: rgb2hex(f.color), color: rgb2hex(f.color) },
-                    { label: "Background", type: "color", value: rgb2hex(f.backgroundColor), color: rgb2hex(f.backgroundColor) },
                     { label: "HTML code", type: "Button", value: 'Show', setClick: 'openEditHtml()' }         
                 ]
             }
@@ -725,11 +721,6 @@ function modifiedcodeHTML() {
     mtable.select.setAttribute("y", propertiesData.sections[0].rows[1].value);
     mtable.select.setAttribute("width", propertiesData.sections[0].rows[2].value);
     mtable.select.setAttribute("height", propertiesData.sections[0].rows[3].value);
-    var f=mtable.select.firstChild.firstChild.style;
-    f.fontSize = propertiesData.sections[0].rows[4].value + "px";
-    f.fontFamily = propertiesData.sections[0].rows[5].value;
-    f.color = propertiesData.sections[0].rows[6].color;
-    f.backgroundColor = propertiesData.sections[0].rows[7].color;
     modifedSizeCodeHtml(mtable.select);
     deleteEllipseMS(mtable.resize);
     if (mtable.resize.setElement)        mtable.resize.creatEllipse();
