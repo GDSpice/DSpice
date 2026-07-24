@@ -5,7 +5,12 @@ function addCodeHtml(elem) {
     newElement.setAttribute("y", 0);
     newElement.setAttribute("width", 222);
     newElement.setAttribute("height", 200);
-	  newElement.innerHTML ='<div  name="htmlCode"  style="zoom:60%;" code="<h1>Hellow word</h1>\n <p>Here write the text in HTML</p>"> <h1>Hellow word</h1>\n <p> Here write the text in HTML</p> </div>';
+	  newElement.innerHTML =`<div  name="htmlCode"  style="zoom:60%;" 
+    code="<div class='ch'><h1>Hellow word</h1>\n <p>Here write the text in HTML</p></div>">
+    <div class="ch"> 
+       <h1>Hellow word</h1> 
+       <p> Here write the text in HTML</p> 
+    `;
     newElement.firstChild.style.height =200+'px';
     newElement.firstChild.style.width =222+'px';
     elem.appendChild(newElement);
@@ -18,7 +23,7 @@ function modifedSizeCodeHtml(element) {
         var x = parseInt(element.getAttribute("x"));
         var y = parseInt(element.getAttribute("y"));
         var w = parseInt(element.getAttribute("width"))*a;
-        var h = parseInt(element.getAttribute("height"))*a;
+        var h = parseInt(element.getAttribute("height"));
 
         element.setAttribute('transform', "translate(" + x + "," + y + ")");
         

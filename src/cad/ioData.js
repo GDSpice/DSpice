@@ -4,7 +4,7 @@
 # Description: In and Out data
 # Author:      d.fathi
 # Created:     29/08/2021
-# Update:      20/07/2026
+# Update:      24/07/2026
 # Copyright:   (c) DSpice 2026
 # Licence:     free 
 #-------------------------------------------------------------------------------
@@ -77,10 +77,10 @@ async function ioPosProbe() {
     //get new pos of probe
     try {
         const result = getElementListSpice();
-        const result_ = await window.electron.listSignalsParams(result,str[0]);
-
+        const result_ = await window.electron.listSignalsParams(result,str[0],false);
+       
         if(result_){
-            mtable.select.childNodes[2].textContent=result_;
+            mtable.select.childNodes[2].textContent=result_.selectedSignal;
             findPosProb();
         }
         
@@ -399,8 +399,7 @@ var setX=[];
 
 if(xAxe.used){
   var xpos=list.length-1;
-  layout.xaxis.title.text=spice.outputs[xpos].name +' ['+spice.outputs[xpos].unit+']';
-   //layout.xaxis.automargin: true
+  layout.xaxis.title=spice.outputs[xpos].name +' ['+spice.outputs[xpos].unit+']';
      for(var j=0; j< list[xpos].data.length; j++){
      setX.push(list[xpos].data[j][1]);
     }

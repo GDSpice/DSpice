@@ -18,14 +18,14 @@ let listWindow;
 async function createListWindow(data) {
     return new Promise((resolve) => {
         listWindow = new BrowserWindow({
-            width: 780,
+            width: 580,
             height: 850,
             parent: BrowserWindow.getFocusedWindow(),
             modal: true,
             resizable: true,
             minimizable: false,
             maximizable: false,
-            autoHideMenuBar: false,
+            autoHideMenuBar: true,
             icon: path.join(__dirname, 'build', 'logo.ico'), 
             webPreferences: {
                 preload: path.join(__dirname, 'preload.js'),
