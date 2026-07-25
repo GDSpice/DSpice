@@ -13,7 +13,7 @@ DSpice: Design and Simulation of Circuits using Spice
 <p align="center">
  
  <a href="#News">
-    <img src="https://img.shields.io/badge/Version-0.0.9-blue" alt="v0.0.9">
+    <img src="https://img.shields.io/badge/Version-0.1.0-blue" alt="v0.1.0">
  </a>
 
     
@@ -36,13 +36,21 @@ The main objectives and features of DSpice are:
 * **Circuit Simulation:** Executing simulations (OP/Tran) seamlessly using ngspice.
 * **Waveform Visualization:** Analyzing and presenting simulation results through a dedicated waveform viewer and Prob.
 
+##  Core Features
+
+* Interface of DSpice created using ElectronJS (v34.2.0) and Node.js (v22.13.1), enabling a modern cross-platform desktop experience.
+* Powered by ngspice (v46), providing a robust library for analog and mixed-signal circuit simulation.
+* Comprehensive support for analog models, offering flexibility for various use cases.
+
 ## News
 
-What’s changed in versions
+What’s New in Version 0.1.0 
 
-* Interface of DSpice created using **ElectronJS (v34.2.0)** and **NodeJs (v22.13.1)**, enabling a modern cross-platform desktop experience.
-* Using ngspice (v46), which provides a robust library for analog and mixed-signal circuit simulation.
-* Support for both analog models, providing flexibility for various use cases.
+- Implemented AC (Alternating Current) Analysis support.
+- Enhanced Plotly layout for improved graph analysis visualization.
+- Updated HTML/CSS styles for the editor page to provide a cleaner and more modern user interface.
+- Added circuit description feature and updated the related dialog.
+- Fixed scrolling and scrollbar issues in the properties panel and drawing class for a smoother user experience.
 
 ## Future Work / Roadmap
 
