@@ -895,26 +895,24 @@ function partSelect() {
     }
 
     mtable.type = "part";
-    mtable.model=data[0];
+    mtable.model=elem;  //data[0]
     propertiesData = JSON.parse(JSON.stringify(defaultData));
     buildPanel();
 }
 
 function modifiedPart() {
-    console.log("modified part");
+  
     var part = mtable.select;
     
     part.setAttribute("directory", propertiesData.sections[0].rows[2].value);
     part.setAttribute("sref", propertiesData.sections[0].rows[4].value);
 
-    if(mtable.model){
-            var elem=getPartModel(part);
+     var elem=getPartModel(part);
 
     if(elem){
         elem.setAttribute("modelname", propertiesData.sections[1].rows[1].value);
         elem.textContent=propertiesData.sections[1].rows[1].value;
     }
-}
     
     if( controlPartRef(part)){
         partSelect();
