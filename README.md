@@ -33,7 +33,7 @@ The main objectives and features of DSpice are:
 * **Custom Modeling:** Creating new SPICE models for various electrical components.
 * **Symbol Design:** Designing and managing custom schematic symbols for these models.
 * **Schematic Capture:** Drawing and designing circuits using an intuitive CAD-style schematic editor.
-* **Circuit Simulation:** Executing simulations (OP/Tran) seamlessly using ngspice.
+* **Circuit Simulation:** Executing simulations (OP/Tran/AC) seamlessly using ngspice.
 * **Waveform Visualization:** Analyzing and presenting simulation results through a dedicated waveform viewer and Prob.
 
 ##  Core Features
