@@ -1,0 +1,428 @@
+*=======================================================================
+* SPICE Model Library for OP AMP
+* Created:      17/05/2026
+* Last update:   17/05/2026
+* Author:   DSpice 
+*=======================================================================
+
+
+
+*****************************************************************************
+* UA741 OPERATIONAL AMPLIFIER MACROMODEL
+*
+* PIN CONNECTIONS:
+*  1 = Non-Inverting Input (+)
+*  2 = Inverting Input (-)
+*  3 = Positive Power Supply (V+)
+*  4 = Negative Power Supply (V-)
+*  5 = Output (Out)
+*
+* INTERNAL NODE MAPPING (For Reference):
+*  6,7   = Main gain and compensation nodes
+*  8     = Internal output node (before output resistance)
+*  9,10  = Internal bias and common-mode nodes
+*  11-14 = Input differential pair internal nodes
+*  53,54 = Supply sensing nodes for protection
+*  90-92 = Output current limiting and clamping nodes
+*  99    = Virtual ground / common-mode reference node
+*****************************************************************************
+
+.SUBCKT UA741  1  2  3  4  5
+
+* --- 1. INPUT STAGE (Differential Pair) ---
+* BJT differential pair (Q1, Q2) with emitter degeneration (RE1, RE2)
+* and collector loads (RC1, RC2). Tail current provided by IEE.
+Q1      11   2  13  QX       ; Q1 Base=11, Emitter=2, Collector=13
+Q2      12   1  14  QX       ; Q2 Base=12, Emitter=1, Collector=14
+RC1      3  11       7.957E3  ; Collector load for Q1
+RC2      3  12       7.957E3  ; Collector load for Q2
+RE1     13  10       2.740E3  ; Emitter degeneration for Q1
+RE2     14  10       2.740E3  ; Emitter degeneration for Q2
+IEE     10   4  DC   10.16E-6 ; Tail current source for input stage
+
+* --- 2. COMMON-MODE & BIASING ---
+* Establishes virtual ground (99) and common-mode feedback.
+EGND    99   0  POLY(2) (3,0) (4,0) 0 .5 .5 ; Virtual ground = avg(V+, V-)
+REE     10  99       19.69E6  ; Common-mode feedback resistance
+GCM      0   6  10  99  2.574E-9 ; Common-mode transconductance
+RP       3   4       18.11E3  ; Power supply resistance/bleeder
+
+* --- 3. MAIN GAIN & FREQUENCY COMPENSATION STAGE ---
+* Transconductance (GA) converts input diff voltage to current.
+* FB is a polynomial voltage source providing the main open-loop gain 
+* and frequency compensation (dominant pole).
+GA       6   0  11  12  137.7E-6  ; Input stage transconductance
+FB       7  99  POLY(5) VB VC VE VLP VLN 0 10.61E6 -10E6 10E6 10E6 -10E6
+C1      11  12       4.664E-12 ; Input stage parasitic/compensation cap
+C2       6   7       20.00E-12 ; Main Miller compensation capacitor
+R2       6   9       100.0E3   ; Gain stage load resistor
+
+* --- 4. OUTPUT STAGE & SLEW RATE / CURRENT LIMITING ---
+* RO1/RO2 model the output impedance. HLIM and VLIM enforce current 
+* and slew rate limits to match the real 741 behavior.
+RO1      8   5       150       ; Output resistance (top half)
+RO2      7  99       150       ; Output resistance (bottom half)
+VLIM     7   8  DC   0         ; Voltage across current limit sense
+HLIM    90   0  VLIM  1K       ; Current limit controlled voltage source
+
+* --- 5. PROTECTION & SUPPLY SENSING ---
+* Diodes protect the inputs and output from overvoltage/ESD.
+* VC and VE sense the supply rails to adjust internal biasing.
+DP       4   3  DX             ; Supply protection diode
+DC       5  53  DX             ; Output to V+ clamp diode
+DE      54   5  DX             ; V- to Output clamp diode
+DLP     90  91  DX             ; Output positive current limit diode
+DLN     92  90  DX             ; Output negative current limit diode
+
+* --- 6. INTERNAL BIAS VOLTAGES ---
+VB       9   0  DC   0         ; Bias voltage for FB polynomial
+VC       3  53  DC   2.600     ; V+ supply sensing offset
+VE      54   4  DC   2.600     ; V- supply sensing offset
+VLP     91   0  DC   25        ; Positive limit reference
+VLN      0  92  DC   25        ; Negative limit reference
+
+* --- COMPONENT MODELS ---
+.MODEL DX D(IS=800.0E-18)                   ; Protection diode model
+.MODEL QX NPN(IS=800.0E-18 BF=62.50)        ; Input BJT model
+
+.ENDS UA741
+
+
+*****************************************************************************
+* TL084 OPERATIONAL AMPLIFIER MACROMODEL
+*
+* PIN CONNECTIONS:
+*  1 = Non-Inverting Input (+)
+*  2 = Inverting Input (-)
+*  3 = Positive Power Supply (V+)
+*  4 = Negative Power Supply (V-)
+*  5 = Output (Out)
+*
+* INTERNAL NODE MAPPING (For Reference):
+*  6,7   = Main gain and compensation nodes
+*  8     = Internal output node (before output resistance)
+*  9,10  = Internal bias and common-mode nodes
+*  11,12 = JFET input gate/drain internal nodes
+*  53,54 = Supply sensing nodes for protection
+*  90-92 = Output current limiting and clamping nodes
+*  99    = Virtual ground / common-mode reference node
+*****************************************************************************
+
+.SUBCKT TL084  1  2  3  4  5
+
+* --- 1. INPUT STAGE (JFET Differential Pair) ---
+* P-JFET differential pair (J1, J2) providing ultra-high input impedance.
+* Drain loads provided by RD1/RD2. Tail current provided by ISS.
+J1      11   2  10  JX       ; J1 Drain=11, Gate=2, Source=10 (P-JFET)
+J2      12   1  10  JX       ; J2 Drain=12, Gate=1, Source=10 (P-JFET)
+RD1      4  11       3.536E3  ; Drain load for J1
+RD2      4  12       3.536E3  ; Drain load for J2
+ISS      3  10  DC   195.0E-6 ; Tail current source (Higher than 741 for faster slew)
+
+* --- 2. COMMON-MODE & BIASING ---
+* Establishes virtual ground (99) and common-mode feedback.
+EGND    99   0  POLY(2) (3,0) (4,0) 0 .5 .5 ; Virtual ground = avg(V+, V-)
+RSS     10  99       1.026E6  ; Common-mode feedback resistance
+GCM      0   6  10  99  8.942E-9 ; Common-mode transconductance
+RP       3   4       2.143E3  ; Power supply resistance/bleeder
+
+* --- 3. MAIN GAIN & FREQUENCY COMPENSATION STAGE ---
+* Transconductance (GA) converts input diff voltage to current.
+* FB provides the main open-loop gain and frequency compensation.
+GA       6   0  11  12  282.8E-6  ; Input stage transconductance (Higher than 741)
+FB       7  99  POLY(5) VB VC VE VLP VLN 0 4.715E6 -5E6 5E6 5E6 -5E6
+C1      11  12       3.498E-12 ; Input stage parasitic/compensation cap
+C2       6   7       15.00E-12 ; Main Miller compensation capacitor
+R2       6   9       100.0E3   ; Gain stage load resistor
+
+* --- 4. OUTPUT STAGE & SLEW RATE / CURRENT LIMITING ---
+* RO1/RO2 model the output impedance. HLIM and VLIM enforce current 
+* and slew rate limits.
+RO1      8   5       150       ; Output resistance (top half)
+RO2      7  99       150       ; Output resistance (bottom half)
+VLIM     7   8  DC   0         ; Voltage across current limit sense
+HLIM    90   0  VLIM  1K       ; Current limit controlled voltage source
+
+* --- 5. PROTECTION & SUPPLY SENSING ---
+* Diodes protect the inputs and output from overvoltage/ESD.
+DP       4   3  DX             ; Supply protection diode
+DC       5  53  DX             ; Output to V+ clamp diode
+DE      54   5  DX             ; V- to Output clamp diode
+DLP     90  91  DX             ; Output positive current limit diode
+DLN     92  90  DX             ; Output negative current limit diode
+
+* --- 6. INTERNAL BIAS VOLTAGES ---
+VB       9   0  DC   0         ; Bias voltage for FB polynomial
+VC       3  53  DC   2.200     ; V+ supply sensing offset
+VE      54   4  DC   2.200     ; V- supply sensing offset
+VLP     91   0  DC   25        ; Positive limit reference
+VLN      0  92  DC   25        ; Negative limit reference
+
+* --- COMPONENT MODELS ---
+.MODEL DX D(IS=800.0E-18)                   ; Protection diode model
+.MODEL JX PJF(IS=15.00E-12 BETA=270.1E-6 VTO=-1) ; Input P-JFET model
+
+.ENDS TL084
+
+*****************************************************************************
+* LM741 OPERATIONAL AMPLIFIER MACRO-MODEL (National Semiconductor)
+*
+* PIN CONNECTIONS:
+*  1  = Non-Inverting Input (+)
+*  2  = Inverting Input (-)
+* 99  = Positive Power Supply (V+)
+* 50  = Negative Power Supply (V-)
+* 28  = Output (Out)
+*
+* FEATURES:
+*  - Improved performance over industry standards
+*  - Plug-in replacement for LM709, LM201, MC1439, 748
+*  - Explicit modeling of Input/Output overload protection
+*  - Includes Input Offset Current and Input Offset Voltage modeling
+*
+* INTERNAL NODE MAPPING (For Reference):
+*  3, 4, 5, 6, 7 = Input differential stage internal nodes
+*  8, 9, 10      = Output voltage swing limiting nodes
+*  15, 16, 17    = High-frequency pole and common-mode zero nodes
+*  20, 21, 22    = Output stage crossover bias network nodes
+*  23, 24, 25, 26, 27 = Output driver stage nodes
+*  49            = Internal common-mode reference node
+*  98            = Internal high-impedance gain node
+*****************************************************************************
+* LEGAL NOTICE: (C) National Semiconductor, Inc. 
+* This material is intended for free software support. 
+* The file may be copied and distributed; however, reselling is illegal.
+*****************************************************************************
+
+.SUBCKT LM741/NS  1   2  99  50  28
+
+* --------------------------------------------------------------------------
+* 1. INPUT STAGE (Differential Pair & Offset Modeling)
+* --------------------------------------------------------------------------
+* Input offset current source (20nA) to model real-world mismatch
+IOS      2   1       20N      
+
+* Input bias resistance network
+R1       1   3       250K     
+R2       3   2       250K     
+
+* Differential pair (NPN) with tail current source (100uA)
+I1       4  50  DC   100U     ; Tail current source
+Q1       5   2   4   QX       ; Q1: Collector=5, Base=2, Emitter=4
+Q2       6   7   4   QX       ; Q2: Collector=6, Base=7, Emitter=4
+
+* Collector loads and input stage compensation capacitor (Fp2 = 2.55 MHz)
+R3       5  99       517      
+R4       6  99       517      
+C4       5   6       60.3614P 
+
+* --------------------------------------------------------------------------
+* 2. COMMON-MODE EFFECT & QUIESCENT CURRENT
+* --------------------------------------------------------------------------
+* Quiescent supply current source (1.6mA)
+I2      99  50  DC   1.6MA    
+
+* Input offset voltage modeling using a polynomial voltage source
+* V_out = 1E-3 + 1 * V(16, 49)
+EOS      7   1  POLY(1) 16 49  1E-3  1  
+
+* Common-mode reference voltage divider
+R8      99  49       40K      
+R9      49  50       40K      
+
+* --------------------------------------------------------------------------
+* 3. OUTPUT VOLTAGE SWING LIMITING
+* --------------------------------------------------------------------------
+* Clamping network to prevent output from exceeding supply rails
+V2      99   8  DC   1.63     ; Upper clamp reference
+V3      10  50  DC   1.63     ; Lower clamp reference
+D1       9   8       DX       ; Upper clamp diode
+D2      10   9       DX       ; Lower clamp diode
+
+* --------------------------------------------------------------------------
+* 4. SECOND STAGE (Main Gain & Dominant Pole)
+* --------------------------------------------------------------------------
+* Main voltage gain stage
+EH      99  98  99  49   1    ; VCVS: Gain = 1, referenced to common-mode
+
+* Transconductance stage converting differential input to single-ended current
+G1      98   9   5   6   2.1E-3 ; VCCS: Transconductance = 2.1 mS
+
+* Dominant pole compensation network (Fp1 = 5 Hz)
+R5      98   9       95.493MEG
+C3      98   9       333.33P  
+
+* --------------------------------------------------------------------------
+* 5. HIGH-FREQUENCY POLE STAGE
+* --------------------------------------------------------------------------
+* Models the high-frequency roll-off (Fp = 30 MHz)
+G3      98  15   9  49   1E-6  ; VCCS for HF pole
+R12     98  15       1MEG     
+C5      98  15       5.3052E-15
+
+* --------------------------------------------------------------------------
+* 6. COMMON-MODE ZERO STAGE
+* --------------------------------------------------------------------------
+* Models the common-mode rejection roll-off (Fpcm = 300 Hz)
+G4      98  16   3  49   3.1623E-8 ; VCCS for CM zero
+L2      98  17       530.5M   ; Inductor to create the zero frequency
+R13     17  16       1K       
+
+* --------------------------------------------------------------------------
+* 7. OUTPUT STAGE (Driver, Crossover, & Isolation)
+* --------------------------------------------------------------------------
+* Output quiescent bias current modeling (controlled by V6)
+F6      50  99  POLY(1) V6  450U  1  
+
+* Output buffer gain stage
+E1      99  23  99  15   1    ; VCVS: Output buffer drive
+
+* Output crossover bias network (prevents crossover distortion)
+V5      22  21  DC   0.18V   
+D4      21  15       DX       
+V4      20  22  DC   0.18V   
+D3      15  20       DX       
+
+* Upper and Lower output driver clamps
+R16     24  23       25       
+D5      26  24       DX       
+V6      26  22  DC   0.65V    ; Upper driver diode drop
+
+R17     23  25       25       
+D6      25  27       DX       
+V7      22  27  DC   0.65V    ; Lower driver diode drop
+
+* High-frequency output isolation (models real-world package inductance)
+L3      22  28       100P     ; Output lead inductance
+RL3     22  28       100K     ; Parallel damping resistance
+
+* --------------------------------------------------------------------------
+* 8. COMPONENT MODELS
+* --------------------------------------------------------------------------
+.MODEL DX D(IS=1E-15)                  ; Idealized protection/clamping diode
+.MODEL QX NPN(BF=625)                  ; Input stage NPN transistor (High Beta)
+
+.ENDS LM741/NS
+
+*****************************************************************************
+* LM124A OPERATIONAL AMPLIFIER MACROMODEL
+* (Standard Linear ICs Macromodels, 1993)
+*
+* PIN CONNECTIONS:
+*  1 = Inverting Input (-)
+*  2 = Non-Inverting Input (+)
+*  3 = Output (Out)
+*  4 = Positive Power Supply (V+)
+*  5 = Negative Power Supply (V-)
+*
+* INTERNAL NODE MAPPING (For Reference):
+*  10, 11, 12, 13, 14, 15, 16, 17, 18 = Input stage, buffering, and protection nodes
+*  19                                  = Main internal high-impedance gain node
+*  21, 22, 23, 24, 25, 26, 27, 28      = Output stage, clamping, and driver nodes
+*****************************************************************************
+
+.SUBCKT LM124A  1  2  3  4  5
+
+* =========================================================================
+* 1. COMPONENT MODELS
+* =========================================================================
+* Custom diode model with specific saturation current, flicker noise (KF), 
+* and zero-bias junction capacitance (CJO) for accurate clamping behavior.
+.MODEL MDTH D (IS=1E-8 KF=3.104131E-15 CJO=10F)
+
+* =========================================================================
+* 2. INPUT STAGE (Buffering & Impedance)
+* =========================================================================
+* Input parasitic capacitances to negative supply (V-)
+CIP      2   5       1.000000E-12  ; Non-inverting input capacitance
+CIN      1   5       1.000000E-12  ; Inverting input capacitance
+
+* Unity-gain voltage buffers to isolate inputs from internal loading
+EIP     10   5   2   5   1         ; Buffer for Non-Inverting input (+)
+EIN     16   5   1   5   1         ; Buffer for Inverting input (-)
+
+* Input resistance network (differential and common-mode)
+RIP     10  11       2.600000E+01  ; Series resistance (+)
+RIN     15  16       2.600000E+01  ; Series resistance (-)
+RIS     11  15       2.003862E+02  ; Differential input resistance
+
+* =========================================================================
+* 3. INPUT PROTECTION & BIAS CURRENT MODELING
+* =========================================================================
+* Input clamping diodes to prevent excessive differential voltage
+DIP     11  12       MDTH 400E-12  ; Positive input clamp diode
+DIN     15  14       MDTH 400E-12  ; Negative input clamp diode
+
+* Voltage sources used to sense current for limiting and bias modeling
+VOFP    12  13  DC   0             ; Sense voltage for positive clamp
+VOFN    13  14  DC   0             ; Sense voltage for negative clamp
+
+* Input bias current source (10 µA typical for bipolar input stages)
+IPOL    13   5  DC   1.000000E-05  
+
+* Common-mode / parasitic capacitance across input stage
+CPS     11  15       3.783376E-09  
+
+* Reverse input protection network (clamps input to V+ if it exceeds it)
+DINN    17  13       MDTH 400E-12  
+VIN     17   5  DC   0.000000E+00  
+DINR    15  18       MDTH 400E-12  
+VIP      4  18  DC   2.000000E+00  
+
+* =========================================================================
+* 4. INPUT CURRENT LIMITING (Feedback Network)
+* =========================================================================
+* Current-Controlled Current Sources (CCCS) to limit input stage current
+FCP      4   5  VOFP 3.400000E+01  ; Positive input current limit feedback
+FCN      5   4  VOFN 3.400000E+01  ; Negative input current limit feedback
+
+* Input bias current modeling (controlled sources for accuracy)
+FIBP     2   5  VOFN 2.000000E-03  ; Bias current at Non-Inverting input
+FIBN     5   1  VOFP 2.000000E-03  ; Bias current at Inverting input
+
+* =========================================================================
+* 5. AMPLIFYING STAGE (Gain & Frequency Compensation)
+* =========================================================================
+* Main gain stage: Current sources driven by the input clamp sense voltages
+FIP      5  19  VOFP 3.600000E+02  ; Positive signal path transconductance
+FIN      5  19  VOFN 3.600000E+02  ; Negative signal path transconductance
+
+* High-impedance load resistors at the main gain node (19)
+RG1     19   5       3.652997E+06  ; Load to V-
+RG2     19   4       3.652997E+06  ; Load to V+
+
+* Miller Compensation Capacitor (sets the dominant pole for stability)
+CC      19   5       6.000000E-09  
+
+* Internal gain stage swing limiting diodes
+DOPM    19  22       MDTH 400E-12  ; Positive swing limit
+DONM    21  19       MDTH 400E-12  ; Negative swing limit
+
+* =========================================================================
+* 6. OUTPUT STAGE (Driver, Clamping, & Impedance)
+* =========================================================================
+* Output driver stage using Current-Controlled Voltage Sources (CCVS)
+* HOPM/VIPM drive the upper (P-type) output transistor equivalent
+HOPM    22  28  VOUT 7.500000E+03  
+VIPM    28   4  DC   1.500000E+02  
+
+* HONM/VINM drive the lower (N-type) output transistor equivalent
+HONM    21  27  VOUT 7.500000E+03  
+VINM     5  27  DC   1.500000E+02  
+
+* Output buffer and sensing
+EOUT    26  23  19   5   1         ; Unity gain buffer from internal node 19
+VOUT    23   5  DC   0             ; 0V source to sense output current (for HOPM/HONM)
+
+* Output impedance network
+ROUT    26   3       20            ; Output resistance (20 Ohms)
+COUT     3   5       1.000000E-12  ; Output parasitic capacitance
+
+* Output voltage swing clamping (prevents output from exceeding supply rails)
+DOP     19  25       MDTH 400E-12  ; Positive output clamp diode
+VOP      4  25  DC   2.242230E+00  ; Positive clamp reference (~V+ - 2.24V)
+
+DON     24  19       MDTH 400E-12  ; Negative output clamp diode
+VON     24   5  DC   7.922301E-01  ; Negative clamp reference (~V- + 0.79V)
+
+.ENDS LM124A

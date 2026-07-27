@@ -10,3 +10,4 @@
 .include "logic.lib"
 .include "bjt_npn.lib"
 .include "mosfet_ideal.lib"
+.include "op_amp.lib"

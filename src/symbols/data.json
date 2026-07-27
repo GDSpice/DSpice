@@ -3,7 +3,14 @@
         "Basic",
         "Source",
         "Semiconductor",
-        "Digital"
+        "Digital",
+        "Amplifier"
+    ],
+    "Amplifier": [
+        "TL084.sym",
+        "UA741.sym",
+        "LM124A.sym",
+        "LM741.sym"
     ],
     "Basic": [
         "Resistor.sym",
