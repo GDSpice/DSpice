@@ -3,7 +3,7 @@
 # Name:        codeSpice.js
 # Author:      d.fathi
 # Created:     27/08/2024
-# Update:      29/08/2024
+# Update:      28/07/2026
 # Copyright:   (c) DSpice 2026
 # Licence:     free
 #--------------------------------------------------------------------------------------------

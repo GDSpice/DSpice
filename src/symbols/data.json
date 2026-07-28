@@ -59,7 +59,8 @@
         "NMOS_4_terminal.sym",
         "PMOS_4_terminal.sym",
         "NJFET.sym",
-        "PJFET.sym"
+        "PJFET.sym",
+        "Diac.sym"
     ],
     "Source": [
         "DCCurrent.sym",

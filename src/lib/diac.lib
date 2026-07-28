@@ -1,0 +1,93 @@
+*=======================================================================
+* SPICE Macro Model Library for Diac
+* Version:       1.0
+* Created:       28/05/2026
+* Last update:   28/07/2026
+* Author:        DSpice 
+* License:       Free for educational and non-commercial use
+*=======================================================================
+* Disclaimer: This model is for simulation purposes only. 
+* Actual physical component behavior may vary.
+*=======================================================================
+
+.SUBCKT diac P1 P2
+
+* Current sensing source
+V1 P1 1 DC 0
+
+* Avalanche network
+D1 2    1    ZD20
+D2 2    3    ZD20
+D3 4    3    ZD14
+D4 4    P2  ZD14
+
+* Internal switches
+S1 1    5    9    P2 SW1
+S2 1    6    1    3   SW2
+S3 1    7    3    1   SW2
+
+* Resistors
+R1 6    3    25
+R2 7    3    25
+R3 8    9    0.5
+R4 9    P2 1G
+
+* Capacitors
+C1 9    P2 1u
+C2 P1  P2 10p
+
+* Behavioral source
+B1 8 P2 V = u(abs(i(V1))-1e-5)
+
+*----------------------------------------------------------
+* Zener models
+*----------------------------------------------------------
+
+.model ZD14 D(
++ IS=3.142f
++ RS=0.1
++ N=1
++ XTI=3
++ EG=1.11
++ M=0.3282
++ VJ=0.75
++ FC=0.5
++ ISR=1.973n
++ NR=2
++ BV=14.6
++ IBV=0.14467
++ NBV=1.093
++ TBV1=1433.3u)
+
+.model ZD20 D(IS=6.994f
++ RS=5.612
++ N=1
++ EG=1.11
++ M=0.2906
++ VJ=0.75
++ FC=0.5
++ ISR=2.088n
++ NR=2
++ BV=21
++ IBV=0.17098
++ NBV=1.2072
++ TBV1=888.89u)
+
+*----------------------------------------------------------
+* Voltage controlled switches
+*----------------------------------------------------------
+
+.model SW1 SW(
++ RON=0.01
++ ROFF=1G
++ VT=0.5
++ VH=0.4)
+
+.model SW2 SW(
++ RON=0.01
++ ROFF=1G
++ VT=10.7
++ VH=10.6)
+
+.ENDS diac
+*
