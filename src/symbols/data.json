@@ -46,18 +46,20 @@
         "XOR.sym"
     ],
     "Semiconductor": [
-        "DiodeBridge.sym",
+        "Diode RD.sym",
+        "Diode FRD.sym",
+        "Diode Schottky.sym",
         "DiodeLaser.sym",
         "DiodeZener.sym",
+        "DiodeBridge.sym",
         "NMOS.sym",
         "NPN.sym",
         "PMOS.sym",
         "PNP.sym",
-        "Diode FRD.sym",
-        "Diode RD.sym",
-        "Diode Schottky.sym",
         "NMOS_4_terminal.sym",
-        "PMOS_4_terminal.sym"
+        "PMOS_4_terminal.sym",
+        "NJFET.sym",
+        "PJFET.sym"
     ],
     "Source": [
         "DCCurrent.sym",
