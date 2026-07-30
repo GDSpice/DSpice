@@ -3,8 +3,8 @@
 # Name:        shapes.js
 # Author:      d.fathi
 # Created:     28/05/2021
-# Update:      07/08/2024
-# Copyright:   (c) PyAMS 2024
+# Update:      30/07/2026
+# Copyright:   (c) DSpice 2026
 # Licence:     free
 #-------------------------------------------------------------------------------------------------
 */
@@ -748,36 +748,44 @@ function fshapes(svg, setDrawing, width, height) {
         //var els = document.getElementById(self.svg).getElementsByClassName("polyline");
 		//
 
+        //select the closest polyline or polygon to the mouse position
+        var threshold = 2; // define a threshold distance for selection
         var els = document.getElementById("sym").children;
-        var listElsInPos = [];
-        for (var i = 0; i < els.length; i++)
-            if ((els[i].getAttribute("class") == 'polyline')||(els[i].getAttribute("name") == 'polygon')) {
-                self.points = getArrayPoints(els[i]);
+        var closestElem = null;
+        var minDistance = Infinity;
+        var bestPoints = null;
+        var bestClosestPoint = null;
 
-                get = pointInPolyline(self.points, self.offset);
+        for (var i = 0; i < els.length; i++) {
+            if ((els[i].getAttribute("class") == 'polyline')||(els[i].getAttribute("name") == 'polygon')) {
+                var points = getArrayPoints(els[i]);
+                var result = getClosestPointOnPolyline(points, self.offset);
                 
-                if (get[0]) {
-                    listElsInPos.push({
-                        pos: get[1],
-                        elem: els[i]
-                    });
-                    self.setCritElem = els[i];
-                    var pos = get[1];
+                if (result.distance < minDistance) {
+                    minDistance = result.distance;
+                    closestElem = els[i];
+                    bestPoints = points;
+                    bestClosestPoint = result.point;
                 }
             }
+        }
 
-        for (var i = 0; i < listElsInPos.length; i++)
-            if (listElsInPos[i].pos < pos) {
-                self.setCritElem = listElsInPos[i].elem;
-                pos = listElsInPos[i].pos;
-            }
-
-        if (listElsInPos.length > 0) {
-            self.points = getArrayPoints(self.setCritElem);
+        // just check if the closest element is within the threshold distance
+        if (closestElem && minDistance <= threshold) {
+            self.setCritElem = closestElem;
+            self.points = bestPoints;
+            self.closestPoint = bestClosestPoint;   //the closest point on the polyline or polygon to the mouse position
+            self.closestDistance = minDistance;     // the distance from the mouse position to the closest point on the polyline or polygon
             return true;
         }
 
-    //****************************************************end polyline******************************************************************//
+        //no polyline or polygon is close enough to the mouse position
+        self.setCritElem = null;
+        self.closestPoint = null;
+        self.closestDistance = null;
+
+
+     //****************************************************end polyline******************************************************************//
         if (evtTarget.classList.contains('var')) {
 			if(evtTarget.getAttribute("name")!="text")
             self.setCritElem = evtTarget;
@@ -829,14 +837,14 @@ function fshapes(svg, setDrawing, width, height) {
                 return true;
             }
 
-    var els = document.getElementsByName("codeHTML");
+       var els = document.getElementsByName("codeHTML");
         for (var i = els.length-1; i >=0 ; i--)
             if (pointInRect(els[i], self.offset)) {
                   self.setCritElem = els[i];
                   return true;
             }
 
-    var els = document.getElementsByName("codeSpice");
+      var els = document.getElementsByName("codeSpice");
         for (var i = els.length-1; i >=0 ; i--)
                 if (pointInRect(els[i], self.offset)) {
                       self.setCritElem = els[i];
@@ -862,3 +870,5 @@ function fshapes(svg, setDrawing, width, height) {
 
    this.displayDate(document.getElementById(self.svg));
 }
+
+

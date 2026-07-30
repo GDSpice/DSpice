@@ -3,11 +3,71 @@
 # Name:        polyline.js
 # Author:      d.fathi
 # Created:     13/06/2021
-# Copyright:   (c) PyAMS 2021
-# Licence:
+# Update:      30/07/2026
+# Copyright:   (c) DSpice 2026
+# Licence:     free
 #-------------------------------------------------------------------------------
  */
+
+
+
+
+
+/**
+ * Find the closest point on a polyline to a given point
+ * Returns: { distance: number, point: {x,y}, segmentIndex: number }
+ */
+function getClosestPointOnPolyline(points, p) {
+    var minDist = Infinity;
+    var closestPt = null;
+    var segIdx = -1;
+
+    for (var i = 0; i < points.length - 1; i++) {
+        var proj = getProjectionOnSegment(p, points[i], points[i + 1]);
+        var dx = p.x - proj.x;
+        var dy = p.y - proj.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (dist < minDist) {
+            minDist = dist;
+            closestPt = proj;
+            segIdx = i;
+        }
+    }
+
+    return {
+        distance: minDist,
+        point: closestPt,
+        segmentIndex: segIdx
+    };
+}
+
+/**
+ * Find the closest point on a line segment from a given point
+ * including the perpendicular projection or the nearest endpoint
+ */
+function getProjectionOnSegment(p, a, b) {
+    var dx = b.x - a.x;
+    var dy = b.y - a.y;
+    
+    // If the segment is a point, return that point
+    if (dx === 0 && dy === 0) {
+        return { x: a.x, y: a.y };
+    }
+    
+    // Calculate the projection factor t of point p onto the line defined by a and b
+    var t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy);
+    
+    // Restrict t to the interval [0, 1] to stay within the line segment
+    t = Math.max(0, Math.min(1, t));
+    
+    return {
+        x: a.x + t * dx,
+        y: a.y + t * dy
+    };
+}
  
+
 function polylineToAttribute(points, dx, dy) {
     var s = '';
     for (var i = 0; i < points.length; i++) {
@@ -19,29 +79,7 @@ function polylineToAttribute(points, dx, dy) {
     return s;
 }
 
-function pointInPolyline(points, p) {
-    var a=0.5;
-    for (var i = 0; i < points.length - 1; i++) {
-        if (Math.abs(points[i].x-points[i + 1].x)>a) {
-            var a = (points[i].y - points[i + 1].y) / (points[i].x - points[i + 1].x);
-            var b = points[i].y - a * points[i].x;
-            if ((p.x >= Math.min(points[i].x, points[i + 1].x)-a) && (p.x <= Math.max(points[i].x, points[i + 1].x)+a)) {
-                if ((p.y >= Math.min(points[i].y, points[i + 1].y)-a) && (p.y <= Math.max(points[i].y, points[i + 1].y)+a))
-                    if (Math.abs((a * p.x + b) - p.y) <= a)
-                        return [true,Math.abs((a * p.x + b) - p.y)]
 
-            }
-        }
-		else {
-            if ((p.x >= points[i].x-4) && (p.x <= points[i].x+4)) {
-                if ((p.y >= Math.min(points[i].y, points[i + 1].y)-a) && (p.y <= Math.max(points[i].y, points[i + 1].y)+a))
-                        return [true,Math.abs(p.x-points[i].x)];
-            }
-        }
-
-    }
-    return [false];
-}
 
 
 function pointInPolylineGetPos(points, p) {
