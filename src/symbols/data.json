@@ -46,11 +46,13 @@
         "XOR.sym"
     ],
     "Semiconductor": [
-        "Diode RD.sym",
-        "Diode FRD.sym",
-        "Diode Schottky.sym",
-        "DiodeLaser.sym",
+        "DiodeRD.sym",
+        "DiodeFRD.sym",
+        "DiodeSchottky.sym",
         "DiodeZener.sym",
+        "DiodeLaser.sym",
+        "DiodeLed.sym",
+        "DiodePhoto.sym",
         "DiodeBridge.sym",
         "NMOS.sym",
         "NPN.sym",

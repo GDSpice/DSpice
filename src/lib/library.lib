@@ -13,3 +13,4 @@
 .include "op_amp.lib"
 .include "jfet_ideal.lib"
 .include "diac.lib"
+.include "optoelectronics.lib"

@@ -1,10 +1,12 @@
 /*
 #-------------------------------------------------------------------------------
 # Name:        designByMouse.js
+# Purpose:     Add and move elements in the design area
 # Author:      d.fathi
 # Created:     28/07/2021
-# Copyright:  (c) PyAMS 2021
-# Licence:
+# Update:      31/07/2026
+# Copyright:  (c) DSpice 2026
+# Licence:    free (MIT)
 #-------------------------------------------------------------------------------
 */
 

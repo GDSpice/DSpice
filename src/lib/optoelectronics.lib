@@ -1,0 +1,138 @@
+*=======================================================================
+* SPICE Macro Model Library for opto electronics
+* Created:       29/07/2026
+* Last update:   29/07/2026
+* Author:        DSpice 
+* License:       Free 
+*=======================================================================
+* Disclaimer: This model is for simulation purposes only. 
+* Actual physical component behavior may vary.
+*=======================================================================
+
+* ======================================================================
+* Model: Laser Diode
+* Description: Realistic laser diode model with series resistance
+*              and junction capacitance.
+* Pins: A (Anode), K (Cathode)
+* ======================================================================
+.SUBCKT LaserDiode A K
+
+* Internal node for series resistance
+* Note: N1 is internal - add to port list for standard SPICE compatibility
+D1 A N1 DLD
+Rs N1 K 2
+
+.MODEL DLD D (
++ IS=1e-20
++ N=1.8
++ RS=0
++ BV=5
++ IBV=1u
++ CJO=50p
++ VJ=1.5
++ M=0.5
++ TT=1n)
+
+.ENDS LaserDiode
+
+* =======================================================================
+* Model: Photo Diode
+* Description: Photodiode model with photocurrent source,
+*              series resistance, shunt resistance, and junction capacitance.
+* Pins: A (Anode), K (Cathode)
+* Note: Photocurrent flows from K to A (reverse direction) when illuminated.
+*       Default Iph=10uA can be overridden during instantiation.
+* =======================================================================
+.SUBCKT PhotoDiode A K PARAMS: Iph=10u
+
+Rs A N1 5
+D1 N1 N2 PD
+Cj N2 K 10p
+Rsh N2 K 100Meg
+
+* Photocurrent source (direction: K to N2 = reverse bias current)
+Ilight K N2 DC {Iph}
+
+.MODEL PD D(
++ IS=1e-14
++ N=1.10
++ RS=0
++ CJO=10p
++ VJ=0.7
++ M=0.5
++ TT=5n
++ BV=60
++ IBV=1u)
+
+.ENDS PhotoDiode
+
+* =======================================================================
+* Model: LED (Light Emitting Diode)
+* Description: Practical LED model with series resistance.
+* Pins: A (Anode), K (Cathode)
+* =======================================================================
+.SUBCKT LED A K
+
+D1 A N1 LED_MODEL
+Rs N1 K 5
+
+.MODEL LED_MODEL D(
++ IS=1e-20
++ N=2
++ RS=0
++ CJO=30p
++ VJ=2.0
++ M=0.5
++ TT=10n
++ BV=5
++ IBV=100u)
+
+.ENDS LED
+
+* =======================================================================
+* Model: OptoCoupler (Opto-Isolator)
+* Description: LED + Phototransistor optocoupler with
+*              Current Transfer Ratio (CTR) control.
+* Pins: A (LED Anode), K (LED Cathode), 
+*       C (Phototransistor Collector), E (Phototransistor Emitter)
+*       B (Internal base node - use dummy net in instantiation)
+* Note: CTR = Ic/Iled (typical values: 0.1 to 1.0)
+* =======================================================================
+.SUBCKT OptoCoupler A K C E B PARAMS: CTR=0.5
+
+* LED with series resistance
+DLED A N1 LED_MODEL
+RLED N1 K 2
+
+.MODEL LED_MODEL D(
++ IS=1e-20
++ N=2
++ RS=2
++ CJO=20p
++ VJ=1.5
++ M=0.5)
+
+* Zero-volt voltage source to sense LED current
+VSENSE N1 K 0
+
+* Current-controlled current source for phototransistor base drive
+FBASE B E VSENSE {CTR}
+
+* Phototransistor
+Q1 C B E PHOTO
+
+.MODEL PHOTO NPN(
++ IS=1e-15
++ BF=100
++ VAF=100
++ CJE=10p
++ CJC=5p
++ TF=2n
++ TR=20n
++ BV=30)
+
+* Base-emitter resistor for stability
+RB B E 100k
+
+.ENDS OptoCoupler
+
