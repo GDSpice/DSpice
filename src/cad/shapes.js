@@ -88,6 +88,7 @@ function evtDown(self) {
 function evtMouve(self) {
     var x = (self.coord.x - self.offset.x);
     var y = (self.coord.y - self.offset.y);
+    var appDscription = true;
     self.px = 1;
 
 
@@ -109,6 +110,7 @@ function evtMouve(self) {
 		break;
 
 	case "analysis":
+        appDscription = false;
     case "codeHTML":
     case "codeSpice":
 	case "codePy":
@@ -178,6 +180,7 @@ function evtMouve(self) {
         self.selectedElement.setAttribute('transform', "translate(" + x + "," + y + ")");
         movePartWithConnectNets(self);
 		    findPosProb();
+        appDscription = false;
         break;
 
     case "probe":
@@ -190,7 +193,11 @@ function evtMouve(self) {
 
     self.resize.setElement = self.selectedElement;
     self.resize.moveObject();
-	//getDescription(self,self.selectedElement);
+
+    if(self.selectedElement && appDscription)
+	  getDescription(self,self.setElement);
+    
+	
 
 }
 
@@ -302,6 +309,8 @@ function fshapes(svg, setDrawing, width, height) {
                 self.selectAll.y = p.y;
 				        getDescription(self,null);
             }
+
+            getListElementsAddToPageDescription();
         }
 
         function drag(evt) {
