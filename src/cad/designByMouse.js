@@ -210,6 +210,7 @@ function designMouseMouve(self, pos) {
 	  case 'part':
       case 'oscilloscope':
       case 'codeHTML':
+      case 'analysis':
       case 'codeSpice':
 	  case 'codePy':
 	       var x=pos.x;
