@@ -16,6 +16,7 @@ function getListElementsAddToPageDescription()
 	treeData[0].nodes=[];
 	treeData[0].elem=[];
 	var select='';
+	var analyze=0;
 
 	for(var i=1; i< collection.length;i++)
 	{
@@ -24,14 +25,17 @@ function getListElementsAddToPageDescription()
 	   if(elem.getAttribute("name")=='pin'){
 		   name+='pin ['+elem.childNodes[2].textContent+']';
 	   } else if(elem.getAttribute("name")=='part'){
-		   name+='part ['+elem.getAttribute("sref")+']';
+		   name+='symbol ['+elem.getAttribute("sref")+']';
 	   } else if(elem.getAttribute("name")=='ref'){
 		   name+='ref ['+elem.textContent+']';
 	   } else if(elem.getAttribute("name")=='param'){
 		   name+='param ['+elem.textContent+']';
 	   } else if(elem.getAttribute("name")=='net'){
-		   name+='net ['+elem.getAttribute("ref")+']';
-	   } else {
+		   name+='wire ['+elem.getAttribute("ref")+']';
+	   } else /*if(elem.getAttribute("name")=='analysis'){
+		   analyze++;
+		   name+='analysis ['+analyze+']';
+	   }*/ else {
 		   name+=elem.getAttribute("name");
 	   }
 
