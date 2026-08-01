@@ -13,7 +13,7 @@ DSpice: Design and Simulation of Circuits using Spice
 <p align="center">
  
  <a href="#News">
-    <img src="https://img.shields.io/badge/Version-0.1.0-blue" alt="v0.1.0">
+    <img src="https://img.shields.io/badge/Version-0.1.1-blue" alt="v0.1.1">
  </a>
 
     
@@ -44,17 +44,17 @@ The main objectives and features of DSpice are:
 
 ## News
 
-What’s New in Version 0.1.0 
+What’s New in Version 0.1.1 
 
-- Implemented AC (Alternating Current) Analysis support.
-- Enhanced Plotly layout for improved graph analysis visualization.
-- Updated HTML/CSS styles for the editor page to provide a cleaner and more modern user interface.
-- Added circuit description feature and updated the related dialog.
-- Fixed scrolling and scrollbar issues in the properties panel and drawing class for a smoother user experience.
+* Expanded SPICE Model Libraries: Added OP-AMP library, ideal JFET, DIAC, and optoelectronics macro models (Photo Diode, Laser Diode).
+* Updated BJT (Bipolar) Transistor (PNP/NPN) SPICE model library for improved accuracy.
+* Added official DSpice documentation and manuals in reStructuredText (.rst) format.
+* Enhanced UI/UX: Element descriptions now appear on mouse move, and basic drawing elements have been updated.
+* Bug Fixes: Resolved issues with dragging analysis elements when adding them, and fixed selecting/moving polylines in the drawing canvas.
+
 
 ## Future Work / Roadmap
 
-* Implement AC (Alternating Current) Analysis.
 * Develop a comprehensive Options/Settings Dialog.
 * Create a Library Management Dialog for better component organization.
 * Expand the component library with additional semiconductor devices and digital models.
@@ -66,7 +66,7 @@ What’s New in Version 0.1.0
 ## Web Site of Software
 
 * **Hom page** <a href="https://dspice.sf.net">https://dspice.sf.net</a>.
-* **DSpice’s documentation**  <a href="https://dspice.sf.net/doc">https://dspice.sf.net/doc</a>.
+* **DSpice’s documentation**  <a href="https://dspice.readthedocs.io/en/latest/index.html">https://dspice.readthedocs.io/</a>.
 
 ## Installation of Software
 
