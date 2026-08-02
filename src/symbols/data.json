@@ -10,7 +10,8 @@
         "TL084.sym",
         "UA741.sym",
         "LM124A.sym",
-        "LM741.sym"
+        "LM741.sym",
+        "LM311.sym"
     ],
     "Basic": [
         "Resistor.sym",
@@ -54,10 +55,10 @@
         "DiodeLed.sym",
         "DiodePhoto.sym",
         "DiodeBridge.sym",
-        "NMOS.sym",
         "NPN.sym",
-        "PMOS.sym",
         "PNP.sym",
+        "NMOS.sym",
+        "PMOS.sym",
         "NMOS_4_terminal.sym",
         "PMOS_4_terminal.sym",
         "NJFET.sym",

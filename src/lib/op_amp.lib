@@ -426,3 +426,92 @@ DON     24  19       MDTH 400E-12  ; Negative output clamp diode
 VON     24   5  DC   7.922301E-01  ; Negative clamp reference (~V- + 0.79V)
 
 .ENDS LM124A
+
+*****************************************************************************
+* LM311 VOLTAGE COMPARATOR MACROMODEL
+*
+* PIN CONNECTIONS:
+*  1 = Non-Inverting Input (+)
+*  2 = Inverting Input (-)
+*  3 = Positive Power Supply (V+)
+*  4 = Negative Power Supply (V-)
+*  5 = Open Collector Output
+*  6 = Output Ground (Emitter of the output transistor)
+*
+* INTERNAL NODE MAPPING (For Reference):
+*  7, 8, 9      = Internal differential and gain stage nodes
+*  10, 11       = Output driver buffering and current sensing nodes
+*  21, 22       = Input offset/bias shift nodes
+*
+* KEY FEATURES MODELED:
+*  - PNP input differential pair (allows input common-mode range to include V-)
+*  - Open-collector output stage with separate output ground
+*  - Input offset voltage modeling
+*  - Reverse supply protection
+*****************************************************************************
+
+.SUBCKT LM311  1  2  3  4  5  6
+
+* =========================================================================
+* 1. COMPONENT MODELS
+* =========================================================================
+* Input PNP differential pair transistors (High Beta for low input bias current)
+.MODEL QIN PNP (IS=800.0E-18 BF=500)
+
+* Internal NPN gain/reference transistors
+.MODEL QMI NPN (IS=800.0E-18 BF=1002)
+.MODEL QMO NPN (IS=800.0E-18 BF=1000 CJC=1E-15 TR=102.5E-9)
+
+* Open-Collector Output NPN transistor (Very high Beta for sharp switching)
+.MODEL QOC NPN (IS=800.0E-18 BF=103.5E3 CJC=1E-15 TF=11.60E-12 TR=48.19E-9)
+
+* Protection diode model
+.MODEL DX  D   (IS=800.0E-18)
+
+* =========================================================================
+* 2. INPUT STAGE (Differential Pair & Offset)
+* =========================================================================
+* Tail current source for the input differential pair (100 µA)
+IEE      3   7  DC   100.0E-6  
+
+* Input offset voltage modeling (DC shift to simulate real-world mismatch)
+VI1     21   1  DC   0.45       ; Offset source for Non-Inverting input
+VI2     22   2  DC   0.45       ; Offset source for Inverting input
+
+* PNP Input Differential Pair
+Q1       9  21   7  QIN         ; Q1: Collector=9, Base=21, Emitter=7
+Q2       8  22   7  QIN         ; Q2: Collector=8, Base=22, Emitter=7
+
+* =========================================================================
+* 3. GAIN & LEVEL SHIFTING STAGE
+* =========================================================================
+* Active load / Current mirror configuration for high gain
+Q4       8   8   4  QMI         ; Q4: Diode-connected NPN (Reference)
+Q3       9   8   4  QMO         ; Q3: NPN gain transistor, base tied to Q4
+
+* =========================================================================
+* 4. OUTPUT STAGE (Open Collector Driver)
+* =========================================================================
+* Voltage buffer: Senses voltage across internal gain nodes (9 and 4) 
+* and replicates it across nodes 10 and 6 (Output Ground)
+E1      10   6   9   4   1      ; VCVS: Gain = 1
+
+* Zero-volt source used purely to sense current for the CCCS (F1)
+V1      10  11  DC   0          ; Current sensing element
+
+* Current-controlled current source: Buffers the signal to drive the output 
+* transistor base without loading the internal high-impedance node.
+F1       9   3  V1   1          ; CCCS: Gain = 1, senses current through V1
+
+* Open-Collector Output Transistor
+* Base=11 (driven by F1/V1), Collector=5 (Output Pin), Emitter=6 (Output Ground)
+Q5       5  11   6  QOC         
+
+* =========================================================================
+* 5. PROTECTION CIRCUITRY
+* =========================================================================
+* Reverse polarity / overvoltage protection across the supply rails
+DP       4   3       DX         ; Protection diode (Anode=V-, Cathode=V+)
+RP       3   4       6.667E3    ; Supply bleeder / current limiting resistor
+
+.ENDS LM311
