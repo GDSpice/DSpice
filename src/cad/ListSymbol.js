@@ -1,3 +1,13 @@
+/*
+#-------------------------------------------------------------------------------
+# Name:        listSymbol.js
+# Author:      d.fathi
+# Created:     28-04-2021
+# Update:      02-08-2026
+# Copyright:  (c) DSpice 2026
+# Licence:    free (MIT)
+#-------------------------------------------------------------------------------
+*/
 
 function getPartForList(self, part) {
 
@@ -213,7 +223,7 @@ function getPageLibDesc(){
     '      <td style="padding:4px;"><select id="selectLibs" onchange="changeListSym()" class="myInput" style="width:100%;"></select></td>' +
     '    </tr></table>' +
     '  </div>' +
-    '  <div id="symlibPage" style="flex:1; overflow-y:auto; overflow-x:hidden; padding:5px;"></div>' +
+    '  <div id="symlibPage" style="flex:1; overflow-y:auto; overflow-x:hidden; padding:5px; scrollbar-width: thin;"></div>' +
     '</div>';
 }
 
@@ -247,7 +257,7 @@ function addListSymbToPageLibs(list){
     // SVG بعرض وارتفاع 100% ليملأ الإطار بالكامل
     rrr += "<li style='border:1px solid #ccc; background:#f9f9f9; border-radius:3px; aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 4px;'>"
          + "<button class='button_lib' onclick='addSymToPage("+i+")' style='width:100%; height:75%; padding:0; background:transparent; border:none; cursor:pointer; display: flex; align-items: center; justify-content: center;'>"
-         + "<svg width='100%' height='100%' viewBox='0 0 " + w + " " + h + "' preserveAspectRatio='xMidYMid meet' style='max-width:100%; max-height:100%;'>" + newElement.innerHTML + "</svg>"
+         + "<svg width='70%' height='70%' viewBox='0 0 " + w + " " + h + "' preserveAspectRatio='xMidYMid meet' style='max-width:100%; max-height:100%;'>" + newElement.innerHTML + "</svg>"
          + "</button>"
          + "<p style='margin:3px 0 0 0; font-size:10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 95%; text-align: center;'><a href='#' onclick='addSymToPage("+i+")'>" + title + "</a></p>"
          + "</li>";

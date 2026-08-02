@@ -6,7 +6,7 @@
 # Author:      d.fathi
 # Created:     2026-04-29
 # Copyright:  (c) DSpice 2026
-# Licence:
+# Licence:   free (MIT)
 #-------------------------------------------------------------------------------
 */
 

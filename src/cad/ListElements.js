@@ -1,4 +1,13 @@
-
+/*
+#-------------------------------------------------------------------------------
+# Name:        listElements.js
+# Author:      d.fathi
+# Created:     28-04-2021
+# Update:      02-08-2026
+# Copyright:  (c) DSpice 2026
+# Licence:    free (MIT)
+#-------------------------------------------------------------------------------
+*/
 	treeData = [
        {
          name: 'All Object',
@@ -35,7 +44,7 @@ function getListElementsAddToPageDescription()
 	   } else /*if(elem.getAttribute("name")=='analysis'){
 		   analyze++;
 		   name+='analysis ['+analyze+']';
-	   }*/ else {
+	   }*/ {
 		   name+=elem.getAttribute("name");
 	   }
 
