@@ -178,6 +178,7 @@ function getPartForList(self, part) {
         case 'label':
 		case 'ref':
 		case 'param':
+        case 'modelSpice':
 
 			break;
 
@@ -193,7 +194,7 @@ function getPartForList(self, part) {
 	while(i< collection.length)
 	{
 		var elem = collection[i];
-        if ((elem.getAttribute("name")=='ref')||(elem.getAttribute("name")=='param'))
+        if ((elem.getAttribute("name")=='ref')||(elem.getAttribute("name")=='param')||(elem.getAttribute("name")=='modelSpice'))
 		{
 			elem.remove();
 			collection = self.children;
