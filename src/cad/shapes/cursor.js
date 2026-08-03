@@ -25,7 +25,6 @@ function getCursor(self,selectdElem)
 	 else
 	  var elem=self.setCritElem;
 	
-	console.log('elem',elem);
 	if(elem.getAttribute("name")!='net') return 'move';
 	var p=getArrayPoints(elem);
 	var n=pointInPolylineGetPos(p, self.offset);

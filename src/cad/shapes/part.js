@@ -128,8 +128,7 @@ function newPart(self, part) {
             var yo = p[0].y - ymin;
             var x = p[1].x - xmin;
             var y = p[1].y - ymin;
-            print(xo);
-            print(yo);
+
 
             elem.setAttribute("points", xo + "," + yo + " " + x + "," + y);
             drawingPin(elem);
@@ -158,7 +157,8 @@ function newPart(self, part) {
             var y = parseFloat(elem.getAttribute("y")) - ymin;
             elem.setAttribute("x", x);
             elem.setAttribute("y", y);
-            elem.setAttribute("class", "var");
+            if(elem.getAttribute("name")!='text')
+               elem.setAttribute("class", "var");
             var r = elem.getAttribute("r");
             elem.setAttribute("transform", 'rotate(' + r + ' ' + x + ' ' + y + ')');
             break;

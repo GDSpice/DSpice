@@ -7,10 +7,6 @@ function itMouved(self){
 }
 
 
-function print(st){
-	console.log(st);
-}
-
 
 function strToBool(v)
 {
