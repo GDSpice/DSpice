@@ -70,6 +70,7 @@
             overflow-x: auto;
             border-bottom:  1px solid #ccc;
             min-height: 32px;
+            scrollbar-width: thin;
         }
 
         .tab {
