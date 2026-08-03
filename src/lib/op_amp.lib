@@ -515,3 +515,96 @@ DP       4   3       DX         ; Protection diode (Anode=V-, Cathode=V+)
 RP       3   4       6.667E3    ; Supply bleeder / current limiting resistor
 
 .ENDS LM311
+
+*****************************************************************************
+* LM393 VOLTAGE COMPARATOR MACROMODEL
+*
+* PIN CONNECTIONS:
+*  1 = Non-Inverting Input (+)
+*  2 = Inverting Input (-)
+*  3 = Positive Power Supply (V+)
+*  4 = Negative Power Supply (V-) / Output Ground (Common)
+*  5 = Open Collector Output
+*
+* INTERNAL NODE MAPPING (For Reference):
+*  7, 8, 9      = Internal differential and gain stage nodes
+*  10, 11       = Output driver buffering and current sensing nodes
+*  21, 22       = Input offset/bias shift nodes
+*
+* KEY FEATURES MODELED:
+*  - PNP input differential pair (Ultra-high Beta for very low input bias current)
+*  - Open-collector output stage (Emitter tied directly to V-)
+*  - Input offset voltage modeling
+*  - Low power consumption modeling (Higher supply bleeder resistance)
+*****************************************************************************
+
+.SUBCKT LM393  1  2  3  4  5
+
+* =========================================================================
+* 1. COMPONENT MODELS
+* =========================================================================
+* Input PNP differential pair transistors (Extremely high Beta = 2000 for 
+* ultra-low input bias current, a key feature of the LM393)
+.MODEL QIN PNP (IS=800.0E-18 BF=2.000E3)
+
+* Internal NPN gain/reference transistors
+.MODEL QMI NPN (IS=800.0E-18 BF=1002)
+.MODEL QMO NPN (IS=800.0E-18 BF=1000 CJC=1E-15 TR=807.4E-9)
+
+* Open-Collector Output NPN transistor (Slower switching times to match 
+* the LM393's ~1.3µs response time)
+.MODEL QOC NPN (IS=800.0E-18 BF=20.29E3 CJC=1E-15 TF=942.6E-12 TR=543.8E-9)
+
+* Protection diode model
+.MODEL DX  D   (IS=800.0E-18)
+
+* =========================================================================
+* 2. INPUT STAGE (Differential Pair & Offset)
+* =========================================================================
+* Tail current source for the input differential pair (100 µA)
+IEE      3   7  DC   100.0E-6  
+
+* Input offset voltage modeling (DC shift to simulate real-world mismatch)
+VI1     21   1  DC   0.75       ; Offset source for Non-Inverting input
+VI2     22   2  DC   0.75       ; Offset source for Inverting input
+
+* PNP Input Differential Pair
+Q1       9  21   7  QIN         ; Q1: Collector=9, Base=21, Emitter=7
+Q2       8  22   7  QIN         ; Q2: Collector=8, Base=22, Emitter=7
+
+* =========================================================================
+* 3. GAIN & LEVEL SHIFTING STAGE
+* =========================================================================
+* Active load / Current mirror configuration for high gain
+Q4       8   8   4  QMI         ; Q4: Diode-connected NPN (Reference)
+Q3       9   8   4  QMO         ; Q3: NPN gain transistor, base tied to Q4
+
+* =========================================================================
+* 4. OUTPUT STAGE (Open Collector Driver)
+* =========================================================================
+* Voltage buffer: Senses voltage across internal gain nodes (9 and 4) 
+* and replicates it across nodes 10 and 4 (V- / Output Ground)
+E1      10   4   9   4   1      ; VCVS: Gain = 1
+
+* Zero-volt source used purely to sense current for the CCCS (F1)
+V1      10  11  DC   0          ; Current sensing element
+
+* Current-controlled current source: Buffers the signal to drive the output 
+* transistor base without loading the internal high-impedance node.
+F1       9   3  V1   1          ; CCCS: Gain = 1, senses current through V1
+
+* Open-Collector Output Transistor
+* Base=11 (driven by F1/V1), Collector=5 (Output Pin), Emitter=4 (V- / GND)
+Q5       5  11   4  QOC         
+
+* =========================================================================
+* 5. PROTECTION & POWER CONSUMPTION CIRCUITRY
+* =========================================================================
+* Reverse polarity / overvoltage protection across the supply rails
+DP       4   3       DX         ; Protection diode (Anode=V-, Cathode=V+)
+
+* Supply bleeder resistor (46.3kΩ). This high value models the LM393's 
+* very low quiescent current (~0.5mA) compared to faster comparators.
+RP       3   4       46.3E3     
+
+.ENDS LM393
