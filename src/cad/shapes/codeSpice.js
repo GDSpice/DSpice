@@ -10,8 +10,8 @@
 */
 
 
- const spiceElements = ['None', 'Resistor', 'Capacitor','Inductor','Voltage Source','Current Source','Transmission Line','Diode','BJT(NPN)','BJT(PNP)','MOSFET(N)','MOSFET(P)','JFET(N)','JFET(P)','Subckt'];
- const Ref={'None':'X','Resistor':'R','Capacitor':'C','Inductor':'L','Voltage Source':'V','Current Source':'I','Transmission Line':'T','Diode':'D','BJT(NPN)':'Q','BJT(PNP)':'Q','MOSFET(N)':'M','MOSFET(P)':'M','JFET(N)':'J','JFET(P)':'J','Subckt':'X'};
+ const spiceElements = ['None', 'Resistor', 'Capacitor','Inductor','Voltage Source','Current Source','Transmission Line','Diode','BJT(NPN)','BJT(PNP)','MOSFET(N)','MOSFET(P)','JFET(N)','JFET(P)','MESFET(N)','MESFET(P)','Subckt'];
+ const Ref={'None':'X','Resistor':'R','Capacitor':'C','Inductor':'L','Voltage Source':'V','Current Source':'I','Transmission Line':'T','Diode':'D','BJT(NPN)':'Q','BJT(PNP)':'Q','MOSFET(N)':'M','MOSFET(P)':'M','JFET(N)':'J','JFET(P)':'J','MESFET(N)':'Z','MESFET(P)':'Z','Subckt':'X'};
  const twoTerminal = ['Resistor', 'Capacitor','Inductor','Voltage Source','Current Source','Diode']; 
 
 //-------------------------Class and function for resize shapes------------------------//

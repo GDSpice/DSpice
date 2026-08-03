@@ -14,3 +14,4 @@
 .include "jfet_ideal.lib"
 .include "diac.lib"
 .include "optoelectronics.lib"
+.include "mesfet.lib"
