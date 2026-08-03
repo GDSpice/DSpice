@@ -11,7 +11,7 @@
 .include "bjt_npn.lib"
 .include "mosfet_ideal.lib"
 .include "op_amp.lib"
-.include "jfet_ideal.lib"
+.include "jfet.lib"
 .include "diac.lib"
 .include "optoelectronics.lib"
 .include "mesfet.lib"

@@ -63,6 +63,8 @@
         "PMOS_4_terminal.sym",
         "NJFET.sym",
         "PJFET.sym",
+        "NMESFET.sym",
+        "PMESFET.sym",
         "Diac.sym"
     ],
     "Source": [
