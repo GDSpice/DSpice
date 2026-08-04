@@ -21,15 +21,18 @@ function getCursorByResize(resize)
 
 function getCursor(self,selectdElem)
 {    if(selectdElem)
-	  var elem=self.selectedElement;
+	   var elem=self.selectedElement;
 	 else
-	  var elem=self.setCritElem;
+	   var elem=self.setCritElem;
 	
 	if(elem.getAttribute("name")!='net') return 'move';
-	var p=getArrayPoints(elem);
-	var n=pointInPolylineGetPos(p, self.offset);
+	  var p=getArrayPoints(elem);
+	  var n=pointInPolylineGetPos(p, self.offset);
 	if(n==-1) return 'move';
-	if(p[n].x==p[n+1].x) return 'e-resize'; else return'n-resize';	
+	if(p[n].x==p[n+1].x) 
+		return 'e-resize'; 
+	else 
+		return'n-resize';	
 }
 
 

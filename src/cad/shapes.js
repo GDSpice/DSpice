@@ -192,11 +192,12 @@ function evtMouve(self) {
     }
 
     self.resize.setElement = self.selectedElement;
+    if(self.selectedElement && appDscription)
+	  getDescription(self, self.selectedElement);
+    
     self.resize.moveObject();
 
-    if(self.selectedElement && appDscription)
-	  getDescription(self,self.setElement);
-    
+
 	
 
 }
@@ -307,7 +308,7 @@ function fshapes(svg, setDrawing, width, height) {
                 self.selectAll.yo = p.y;
                 self.selectAll.x = p.x;
                 self.selectAll.y = p.y;
-				        getDescription(self,null);
+				     getDescription(self,null);
             }
 
             getListElementsAddToPageDescription();
