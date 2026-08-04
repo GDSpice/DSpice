@@ -437,6 +437,8 @@ function rotatePart() {
         }
     }
 
+    portRotate(drawing.resize.setElement);
+
 }
 
 function flipHorizontalPart() {
@@ -547,6 +549,9 @@ function flipHorizontalPart() {
             }
         }
     }
+
+
+    portRotate(drawing.resize.setElement);
 
 }
 
@@ -659,6 +664,8 @@ function flipVerticallyPart() {
             }
         }
     }
+
+    portRotate(drawing.resize.setElement);
 
 }
 

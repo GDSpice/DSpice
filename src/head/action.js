@@ -94,6 +94,10 @@ function setAction(value){
       addGnd();
     break;
 
+    case "port":
+      addPort();
+    break;
+
     case "end":
       drawing.shapes.design.mouse = false;
       drawing.shapes.design.start = false;

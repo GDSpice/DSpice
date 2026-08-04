@@ -843,6 +843,27 @@ function partSelect() {
     var part = mtable.select;
 
     if(mtable.select.getAttribute("directory")=='standard'){
+        if(part.firstChild.getAttribute("symbolname")=="Port"){
+
+        defaultData = {
+          header: { title: "Part", subtitle: "Selected" },
+          sections: [
+            {
+                title: "Basic Properties",
+                collapsed: false,
+                showReset: true,
+                rows: [
+                    { label: "Symbol.type", type: "text", value: part.firstChild.getAttribute("symbolname"), readonly: true },
+                    { label: "Symbol.file", type: "text", value: part.getAttribute("directory"), readonly: true },
+                    { label: "Symbol.name", type: "text", value: part.firstChild.getAttribute("reference") },
+                    { label: "Symbol.direction", type: "dropdown", value: part.firstChild.getAttribute("direction") , options: ['Input', 'Output','Bi-Direct'] }
+                ]
+            }
+        ]
+    };
+
+
+        } else
          defaultData = {
         header: { title: "Part", subtitle: "Selected" },
         sections: [
@@ -902,13 +923,26 @@ function partSelect() {
 }
 
 function modifiedPart() {
-  
+
+
     var part = mtable.select;
+
+    if(part.getAttribute("directory")=='standard'){
+        if(part.firstChild.getAttribute("symbolname")=="Port"){
+                part.firstChild.setAttribute("reference", propertiesData.sections[0].rows[2].value);
+                part.firstChild.setAttribute("direction", propertiesData.sections[0].rows[3].value);
+                var pin = part.querySelector('[name="pin"]');
+                pin.childNodes[2].textContent= propertiesData.sections[0].rows[2].value;
+                portRotate(mtable.select);
+        }
+
+        return;
+    }
     
     part.setAttribute("directory", propertiesData.sections[0].rows[2].value);
     part.setAttribute("sref", propertiesData.sections[0].rows[4].value);
 
-     var elem=getPartModel(part);
+    var elem=getPartModel(part);
 
     if(elem){
         elem.setAttribute("modelname", propertiesData.sections[1].rows[1].value);
