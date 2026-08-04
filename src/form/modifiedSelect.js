@@ -594,9 +594,10 @@ function modifiedPin() {
         else if (a < b)
             return -1;
         else
-            return 0;
+            return 1;
     }
-    var size = propertiesData.sections[0].rows[0].value;
+    var size = propertiesData.sections[0].rows[0].value*1;
+    console.log('size', size, 'points', points);
     if (points[0].y == points[1].y)
         points[1].x = points[0].x + sign(points[1].x, points[0].x) * size;
     else if (points[0].x == points[1].x)
