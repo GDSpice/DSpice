@@ -645,6 +645,7 @@ function fshapes(svg, setDrawing, width, height) {
             newPart(newElement, self.part);
             svg.appendChild(newElement);
             addName(newElement);
+            updateInternalParts(newElement);
 			updateVarPin(newElement);
             break;
 

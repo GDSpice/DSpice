@@ -855,7 +855,7 @@ function partSelect() {
                 rows: [
                     { label: "Symbol.type", type: "text", value: part.firstChild.getAttribute("symbolname"), readonly: true },
                     { label: "Symbol.file", type: "text", value: part.getAttribute("directory"), readonly: true },
-                    { label: "Symbol.name", type: "text", value: part.firstChild.getAttribute("reference") },
+                    { label: "Symbol.name", type: "text", value: part.getAttribute("sref") },
                     { label: "Symbol.direction", type: "dropdown", value: part.firstChild.getAttribute("direction") , options: ['Input', 'Output','Bi-Direct'] }
                 ]
             }
@@ -863,7 +863,26 @@ function partSelect() {
     };
 
 
-        } else
+    } else  if(part.firstChild.getAttribute("symbolname")=="VBar"){
+
+        defaultData = {
+          header: { title: "Part", subtitle: "Selected" },
+          sections: [
+            {
+                title: "Basic Properties",
+                collapsed: false,
+                showReset: true,
+                rows: [
+                    { label: "Symbol.type", type: "text", value: part.firstChild.getAttribute("symbolname"), readonly: true },
+                    { label: "Symbol.file", type: "text", value: part.getAttribute("directory"), readonly: true },
+                    { label: "Symbol.name", type: "text", value: part.getAttribute("sref") }
+                ]
+            }
+        ]
+    };
+
+
+    } else
          defaultData = {
         header: { title: "Part", subtitle: "Selected" },
         sections: [
@@ -878,7 +897,7 @@ function partSelect() {
             }
         ]
     };
-    }else{
+    } else{
     defaultData = {
         header: { title: "Part", subtitle: "Selected" },
         sections: [
@@ -935,6 +954,14 @@ function modifiedPart() {
                 var pin = part.querySelector('[name="pin"]');
                 pin.childNodes[2].textContent= propertiesData.sections[0].rows[2].value;
                 portRotate(mtable.select);
+                information(drawing.resize);
+        }
+
+                if(part.firstChild.getAttribute("symbolname")=="VBar"){
+                part.firstChild.setAttribute("reference", propertiesData.sections[0].rows[2].value);
+                part.setAttribute("sref", propertiesData.sections[0].rows[2].value);
+                var text = part.querySelector('[name="text"]');
+                text.textContent= propertiesData.sections[0].rows[2].value;
         }
 
         return;

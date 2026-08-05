@@ -98,6 +98,10 @@ function setAction(value){
       addPort();
     break;
 
+    case "vbar":
+      addVBar();
+    break;
+
     case "end":
       drawing.shapes.design.mouse = false;
       drawing.shapes.design.start = false;
