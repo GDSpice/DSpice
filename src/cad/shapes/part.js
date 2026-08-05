@@ -309,7 +309,6 @@ function rotatePart() {
                     var yo = p[0].x;
                     var x = p[1].y;
                     var y = p[1].x;
-
                     e.setAttribute("points", xo + "," + yo + " " + x + "," + y);
                     drawingPin(e);
                     break;
@@ -329,6 +328,7 @@ function rotatePart() {
                         e.setAttribute('rotate', '180°');
                     setparamPos(y, x, e);
                     break;
+
                 case "polyline":
                 case "polygon":
                     var p = getArrayPoints(e);

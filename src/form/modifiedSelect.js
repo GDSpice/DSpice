@@ -930,6 +930,7 @@ function modifiedPart() {
     if(part.getAttribute("directory")=='standard'){
         if(part.firstChild.getAttribute("symbolname")=="Port"){
                 part.firstChild.setAttribute("reference", propertiesData.sections[0].rows[2].value);
+                part.setAttribute("sref", propertiesData.sections[0].rows[2].value);
                 part.firstChild.setAttribute("direction", propertiesData.sections[0].rows[3].value);
                 var pin = part.querySelector('[name="pin"]');
                 pin.childNodes[2].textContent= propertiesData.sections[0].rows[2].value;

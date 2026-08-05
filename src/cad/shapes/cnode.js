@@ -257,6 +257,29 @@ for(var i=0; i<netIds.length;i++){
 			nets[j].setAttribute('ref','0');
 			
 }
+
+
+ var ports=[];
+ for(var i=0; i<parts.length;i++)
+	 if((parts[i].getAttribute('directory')=='standard') && parts[i].getAttribute('model')=='Port'){
+        pins=getListPins(parts[i]);
+		   for(var n=0; n<pins.length; n++){
+			   if(pins[n].elem.childNodes[1].style.display=="none") 
+                  ports.push({id:pins[n].elem.getAttribute('netId'),name:parts[i].firstChild.getAttribute("reference")});  				   
+			    } 
+ }
+
+ console.log(ports);
+
+ for(var i=0; i<ports.length;i++){
+	var net=document.getElementById(ports[i].id);
+	ref=net.getAttribute('ref');
+	for(var j=0; j<nets.length;j++)
+		if(nets[j].getAttribute('ref')==ref)
+			nets[j].setAttribute('ref',ports[i].name);
+			
+}
+
 	
  
 }
