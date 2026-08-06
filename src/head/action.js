@@ -482,6 +482,10 @@ function displayByPageType(){
   menuitems.probe.style.display =displayPage;
   toolbarButtons.runOpAnalysis.style.display =displayPage;
   menuitems.runOpAnalysis.style.display =displayPage;
+  toolbarButtons.vbar.style.display =displayPage;
+  menuitems.vbar.style.display =displayPage;
+  toolbarButtons.port.style.display =displayPage;
+  menuitems.port.style.display =displayPage;
 
   toolbarButtons.pin.style.display =displaySym;
   menuitems.pin.style.display =displaySym;

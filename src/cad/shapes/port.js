@@ -191,9 +191,5 @@ function portRotate(element) {
         height=ymax-ymin;
         element.setAttribute("width", parseInt(width/5)*5);
         element.setAttribute("height", parseInt(height/5)*5);
-
-      
-  
-        //information(drawing.resize);
     
 }
