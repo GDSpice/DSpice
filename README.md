@@ -13,7 +13,7 @@ DSpice: Design and Simulation of Circuits using Spice
 <p align="center">
  
  <a href="#News">
-    <img src="https://img.shields.io/badge/Version-0.1.1-blue" alt="v0.1.1">
+    <img src="https://img.shields.io/badge/Version-0.1.2-blue" alt="v0.1.2">
  </a>
 
     
@@ -44,8 +44,13 @@ The main objectives and features of DSpice are:
 
 ## News
 
-What’s New in Version 0.1.1 
+What’s New in Version 0.1.2 (06/08/2026)
 
+* New Components: Added internal port elements (Input, Output, Bidirectional), Voltage Bar element, and a new MESFET element.
+* Expanded SPICE Models: Added macro models for LM311 and LM393 (Voltage Comparator), and updated JFET and BJT model libraries for improved accuracy.
+* Enhanced UI/UX: Added SVG icons for Port and VBar in the toolbar/menus, updated the element list to display symbol names, and adjusted port sizes for better visibility.
+* Improved Workflow: Connected wires now automatically rename to match the port name.
+* Terminology & Cleanup: Renamed "Part" to "Symbol" and "Net" to "Wire" in the selection list for better clarity, and removed obsolete "modelspice" entries from the symbol list.
 * Expanded SPICE Model Libraries: Added OP-AMP library, ideal JFET, DIAC, and optoelectronics macro models (Photo Diode, Laser Diode).
 * Updated BJT (Bipolar) Transistor (PNP/NPN) SPICE model library for improved accuracy.
 * Added official DSpice documentation and manuals in reStructuredText (.rst) format.
@@ -55,13 +60,15 @@ What’s New in Version 0.1.1
 
 ## Future Work / Roadmap
 
-* Develop a comprehensive Options/Settings Dialog.
-* Create a Library Management Dialog for better component organization.
-* Expand the component library with additional semiconductor devices and digital models.
-* Export analysis results to standard formats (e.g., CSV files).
-* Integrate Verilog (Verilog-A/AMS) for mixed-signal (analog and digital) modeling.
-* Embed a Python scripting engine for automation and custom extensions.
-* Extend pplication compatibility to support multiple operating systems, specifically adding native builds for Linux and macOS.
+* Develop a dedicated Project Workspace to manage multiple circuit files, simulation profiles, and related assets in a unified, organized environment.
+* Integrate AI-assisted tools to help analyze circuits, troubleshoot errors, and optimize simulation performance.
+* Implement interactive simulation capabilities, allowing real-time parameter adjustments and immediate visual feedback during runtime.
+* Develop a comprehensive Options/Settings Dialog for advanced user customization.
+* Expand the component library with additional advanced semiconductor devices and digital models.
+* Export analysis results to standard formats (e.g., CSV, TXT files).
+* Integrate Verilog (Verilog-A/AMS) for advanced mixed-signal (analog and digital) modeling.
+* Embed a Python scripting engine for automation, custom extensions, and advanced data processing.
+* Extend application compatibility to support multiple operating systems, specifically adding native builds for Linux and macOS.
 
 ## Web Site of Software
 

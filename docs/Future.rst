@@ -4,14 +4,15 @@
 Future Work / Roadmap
 =====================
 
-* Implement AC (Alternating Current) Analysis.
-* Develop a comprehensive Options/Settings Dialog.
-* Create a Library Management Dialog for better component organization.
-* Expand the component library with additional semiconductor devices and digital models.
-* Export analysis results to standard formats (e.g., CSV files).
-* Integrate Verilog (Verilog-A/AMS) for mixed-signal (analog and digital) modeling.
-* Embed a Python scripting engine for automation and custom extensions.
-* Extend pplication compatibility to support multiple operating systems, specifically adding native builds for Linux and macOS.
+- Develop a dedicated Project Workspace to manage multiple circuit files, simulation profiles, and related assets in a unified, organized environment.
+- Integrate AI-assisted tools to help analyze circuits, troubleshoot errors, and optimize simulation performance.
+- Implement interactive simulation capabilities, allowing real-time parameter adjustments and immediate visual feedback during runtime.
+- Develop a comprehensive Options/Settings Dialog for advanced user customization.
+- Expand the component library with additional advanced semiconductor devices and digital models.
+- Export analysis results to standard formats (e.g., CSV, TXT files).
+- Integrate Verilog (Verilog-A/AMS) for advanced mixed-signal (analog and digital) modeling.
+- Embed a Python scripting engine for automation, custom extensions, and advanced data processing.
+- Extend application compatibility to support multiple operating systems, specifically adding native builds for Linux and macOS.
 
 Core Features
 =============

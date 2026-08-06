@@ -4,10 +4,16 @@
 #-------------------------------------------------------------------------------
 # Name:        tabs-container.js
 # Author:      d.fathi
-# Created:     2026-04-29
+# Created:     29/04/2026
+# Updated:     06/08/2026
+# Purpose:     Tabs container for DSpice IDE
 # Copyright:  (c) DSpice 2026
 # Licence:   free (MIT)
 #-------------------------------------------------------------------------------
+
+
+# Usage:       This script manages the tabs and content area for the DSpice IDE, allowing users to create, 
+               switch, and close tabs for different file types.
 */
 
   
@@ -389,7 +395,7 @@ document.addEventListener('touchend', () => {
             return `         
         <div class="welcome-page" id="welcomePage">
            <div class="welcome-content">
-             <h1 class="welcome-title"><span class="icon"><img src="form/logo.png" class="welcome-icon" width="100" height="100" ></span>DSpice 0.1.1</h1>
+             <h1 class="welcome-title"><span class="icon"><img src="form/logo.png" class="welcome-icon" width="100" height="100" ></span>DSpice 0.1.2</h1>
              <p class="welcome-subtitle">Designing and Simulating Circuits with SPICE</p>
 
             <div class="welcome-columns">

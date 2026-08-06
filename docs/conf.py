@@ -22,8 +22,8 @@ copyright = '2026, DSpice'
 author = 'd.fathi'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
-version='DSpice 0.1.0'
+release = '0.1.2'
+version='DSpice 0.1.2'
 
 
 # -- General configuration ---------------------------------------------------
