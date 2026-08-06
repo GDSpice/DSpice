@@ -34,7 +34,8 @@ function getListElementsAddToPageDescription()
 	   if(elem.getAttribute("name")=='pin'){
 		   name+='pin ['+elem.childNodes[2].textContent+']';
 	   } else if(elem.getAttribute("name")=='part'){
-		   name+='symbol ['+elem.getAttribute("sref")+']';
+		   name+=elem.firstChild.getAttribute("symbolname")
+		   name+=' ['+elem.getAttribute("sref")+']';
 	   } else if(elem.getAttribute("name")=='ref'){
 		   name+='ref ['+elem.textContent+']';
 	   } else if(elem.getAttribute("name")=='param'){
