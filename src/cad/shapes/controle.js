@@ -6,7 +6,7 @@ function getTextContentByType(type) {
         return 'Text styling';
         break;
     case 'modelSpice':
-        return '<model>';
+        return 'modelname';
         break;
     case 'param':
         return 'p=100';

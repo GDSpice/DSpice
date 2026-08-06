@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect x="4" y="4" width="24" height="24" rx="3" ry="3" fill="#2980b9" stroke="#1e5a8c" stroke-width="2"/>
+
+  <!-- Pins Left -->
+  <rect x="1" y="9" width="4" height="2" fill="#646464"/>
+  <rect x="1" y="15" width="4" height="2" fill="#646464"/>
+  <rect x="1" y="21" width="4" height="2" fill="#646464"/>
+
+  <!-- Pins Right -->
+  <rect x="27" y="9" width="4" height="2" fill="#646464"/>
+  <rect x="27" y="15" width="4" height="2" fill="#646464"/>
+  <rect x="27" y="21" width="4" height="2" fill="#646464"/>
+
+  <!-- S Letter -->
+  <text x="16" y="22" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">S</text>
+</svg>

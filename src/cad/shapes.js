@@ -585,7 +585,7 @@ function fshapes(svg, setDrawing, width, height) {
 
             if(element=='modelSpice')
             {
-                newElement.setAttribute("modelname", "<model>");
+                newElement.setAttribute("modelname", "modelname");
                 newElement.setAttribute("modelfile", "None");
                 newElement.setAttribute("modellist", "None");
             }
