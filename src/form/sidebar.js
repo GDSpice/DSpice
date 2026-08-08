@@ -1,80 +1,78 @@
-    
-// ========== Create ACTIVITY BAR SWITCHING ==========
-
-document.getElementById('activityBar').innerHTML = `        
-        <!--div class="activity-icon active" data-panel="explorer" title="Explorer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
-          </svg>
-        </div-->
-
-<div class="activity-icon active" data-panel="propertiesPanel" title="Variables">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M8 3H7a2 2 0 00-2 2v5a2 2 0 01-2 2 2 2 0 012 2v5a2 2 0 002 2h1"/>
-    <path d="M16 3h1a2 2 0 012 2v5a2 2 0 002 2 2 2 0 00-2 2v5a2 2 0 01-2 2h-1"/>
-  </svg>
-</div>
-
-        <div class="activity-icon" data-panel="libraryPanel" title="Library">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M2 8l10-6 10 6"/>
-            <path d="M5 8v12"/>
-            <path d="M12 8v12"/>
-            <path d="M19 8v12"/>
-            <path d="M2 20h20"/>
-            <path d="M9 20V16a3 3 0 016 0v4"/>
-          </svg>
-        </div>
-
-  <!--div class="activity-icon" data-panel="listElements" title="List Elements">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <rect x="3" y="4" width="18" height="4" rx="1"/>
-    <rect x="3" y="10" width="18" height="4" rx="1"/>
-    <rect x="3" y="16" width="18" height="4" rx="1"/>
-  </svg>
-</div>
-
-     
-        <div class="activity-icon" data-panel="library" title="Library">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2c-2 0-4 0-4 2v2h4v2H6c-2 0-2 2-2 4s0 4 2 4h2v-2c0-2 2-2 4-2h4c2 0 2-2 2-4V4c0-2-2-2-4-2z"/>
-            <path d="M12 22c2 0 4 0 4-2v-2h-4v-2h6c2 0 2-2 2-4s0-4-2-4h-2v2c0 2-2 2-4 2H8c-2 0-2 2-2 4v4c0 2 2 2 4 2z"/>
-          </svg>
-        </div-->
-
-        <div class="activity-bottom">
-          <!--div class="activity-icon" id="themeToggle" title="Toggle Dark Mode">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </div>
-
-          <div class="activity-icon" title="Settings">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
-            </svg>
-          </div>
-        </div--> `;
-
-// ==========  ACTIVITY BAR SWITCHING one strating ==========
+  /*
+#-------------------------------------------------------------------------------
+# Name:        sidebar.js
+# Author:      d.fathi
+# Created:     29/04/2026
+# Updated:     08/08/2026
+# Purpose:     Sidebar for DSpice IDE
+# Copyright:  (c) DSpice 2026
+# Licence:   free (MIT)
+#-------------------------------------------------------------------------------
 
 
+# Usage:       This script configures the sidebar for the DSpice IDE.
+*/  
 
-// ========== Add Event Listeners for Activity Bar Switching ==========
+// ========== ACTIVITY BAR CONFIGURATION ==========
 
+document.getElementById('activityBar').innerHTML = `
+  <div class="activity-icon active" data-panel="propertiesPanel" title="Properties">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3H21V21H3Z"/>
+      <path d="M6 7H10"/>
+      <path d="M12 7H18"/>
+      <path d="M6 12H10"/>
+      <path d="M12 12H18"/>
+      <path d="M6 17H10"/>
+      <path d="M12 17H18"/>
+    </svg>
+  </div>
 
+  <div class="activity-icon" data-panel="componentsPanel" title="Components">
+    <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3H21V21H3Z"/>
+      <path d="M5 8H7L8 7L9 9L10 7L11 9L12 7L13 9L14 7L15 8H19"/>
+      <path d="M5 16H9M9 13.5V18.5M11 13.5V18.5M11 16H19"/>
+    </svg>
+  </div>
+
+  <div class="activity-icon" data-panel="SPICELibraryPanel" title="SPICE Library">
+    <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3H21V21H3Z"/>
+      <path d="M4.5 9L12 4L19.5 9H4.5Z" fill="currentColor" stroke="none"/>
+      <path d="M11 6.2 A1 1 0 1 0 13 6.2 A1 1 0 1 0 11 6.2Z" fill="white" stroke="none"/>
+      <path d="M4.5 9H19.5V10.5H4.5Z" fill="currentColor" stroke="none"/>
+      <path d="M6 10.5H8V19H6Z" fill="currentColor" stroke="none"/>
+      <path d="M16 10.5H18V19H16Z" fill="currentColor" stroke="none"/>
+      <path d="M4 19H20V20H4Z" fill="currentColor" stroke="none"/>
+      <path d="M12 17.8 C10.7 16.7 9.2 16.2 7.8 16.2 V12 C9.4 11.7 10.8 12.2 12 13.3 C13.2 12.2 14.6 11.7 16.2 12 V16.2 C14.8 16.2 13.3 16.7 12 17.8Z"/>
+      <path d="M12 13.3V17.8"/>
+    </svg>
+  </div>
+
+  <div class="activity-icon" data-panel="libraryAIAssistant" title="AI Assistant">
+    <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3H21V21H3Z"/>
+      <path d="M12 6 L13.3 10.7 L18 12 L13.3 13.3 L12 18 L10.7 13.3 L6 12 L10.7 10.7 Z"/>
+      <path d="M17.5 5 L18 6.5 L19.5 7 L18 7.5 L17.5 9 L17 7.5 L15.5 7 L17 6.5 Z"/>
+    </svg>
+  </div>
+
+  <div class="activity-bottom"></div>
+`;
+
+// ========== EVENT LISTENERS FOR ACTIVITY BAR ==========
 
 document.querySelectorAll('.activity-icon').forEach(icon => {
   icon.addEventListener('click', () => {
-    // Remove active class from all icons
     document.querySelectorAll('.activity-icon').forEach(i => i.classList.remove('active'));
-    // Add active class to clicked icon
     icon.classList.add('active');
-    // Get the panel to show from data attribute
+    
     const panelToShow = icon.getAttribute('data-panel');
-    // Hide all panels
-    document.querySelectorAll('.panel').forEach(panel => panel.style.display='none');
-    // Show the selected panel
-    document.getElementById(panelToShow).style.display = 'block';
+    document.querySelectorAll('.panel').forEach(panel => panel.style.display = 'none');
+    
+    if (panelToShow) {
+      document.getElementById(panelToShow).style.display = 'block';
+    }
   });
 });

@@ -216,7 +216,7 @@ function getPartForList(self, part) {
 var listSymbols=[];
 
 function getPageLibDesc(){
-  document.getElementById("libraryPanel").innerHTML = 
+  document.getElementById("componentsPanel").innerHTML = 
     '<div style="display:flex; flex-direction:column; height:100%;">' +
     '  <div style="flex-shrink:0; background:#f0f0f0; border-bottom:1px solid #ccc;">' +
     '    <table id="customers" style="width:100%; margin:0;"><tr>' +

@@ -13,7 +13,7 @@
 
 <style>
   /* Symbol Panel */
-#libraryPanel {
+#componentsPanel {
   width: 100%;
   overflow-x: hidden;
 }
@@ -75,8 +75,8 @@
              <div   id="tree-container"></div>
         
             </div>
-        <div class="panel"  style="display: none;" id="libraryPanel"></div> 
-        <div class="panel"  style="display: none;" id="listElements"></div> 
+        <div class="panel"  style="display: none;" id="componentsPanel"></div> 
+       
       </div>
       <!-- Vertical Splitter -->
       <div class="splitter" id="splitter"></div>
@@ -186,7 +186,7 @@
     setTimeout(getSpiceVersion, 10000);
 
 
-const panel_ = document.getElementById('libraryPanel');
+const panel_ = document.getElementById('componentsPanel');
 const resizeObserver = new ResizeObserver(entries => {
   for (const entry of entries) {
     // Use contentRect for width/height (includes padding, excludes border/margin)
