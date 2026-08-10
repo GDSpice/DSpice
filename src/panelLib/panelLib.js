@@ -2,7 +2,7 @@ let currentData = null;
     let selectedFile = null;
 
     async function openLibrary() {
-        const p = await window.electron.getLibraryPath(); //ipcRenderer.invoke('get-library-path');
+        const p = await window.electron.getLibraryPath();
         if (p) loadLibrary(p);
     }
 

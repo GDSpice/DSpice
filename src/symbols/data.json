@@ -48,13 +48,13 @@
         "XOR.sym"
     ],
     "Semiconductor": [
-        "DiodeRD.sym",
-        "DiodeFRD.sym",
+        "Diode.sym",
         "DiodeSchottky.sym",
         "DiodeZener.sym",
         "DiodeLaser.sym",
         "DiodeLed.sym",
         "DiodePhoto.sym",
+        "Diac.sym",
         "DiodeBridge.sym",
         "NPN.sym",
         "PNP.sym",
@@ -65,8 +65,7 @@
         "NJFET.sym",
         "PJFET.sym",
         "NMESFET.sym",
-        "PMESFET.sym",
-        "Diac.sym"
+        "PMESFET.sym"
     ],
     "Source": [
         "DCCurrent.sym",

@@ -2,8 +2,6 @@
 .include "controlled_sources.lib"
 .include "switches.lib"
 .include "conductor_load.lib"
-.include "rectifierDiode.lib"
-.include "fastRectifierDiode.lib"
 .include "schottkyDiode.lib"
 .include "transformer.lib"
 .include "bridge.lib"
@@ -16,3 +14,4 @@
 .include "optoelectronics.lib"
 .include "mesfet.lib"
 .include "mosfet.lib"
+.include "diode.lib"
