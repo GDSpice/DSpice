@@ -83,6 +83,11 @@ contextBridge.exposeInMainWorld('electron', {
     sendEditedLayout: (data) => ipcRenderer.send('get-data-layout', data),
     //Help------------------------------------------------------------------------------------
     openBrowserWindow:(event, data)=> ipcRenderer.send('open-browser-window',event,  data),
+    //Read library and project libraries------------------------------------------------------
+    getLibraryPath: () => ipcRenderer.invoke('get-library-path'),
+    readLibrary: (libraryPath) => ipcRenderer.invoke('read-library', libraryPath),
+    readCircuitProjectLibs: (circuitPath) => ipcRenderer.invoke('read-circuit-project-libs', circuitPath),
+    readFileContent: (filePath) => ipcRenderer.invoke('read-file-content', filePath)
 
 });
 

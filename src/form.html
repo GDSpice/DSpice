@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="head/index.css">
     <link rel="stylesheet" href="list/list.css">
     <link rel="stylesheet" href="cad/css/HTMLcode.css">
+    <link rel="stylesheet" href="panelLib/panelLib.css">
 
 <style>
   /* Symbol Panel */
@@ -76,6 +77,47 @@
         
             </div>
         <div class="panel"  style="display: none;" id="componentsPanel"></div> 
+        <div class="panel"  style="display: none;" id="SPICELibraryPanel">
+          <!-- start Library Panel -->
+<div class="panelLib-container">
+
+    <!-- ===== Fixed Top ===== -->
+    <div class="panelLib-top" id="panelLibTop">
+        <div class="panelLib-header">
+            <span>📚 Spice Library Viewer</span>
+            <span class="subtitle" id="headerSubtitle">No library loaded</span>
+        </div>
+        <!-- Path bars will be inserted here by JS -->
+    </div>
+
+    <!-- ===== Scrollable Content ===== -->
+    <div class="panelLib-scroll" id="panelLibScroll">
+        <div class="empty-state" style="padding:30px 14px;text-align:center;color:#888;font-size:13px;">
+            <div style="font-size:32px;margin-bottom:8px;opacity:0.4;">📂</div>
+            <div>Loading library...</div>
+        </div>
+    </div>
+
+    <!-- ===== File Preview (collapsible) ===== -->
+    <div class="file-preview" id="filePreview">
+        <div class="file-preview-header">
+            <span class="file-preview-title" id="previewTitle">File Preview</span>
+            <span class="file-preview-close" onclick="closePreview()">✕</span>
+        </div>
+        <pre id="previewContent"></pre>
+    </div>
+
+    <!-- ===== Fixed Bottom Controls ===== -->
+    <div class="plcontrols">
+        <button class="plbtn plbtn-primary" onclick="openLibrary()">📂 Open Library</button>
+        <button class="plbtn plbtn-project" onclick="openCircuit()">⚡ Open Circuit</button>
+        <button class="plbtn plbtn-secondary" onclick="closePreview()">✕ Close Preview</button>
+    </div>
+
+</div>
+
+          <!-- end Library Panel -->
+        </div>
        
       </div>
       <!-- Vertical Splitter -->
@@ -155,6 +197,7 @@
 <script type="text/javascript" src="cad/ioData.js"></script>
 <script type="text/javascript" src="cad/std.js"></script>
 <script type="text/javascript" src="list/list.js"></script>
+<script type="text/javascript" src="panelLib/panelLib.js"></script>
 
 
 
@@ -187,6 +230,7 @@
 
 
 const panel_ = document.getElementById('componentsPanel');
+
 const resizeObserver = new ResizeObserver(entries => {
   for (const entry of entries) {
     // Use contentRect for width/height (includes padding, excludes border/margin)
