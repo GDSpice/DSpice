@@ -48,6 +48,7 @@ function registerLibraryHandlers() {
             return {
                 success: true,
                 libPath: libPath,
+                libName: path.basename(libPath),
                 libDir: libDir,
                 libraries: libraries
             };
@@ -89,6 +90,7 @@ function registerLibraryHandlers() {
                     results.push({
                         fileName: item.name,
                         relativePath: relativePath,
+                        dir: path.dirname(relativePath),
                         fullPath: fullPath,
                         size: stat.size
                     });
@@ -123,6 +125,7 @@ function registerLibraryHandlers() {
                 return {
                     success: true,
                     circuitPath: circuitPath,
+                    circuitName: path.basename(circuitPath),
                     projectDir: projectDir,
                     libCount: projectLibs.length,
                     projectLibs: projectLibs

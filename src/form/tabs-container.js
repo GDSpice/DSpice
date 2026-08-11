@@ -231,6 +231,7 @@ function switchTab(id) {
           drawing.fileName= activeFile.name;
           caption();
           displayByPageType();
+          loadCircuit(activeFile.filePath);
           
           
         }

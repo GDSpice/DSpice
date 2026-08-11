@@ -1,44 +1,35 @@
 let currentData = null;
-    let selectedFile = null;
+let selectedFile = null;
 
-    async function openLibrary() {
-        const p = await window.electron.getLibraryPath();
-        if (p) loadLibrary(p);
-    }
-
-    async function openCircuit() {
-        const p = await window.electron.getCircuitPath();
-        if (p) loadCircuit(p);
-    }
 
     async function configLibrary() {
-        const p = await window.electron.getLibraryPath();
-        if (p) loadLibrary(p);
+       window.electron.openLibraryManager();
+      // loadLibrary();
     }
 
-    async function loadLibrary(libPath) {
-        const result = await window.electron.readLibrary(libPath);
+    async function loadLibrary() {
+        const result = await window.electron.readLibrary(libarayPath);
         if (result.success) {
             currentData = result;
             buildpanelLib(result, null);
-            document.getElementById('headerSubtitle').textContent = result.libPath; //path.basename(
+            document.getElementById('headerSubtitle').textContent = result.libName; 
         } else {
             alert('Error: ' + result.error);
         }
     }
 
     async function loadCircuit(circuitPath) {
-        const libPath = 'D:\\project\\DSpice\\lib\\library.lib';
+        const libPath = libarayPath;
         const libResult = await window.electron.readLibrary(libPath);
         const projResult = await window.electron.readCircuitProjectLibs(circuitPath);
 
         if (libResult.success) {
             currentData = libResult;
             buildpanelLib(libResult, projResult);
-            document.getElementById('headerSubtitle').textContent = circuitPath; //path.basename(circuitPath);
+            document.getElementById('headerSubtitle').textContent = projResult.circuitName;
         } else {
             buildpanelLib({ libraries: [], libPath: libPath }, projResult);
-            document.getElementById('headerSubtitle').textContent = circuitPath; //path.basename(circuitPath);
+            document.getElementById('headerSubtitle').textContent = projResult.circuitName;
         }
     }
 
@@ -54,7 +45,7 @@ let currentData = null;
         // Library path bar
         const libBar = document.createElement('div');
         libBar.className = 'path-bar';
-        libBar.innerHTML = '<span title="' + libData.libPath + '"><strong>Library:</strong> ' + libData.libPath + '</span>'; //libData.libPath
+        libBar.innerHTML = '<span title="' + libData.libPath + '"><strong>Library:</strong> ' + libData.libName + '</span>'; 
         const cfgBtn = document.createElement('button');
         cfgBtn.className = 'config-btn';
         cfgBtn.innerHTML = '⚙️ Config';
@@ -67,7 +58,7 @@ let currentData = null;
         if (projectData && projectData.circuitPath) {
             const cirBar = document.createElement('div');
             cirBar.className = 'path-bar circuit';
-            cirBar.innerHTML = '<span title="' + projectData.circuitPath + '"><strong>Circuit:</strong> ' + projectData.circuitPath + '</span>'; //path.basename
+            cirBar.innerHTML = '<span title="' + projectData.circuitPath + '"><strong>Circuit:</strong> ' + projectData.circuitName + '</span>'; 
             panelLibTop.appendChild(cirBar);
         }
 
@@ -97,7 +88,7 @@ let currentData = null;
         if (projLibs.length > 0) {
             const byDir = {};
             projLibs.forEach(p => {
-                const d = path.dirname(p.relativePath);
+                const d = p.dir;
                 if (!byDir[d]) byDir[d] = [];
                 byDir[d].push(p);
             });
@@ -122,16 +113,16 @@ let currentData = null;
         const row = document.createElement('div');
         row.className = 'plrow' + (!lib.exists ? ' missing' : '');
         row.innerHTML = '<div class="plrow-icon">' + (lib.exists ? '📄' : '❓') + '</div><div class="plrow-info"><div class="plrow-name">' + lib.fileName + '</div><div class="plrow-path">' + lib.filePath + '</div></div><span class="plrow-status ' + (lib.isLocal ? 'status-local' : 'status-external') + '">' + (lib.isLocal ? 'Local' : 'External') + '</span>' + (!lib.exists ? '<span class="plrow-status status-missing">Missing</span>' : '');
-        row.onclick = () => selectFile(row, lib);
+        row.ondblclick = () => selectFile(row, lib);
         return row;
     }
 
     function createProjectLibRow(p) {
         const row = document.createElement('div');
         row.className = 'plrow';
-        const d = path.dirname(p.relativePath) !== '.' ? path.dirname(p.relativePath) + '\\' : '';
+        const d =p.dir !== '.' ? p.dir + '\\' : '';
         row.innerHTML = '<div class="plrow-icon">📄</div><div class="plrow-info"><div class="plrow-name">' + p.fileName + '</div><div class="plrow-path">' + d + p.fileName + '</div></div><span class="plrow-status status-project">Project</span>';
-        row.onclick = () => selectFile(row, { fileName: p.fileName, fullPath: p.fullPath, exists: true });
+        row.ondblclick = () => selectFile(row, { fileName: p.fileName, fullPath: p.fullPath, exists: true });
         return row;
     }
 
@@ -140,26 +131,47 @@ let currentData = null;
         row.classList.add('selected');
         selectedFile = lib;
         if (lib.exists) {
-            const r = await window.electron.readFileContent(lib.fullPath);
-            showPreview(lib.fileName, r.success ? r.content : 'Error: ' + r.error);
+            const r = await window.electron.editText(lib.fullPath,0);
         } else {
-            showPreview(lib.fileName, 'File not found at: ' + lib.fullPath);
+            alert('File not found at: ' + lib.fullPath);
         }
     }
 
     function toggleSection(h) { h.parentElement.classList.toggle('collapsed'); }
 
-    function showPreview(t, c) {
-        document.getElementById('filePreview').classList.add('show');
-        document.getElementById('previewTitle').textContent = '📄 ' + t;
-        document.getElementById('previewContent').textContent = c;
-    }
 
-    function closePreview() {
-        document.getElementById('filePreview').classList.remove('show');
-        document.querySelectorAll('.plrow.selected').forEach(r => r.classList.remove('selected'));
-        selectedFile = null;
-    }
+
+ function loadPanelLib() {
+
+  document.getElementById('SPICELibraryPanel').innerHTML = `
+   <div class="panelLib-container">
+
+    <!-- ===== Fixed Top ===== -->
+    <div class="panelLib-top" id="panelLibTop">
+        <div class="panelLib-header">
+            <span>Spice Library Viewer</span>
+            <span class="subtitle" style=" display: none;"  id="headerSubtitle">No library loaded</span>
+        </div>
+        <!-- Path bars will be inserted here by JS -->
+    </div>
+
+    <!-- ===== Scrollable Content ===== -->
+    <div class="panelLib-scroll" id="panelLibScroll">
+        <div class="empty-state" style="padding:30px 14px;text-align:center;color:#888;font-size:13px;">
+            <div style="font-size:32px;margin-bottom:8px;opacity:0.4;">📂</div>
+            <div>Loading library...</div>
+        </div>
+    </div>
+
+
+    <!-- ===== Fixed Bottom Controls ===== -->
+    <div class="plcontrols" style=" display: none;">
+        <button class="plcontrol-btn" onclick="configLibrary()">⚙️ Configure Library</button>
+    </div>
+
+ </div>`;
+
+ }
 
    function updateContainerHeight() {
         const container = document.querySelector('.panelLib-container');
@@ -172,6 +184,7 @@ let currentData = null;
     window.addEventListener('resize', updateContainerHeight);
 
     window.onload = () => {
+        loadPanelLib();
         updateContainerHeight();
-        loadLibrary('D:\\project\\DSpice\\lib\\library.lib');
+        loadLibrary();
     };
