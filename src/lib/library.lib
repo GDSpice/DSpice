@@ -15,3 +15,4 @@
 .include "mesfet.lib"
 .include "mosfet.lib"
 .include "diode.lib"
+.include "zenerDiode.lib"

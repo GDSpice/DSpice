@@ -1,0 +1,80 @@
+
+*=============================================================
+*  ZENER DIODE SPICE MODELS LIBRARY
+*-------------------------------------------------------------
+
+*-------------------------------------------------------------
+*  Model parameters:
+*    IS  = reverse saturation (leakage) current
+*    N   = emission coefficient (controls knee sharpness)
+*    RS  = series / dynamic resistance (slope above breakdown)
+*    BV  = Zener breakdown voltage
+*    IBV = test current at which BV is specified
+*
+*  NOTE: For AC / transient switching simulations you may add
+*        CJO (junction capacitance) and TT (transit time).
+*=============================================================
+
+*-------------------------------------------------------------
+* DZ3V3 : 3.3V Zener (approx. 1N4728A / BZX55C3V3)
+* Use   : 3.3V logic rail regulation, level shifting
+*-------------------------------------------------------------
+.model DZ3V3 D ( IS=1e-9 N=1.9 RS=10 BV=3.3 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ4V7 : 4.7V Zener (approx. 1N4732A / BZX55C4V7)
+* Use   : 5V rail clamping, general-purpose regulation
+*-------------------------------------------------------------
+.model DZ4V7 D ( IS=1e-9 N=1.8 RS=8 BV=4.7 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ5V1 : 5.1V Zener (approx. 1N4733A / BZX55C5V1)
+* Use   : classic 5V shunt regulator, over-voltage protection
+*-------------------------------------------------------------
+.model DZ5V1 D ( IS=1e-9 N=1.7 RS=7 BV=5.1 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ5V6 : 5.6V Zener (approx. 1N4734A / BZX55C5V6)
+* Use   : best temperature stability, simple voltage reference
+*-------------------------------------------------------------
+.model DZ5V6 D ( IS=1e-9 N=1.7 RS=6 BV=5.6 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ6V2 : 6.2V Zener (approx. 1N4735A / BZX55C6V2)
+* Use   : biasing and regulation between 5V and 9V rails
+*-------------------------------------------------------------
+.model DZ6V2 D ( IS=1e-9 N=1.6 RS=6 BV=6.2 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ7V5 : 7.5V Zener (approx. 1N4737A / BZX55C7V5)
+* Use   : pre-regulation of 9V/12V rails, op-amp clamping
+*-------------------------------------------------------------
+.model DZ7V5 D ( IS=5e-10 N=1.6 RS=8 BV=7.5 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ9V1 : 9.1V Zener (approx. 1N4739A / BZX55C9V1)
+* Use   : regulation of 12V rails down to ~9V reference
+*-------------------------------------------------------------
+.model DZ9V1 D ( IS=5e-10 N=1.6 RS=9 BV=9.1 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ12V : 12V Zener (approx. 1N4742A / BZX55C12)
+* Use   : 12V bus protection and regulation
+*-------------------------------------------------------------
+.model DZ12V D ( IS=1e-10 N=1.5 RS=9 BV=12 IBV=1m )
+
+*-------------------------------------------------------------
+* DZ15V : 15V Zener (approx. 1N4744A)
+* Use   : datasheet-matched test current IBV=17mA
+*-------------------------------------------------------------
+.model DZ15V D ( IS=1e-10 N=1.5 RS=14 BV=15 IBV=17m )
+
+*-------------------------------------------------------------
+* DZ24V : 24V Zener (approx. 1N4749A)
+* Use   : 24V industrial line protection
+*-------------------------------------------------------------
+.model DZ24V D ( IS=1e-11 N=1.5 RS=25 BV=24 IBV=10m )
+
+*=============================================================
+*  END OF LIBRARY
+*=============================================================
