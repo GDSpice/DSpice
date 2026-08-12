@@ -65,7 +65,9 @@
         "NJFET.sym",
         "PJFET.sym",
         "NMESFET.sym",
-        "PMESFET.sym"
+        "PMESFET.sym",
+        "POWER NMOS.sym",
+        "POWER PMOS.sym"
     ],
     "Source": [
         "DCCurrent.sym",

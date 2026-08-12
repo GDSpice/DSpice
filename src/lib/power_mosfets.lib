@@ -1,0 +1,117 @@
+*=============================================================
+*  POWER MOSFET (VDMOS) SPICE MODELS LIBRARY
+*-------------------------------------------------------------
+*  File   : power_mosfets.lib
+*-------------------------------------------------------------
+*  Model parameters:
+*    Vto    = gate threshold voltage (negative for P-channel)
+*    Rd     = drain resistance  (ohm)
+*    Rs     = source resistance (ohm)
+*    Rb     = bulk/body resistance (ohm)
+*    Rg     = gate resistance (ohm)
+*    mtriode= triode-region transconductance multiplier
+*    cgs    = gate-source capacitance
+*    cgdmax = gate-drain capacitance at Vds = 0 (Miller plateau max)
+*    cgdmin = gate-drain capacitance at high Vds
+*    Is     = body-diode saturation current
+*    Rbd    = body-diode bulk resistance
+*    ksubth = subthreshold conduction factor
+*    mfg/Vds/Ron/Qg = informational (datasheet) fields
+*
+*  NOTE: These are simplified generic models for functional
+*        simulation. Use manufacturer models for precision work.
+*=============================================================
+
+*-------------------------------------------------------------
+* IRF540N : N-ch, 100V, 33A, Rds(on)=44mOhm, Qg=63nC
+* Use     : general purpose switching, motor drives
+*-------------------------------------------------------------
+.model IRF540N VDMOS (Vto=4.16 Rd=0.063 Rs=0.025 Rb=0.057 Rg=1.7
++ mtriode=0.735 cgdmax=3n cgdmin=300p cgs=1.6n
++ Is=7.88p Rbd=0.618 ksubth=26.2
++ mfg=IR Vds=100 Ron=0.044 Qg=63n)
+
+*-------------------------------------------------------------
+* IRFZ44N : N-ch, 55V, 49A, Rds(on)=17.5mOhm, Qg=63nC
+* Use     : low-voltage DC-DC converters, PWM switching
+*-------------------------------------------------------------
+.model IRFZ44N VDMOS (Vto=3.8 Rd=0.035 Rs=0.015 Rb=0.04 Rg=1.4
++ mtriode=0.9 cgdmax=2.2n cgdmin=220p cgs=1.9n
++ Is=10p Rbd=0.4 ksubth=30
++ mfg=IR Vds=55 Ron=0.0175 Qg=63n)
+
+*-------------------------------------------------------------
+* IRF3205 : N-ch, 55V, 110A, Rds(on)=8mOhm, Qg=146nC
+* Use     : high-current automotive & battery applications
+*-------------------------------------------------------------
+.model IRF3205 VDMOS (Vto=3.5 Rd=0.016 Rs=0.008 Rb=0.03 Rg=1.1
++ mtriode=1.0 cgdmax=4.5n cgdmin=450p cgs=5.8n
++ Is=20p Rbd=0.3 ksubth=35
++ mfg=IR Vds=55 Ron=0.008 Qg=146n)
+
+*-------------------------------------------------------------
+* IRFB4110 : N-ch, 100V, 180A, Rds(on)=3.7mOhm, Qg=240nC
+* Use     : ultra-low Ron synchronous rectification, SMPS
+*-------------------------------------------------------------
+.model IRFB4110 VDMOS (Vto=3.3 Rd=0.007 Rs=0.004 Rb=0.015 Rg=0.8
++ mtriode=1.2 cgdmax=6n cgdmin=600p cgs=8n
++ Is=30p Rbd=0.2 ksubth=40
++ mfg=IR Vds=100 Ron=0.0037 Qg=240n)
+
+*-------------------------------------------------------------
+* STP55NF06 : N-ch, 60V, 60A, Rds(on)=14mOhm, Qg=80nC
+* Use     : 12V/24V systems, H-bridge motor control
+*-------------------------------------------------------------
+.model STP55NF06 VDMOS (Vto=3.5 Rd=0.025 Rs=0.012 Rb=0.03 Rg=1.2
++ mtriode=0.9 cgdmax=2.8n cgdmin=280p cgs=3.5n
++ Is=18p Rbd=0.35 ksubth=35
++ mfg=ST Vds=60 Ron=0.014 Qg=80n)
+
+*-------------------------------------------------------------
+* IRF740 : N-ch, 400V, 10A, Rds(on)=550mOhm, Qg=72nC
+* Use     : offline SMPS, half/full bridge topologies
+*-------------------------------------------------------------
+.model IRF740 VDMOS (Vto=3.8 Rd=0.4 Rs=0.05 Rb=0.1 Rg=2.5
++ mtriode=0.4 cgdmax=1n cgdmin=100p cgs=1n
++ Is=3p Rbd=1.5 ksubth=40
++ mfg=IR Vds=400 Ron=0.55 Qg=72n)
+
+*-------------------------------------------------------------
+* IRF840 : N-ch, 500V, 8A, Rds(on)=850mOhm, Qg=60nC
+* Use     : high-voltage switching, fluorescent ballasts
+*-------------------------------------------------------------
+.model IRF840 VDMOS (Vto=4.0 Rd=0.7 Rs=0.05 Rb=0.1 Rg=3.0
++ mtriode=0.35 cgdmax=0.8n cgdmin=80p cgs=0.9n
++ Is=2p Rbd=2.0 ksubth=45
++ mfg=IR Vds=500 Ron=0.85 Qg=60n)
+
+*-------------------------------------------------------------
+* IRFP460 : N-ch, 500V, 20A, Rds(on)=270mOhm, Qg=207nC
+* Use     : high-power SMPS, UPS, welding supplies
+*-------------------------------------------------------------
+.model IRFP460 VDMOS (Vto=4.036 Rd=0.0692 Rs=0.0219 Rb=0.166 Rg=1.48
++ mtriode=0.48 cgdmax=4.8n cgdmin=480p cgs=7n
++ Is=6.4p Rbd=1.05 ksubth=50
++ mfg=IR Vds=500 Ron=0.27 Qg=207n)
+
+*-------------------------------------------------------------
+* IRF9540 : P-ch, -100V, -23A, Rds(on)=117mOhm, Qg=43nC
+* Use     : high-side switching without charge pump
+*-------------------------------------------------------------
+.model IRF9540 VDMOS (Vto=-4.0 Rd=0.2 Rs=0.05 Rb=0.08 Rg=2.0
++ mtriode=0.6 cgdmax=1.5n cgdmin=150p cgs=1.2n
++ Is=5p Rbd=0.8 ksubth=25
++ mfg=IR Vds=100 Ron=0.117 Qg=43n)
+
+*-------------------------------------------------------------
+* IRF4905 : P-ch, -55V, -74A, Rds(on)=20mOhm, Qg=180nC
+* Use     : high-current high-side switch, reverse polarity prot.
+*-------------------------------------------------------------
+.model IRF4905 VDMOS (Vto=-3.5 Rd=0.04 Rs=0.02 Rb=0.05 Rg=1.5
++ mtriode=0.8 cgdmax=5n cgdmin=500p cgs=7.5n
++ Is=15p Rbd=0.35 ksubth=30
++ mfg=IR Vds=55 Ron=0.02 Qg=180n)
+
+*=============================================================
+*  END OF LIBRARY
+*=============================================================

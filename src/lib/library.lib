@@ -16,3 +16,4 @@
 .include "mosfet.lib"
 .include "diode.lib"
 .include "zenerDiode.lib"
+.include "power_mosfets.lib"

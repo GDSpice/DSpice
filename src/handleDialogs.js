@@ -21,7 +21,7 @@ async function createEditWindowHtml(text,caption) {
             height: 395,
             parent: BrowserWindow.getFocusedWindow(), 
             modal: true,
-            icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
+            icon: path.join(__dirname, 'build', 'logo.ico'), // modified logo
             autoHideMenuBar: true,
             resizable: false,
             minimizable: false,
@@ -71,7 +71,7 @@ async function createDialogPythonPath() {
           width: 610,
           height: 300,
           parent: BrowserWindow.getFocusedWindow(),
-          icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
+          icon: path.join(__dirname, 'build', 'logo.ico'), // modified logo
           modal: true,
           resizable: false,
           minimizable: false,
@@ -181,7 +181,7 @@ ipcMain.on('open-browser-window', (event, data) => {
             width: 800,
             height: 695,
             parent: BrowserWindow.getFocusedWindow(),
-            icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
+            icon: path.join(__dirname, 'build', 'logo.ico'), // modified logo
             modal: true,
             autoHideMenuBar: true,
             webPreferences: {
