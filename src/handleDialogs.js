@@ -153,7 +153,7 @@ ipcMain.on('open-dialog-about', () => {
           width: 600,
           height: 500,
           parent: BrowserWindow.getFocusedWindow(),
-          icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
+          icon: path.join(__dirname, 'build', 'logo.ico'), //modified logo
           modal: true,
           resizable: false,
           minimizable: false,
@@ -191,9 +191,10 @@ ipcMain.on('open-browser-window', (event, data) => {
         });
         console.log(data);
       if(data=="help")
-        dialogWindow.loadURL('http://dspice.sf.net/doc');
+        dialogWindow.loadURL('https://dspice.readthedocs.io/');
       if(data=="webPage")
         dialogWindow.loadURL('http://dspice.sf.net/');
+
       if(data=="elements")
         dialogWindow.loadURL('https://dspice.sourceforge.io/doc/Models.html');
   
