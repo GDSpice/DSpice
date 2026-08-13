@@ -5,6 +5,14 @@ News
 ====
 What’s New in Version
 
+ **v0.1.3  (13-08-2027)**
+
+- Expanded SPICE Model Libraries: Added power MOSFET (VDMOS) and Zener diode SPICE models, with comprehensive updates to existing MOSFET and diode model libraries.
+- Enhanced Sidebar & Library Management: Introduced a dedicated SPICE library panel in the sidebar, complete with new SVG icons for better navigation and visual consistency.
+- Improved Workflow: Users can now open files directly from the SPICE library panel into the netlist editor, streamlining the circuit design process.
+- System Improvements: Updated dialog handling mechanisms for better stability and a smoother user experience.
+
+
  **v0.1.2  (06-08-2027)**
 
 - New Components: Added internal port elements (Input, Output, Bidirectional), Voltage Bar element, and a new MESFET element.
