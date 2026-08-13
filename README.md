@@ -13,7 +13,7 @@ DSpice: Design and Simulation of Circuits using Spice
 <p align="center">
  
  <a href="#News">
-    <img src="https://img.shields.io/badge/Version-0.1.2-blue" alt="v0.1.2">
+    <img src="https://img.shields.io/badge/Version-0.1.3-blue" alt="v0.1.3">
  </a>
 
     
@@ -44,18 +44,17 @@ The main objectives and features of DSpice are:
 
 ## News
 
-What’s New in Version 0.1.2 (06/08/2026)
+What’s New in Version 0.1.3 (13/08/2026)
 
+* Expanded SPICE Model Libraries: Added power MOSFET (VDMOS) and Zener diode SPICE models, with comprehensive updates to existing MOSFET and diode model libraries.
+* Enhanced Sidebar & Library Management: Introduced a dedicated SPICE library panel in the sidebar, complete with new SVG icons for better navigation and visual consistency.
+* Improved Workflow: Users can now open files directly from the SPICE library panel into the netlist editor, streamlining the circuit design process.
+* System Improvements: Updated dialog handling mechanisms for better stability and a smoother user experience.
 * New Components: Added internal port elements (Input, Output, Bidirectional), Voltage Bar element, and a new MESFET element.
 * Expanded SPICE Models: Added macro models for LM311 and LM393 (Voltage Comparator), and updated JFET and BJT model libraries for improved accuracy.
 * Enhanced UI/UX: Added SVG icons for Port and VBar in the toolbar/menus, updated the element list to display symbol names, and adjusted port sizes for better visibility.
 * Improved Workflow: Connected wires now automatically rename to match the port name.
 * Terminology & Cleanup: Renamed "Part" to "Symbol" and "Net" to "Wire" in the selection list for better clarity, and removed obsolete "modelspice" entries from the symbol list.
-* Expanded SPICE Model Libraries: Added OP-AMP library, ideal JFET, DIAC, and optoelectronics macro models (Photo Diode, Laser Diode).
-* Updated BJT (Bipolar) Transistor (PNP/NPN) SPICE model library for improved accuracy.
-* Added official DSpice documentation and manuals in reStructuredText (.rst) format.
-* Enhanced UI/UX: Element descriptions now appear on mouse move, and basic drawing elements have been updated.
-* Bug Fixes: Resolved issues with dragging analysis elements when adding them, and fixed selecting/moving polylines in the drawing canvas.
 
 
 ## Future Work / Roadmap
