@@ -794,49 +794,8 @@ function modifiedText() {
 }
 
 
-//-------codePy description ---------------------------------------------------
-function codePySelect() {
+//-------part description ---------------------------------------------------
 
-        defaultData = {
-        header: { title: "CodePy", subtitle: "Selected" },
-        sections: [
-            {
-                title: "Basic Properties",
-                collapsed: false,
-                showReset: true,
-                rows: [
-                    { label: "Width  (px)", type: "number", value: parseInt(mtable.select.getAttribute("width")) },
-                    { label: "Height (px)", type: "number", value: parseInt(mtable.select.getAttribute("height")) },
-                    { label: "Pos.x", type: "number", value: parseInt(mtable.select.getAttribute("x")) },
-                    { label: "Pos.y", type: "number", value: parseInt(mtable.select.getAttribute("y")) },
-                    { label: "CodePy", type: "Button", value: 'Show Model', setClick:'openEditCodePy()' }
-                ]
-            }
-        ]
-    };
-
-    mtable.type = "codePy";
-    propertiesData = JSON.parse(JSON.stringify(defaultData));
-    buildPanel();
-
-
-}
-
-function modifiedcodePy() {
-
-  var codePy_= mtable.select;
-
-    codePy_.setAttribute("width", propertiesData.sections[0].rows[0].value);
-    codePy_.setAttribute("height", propertiesData.sections[0].rows[1].value);
-    codePy_.setAttribute("x", propertiesData.sections[0].rows[2].value);
-    codePy_.setAttribute("y", propertiesData.sections[0].rows[3].value);
-
-
-    modifedSizeCodePy(mtable.select);
-    deleteEllipseMS(mtable.resize);
-    if (mtable.resize.setElement)
-     mtable.resize.creatEllipse();
-}
 
 
 function partSelect() {

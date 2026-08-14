@@ -62,69 +62,13 @@ ipcMain.handle('edit-text-html', async (event, text,caption) => {
 
 //Python path dialog--------------------------------------------------------------------------
 
-let pythonPathWindow = null;
-
-async function createDialogPythonPath() {
-    return new Promise((resolve) => {
-  if (!pythonPathWindow) {
-      pythonPathWindow = new BrowserWindow({
-          width: 610,
-          height: 300,
-          parent: BrowserWindow.getFocusedWindow(),
-          icon: path.join(__dirname, 'build', 'logo.ico'), // modified logo
-          modal: true,
-          resizable: false,
-          minimizable: false,
-          maximizable: false,
-          title: "python Path",
-          autoHideMenuBar: true,
-          webPreferences: {
-              preload: path.join(__dirname, 'preload.js'),
-              contextIsolation: true
-          }
-      });
-
-      pythonPathWindow.loadFile(path.join(__dirname, 'dialogs','pythonPath.html'));
-
-        pythonPathWindow.webContents.once('did-finish-load', () => {
-                const folderPath = path.join(config.folderPath, 'python');
-                const dirs = fs.readdirSync(folderPath).filter(f => {
-                    return fs.statSync(path.join(folderPath, f)).isDirectory();
-    });
-            const dirsWithPath = dirs.map(f => path.join(folderPath, f));
-            pythonPathWindow.webContents.send('python-folders',dirs, dirsWithPath  );
-        });
-
-      pythonPathWindow.on('closed', () => {
-          pythonPathWindow = null;
-           resolve(null); // ⬅️ return to `index.html`
-      });
-  }
-});
-
-}
-
-ipcMain.handle('dialog-python-path', async (event) => {
-    return await createDialogPythonPath();
-});
 
 
 
-ipcMain.handle('save-python-folder', async (event, folder) => {
-const folderPath = folder//path.join(__dirname, 'python', folder);
-const configPath = path.join(config.folderPath,'python', 'config.json');
-let _json = {};
-if (fs.existsSync(configPath)) {
-    try {
-        _json = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-    } catch (e) {
-        _json = {};
-    }
-}
-_json.pythonPath = folderPath;
-fs.writeFileSync(configPath, JSON.stringify(_json, null, 2), 'utf-8');
-return true;    
-});
+
+
+
+
 
 ipcMain.handle('get-python-folder', async () => {
     const configPath = path.join(config.folderPath,'python', 'config.json');

@@ -6,152 +6,14 @@ const fs = require('fs');
 const os = require('os');
 const config = require('./config');
 
-function getPythonFolder(){    
-    
-    const configPath = path.join(config.folderPath,'python', 'config.json');
-    if (fs.existsSync(configPath)) {
-        try {
-            const _json = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-            return path.join(config.folderPath, 'python', _json.pythonPath, "python.exe") 
-        } catch (e) {
-            return null;
-        }
-    }
-    return null;
-}
 
 
-// Executing Python script and returning results-----------------------------------------------------------------------
-// editor of codePy
-let editWindowCodePy;
+// Executing ngspice netlist and returning results-----------------------------------------------------------------------
 
-
-async function createEditWindowCodePy(codeCircuit,codeAnalysis,caption) {
-    return new Promise((resolve) => {
-      editWindowCodePy = new BrowserWindow({
-            width: 800,
-            height: 850,
-            parent: BrowserWindow.getFocusedWindow(), 
-            modal: true,
-            icon: path.join(__dirname, 'build', 'logo_win.ico'), // 🖼️ modified logo
-            autoHideMenuBar: true,
-            resizable: false,
-            minimizable: false,
-            maximizable: false,
-            title: caption,
-            webPreferences: {
-                preload: path.join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                enableRemoteModule: false,
-                nodeIntegration: false
-            }
-        });
-        var pathpage=path.join(__dirname,'dialogs','editCodePy.html')
-        
-        editWindowCodePy.loadFile(pathpage);
-
-        editWindowCodePy.webContents.once('did-finish-load', () => {
-            editWindowCodePy.webContents.send('set-codePy', codeCircuit,codeAnalysis);
-        });
-
-        ipcMain.once('save-edited-codePy', (event, newText) => {
-            resolve(newText); // ⬅️ return to `index.html`
-            if (editWindowCodePy) {
-                editWindowCodePy.close();
-                editWindowCodePy = null;
-            }
-        });
-
-
-                
-
-
-        ipcMain.on("run-python-code", (event, code) => {
-            if (pypyProcess) {
-                console.log("PyPy process is already running.");
-                return;
-            }
-
-            // Write the code to a temporary file
-            const scriptPath = path.join(config.folderPath, 'temp_script.py');
-            fs.writeFileSync(scriptPath,code , 'utf8');
-            const pypyPath = getPythonFolder();
-            console.log("Starting Python process...");
-            pypyProcess = spawn(pypyPath, [scriptPath]);
-    
-                let buffer = "";
-
-                pypyProcess.stdout.on("data", (data) => {
-                    buffer += data.toString();
-
-                    // تقسيم الإخراج إلى أسطر
-                    let lines = buffer.split("\n");
-
-                    // نحتفظ بآخر جزء لأنه قد يكون غير مكتمل
-                    buffer = lines.pop();
-
-                    for (let line of lines) {
-                        const trimmed = line.trim();
-                        if (!trimmed) continue;
-
-                        try {
-                            const progressData = JSON.parse(trimmed);
-                            editWindowCodePy.webContents.send("pyCode-progress", progressData);
-                        } catch (error) {
-                            // إذا لم يكن JSON نرسله كنص عادي
-                            editWindowCodePy.webContents.send("pyCode-container", trimmed);
-                        }
-                    }
-                });
-    
-                pypyProcess.stderr.on("data", (data) => {
-                    console.error(`⚠️ stderr: ${data}`);
-                    editWindowCodePy.webContents.send("pyCode-container", `⚠️ error: \n${data.toString()}`);
-                });
-
-                pypyProcess.on("close", (code) => {
-                    console.log(`✅ انتهى PyPy برمز الخروج ${code}`);
-                    // لو بقيت بيانات غير معالجة في buffer
-                    if (buffer.trim()) {
-                        try {
-                            const lastData = JSON.parse(buffer.trim());
-                            editWindowCodePy.webContents.send("pyCode-progress", lastData);
-                        } catch {
-                            editWindowCodePy.webContents.send("pyCode-container", buffer.trim());
-                        }
-                    }
-                    buffer = "";
-                    pypyProcess = null;
-                    editWindowCodePy.webContents.send("pyCode-close");
-                });
-    });
-
-        ipcMain.on("stop-python-execution", () => {
-            if (pypyProcess) {
-                console.log("🛑 Stope PyPy process...");
-                pypyProcess.kill(); // stop process
-                pypyProcess = null;
-                editWindowCodePy.webContents.send("pyCode-close");
-            } else {
-                console.log("❌ PyPy process running.");
-            }
-        });
-
-
-    });
-    
-}
-
-
-ipcMain.handle('edit-codePy', async (event, codeCircuit,codeAnalysis,caption) => {
-    return await createEditWindowCodePy(codeCircuit,codeAnalysis,caption);
-});
-            
-
-
-
+     
 
 const NGSPICE_PATH = path.join(config.folderPath, 'ngspice','bin', 'ngspice_con.exe');
+
 
 ipcMain.handle('show-exec-op', async (event, spiceCode) => {
   try {
@@ -707,7 +569,7 @@ function formatValuetemp(value) {
 
 
 module.exports = {
-    getPythonFolder
+    
   };
 
 

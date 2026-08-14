@@ -9,7 +9,7 @@ const { handlersListSignalsParams } = require('./handleListSignalsParams');
 const handleExecSpice = require('./handleExecSpice');
 const handleGestionSymbols = require('./handleGestionSymbols');
 const handleLibraryManager = require('./handleLibraryManager');
-const { registerLibraryHandlers } = require('./handlelibrary');
+const { registerLibraryHandlers } = require('./handleLibrary');
 const handleListModels = require('./handleListModels');
 const {handlersLayout}= require('./handleLayout');
 
@@ -31,7 +31,7 @@ app.whenReady().then(() => {
     height: 600,
     maximized: true,
     icon: path.join(__dirname, 'build', 'logo.ico'), //  modified logo
-    autoHideMenuBar: false, // Hide the menu bar
+    autoHideMenuBar: true, // Hide the menu bar
     webPreferences: {
       preload:path.join(__dirname,'preload.js'), 
       contextIsolation: true,

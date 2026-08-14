@@ -47,25 +47,6 @@ function generateCodePyofCircuit(){
 }
 
 
-async function openEditCodePy() {
-
-  const originalText = mtable.select.getAttribute("code");
-  const circuitText=generateCodePyofCircuit();
-  const editedText = await window.electron.editCodePy(circuitText,originalText,'Python Code Editor');
-  mtable.select.setAttribute("code",editedText.text);
-
-  if( editedText.data=='') {
-    mtable.select.firstChild.innerHTML =ico_svg;
-    modifedSizeCodePy(mtable.select);
-    return;
-  }
-  
-  const svgMatch = editedText.data.match(/<svg[^>]*>[\s\S]*<\/svg>/i);
-  let svgOnly = svgMatch ? svgMatch[0] : '';
-  mtable.select.firstChild.innerHTML=svgOnly;
-  modifedSizeCodePy(mtable.select);
-  
-}
 
 
 function modifedSizeCodePy(element) {

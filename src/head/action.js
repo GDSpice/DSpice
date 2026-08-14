@@ -139,9 +139,7 @@ function setAction(value){
        window.electron.openDialogAbout();
     break;
 
-    case "pythonPath":
-       openDialogPythonPath();
-    break;
+
 
     case "after":
       after_();
@@ -590,10 +588,6 @@ document.addEventListener("keyup", function(event) {
 
 
 
-async function openDialogPythonPath()
-{
- await window.electron.openDialogPythonPath();
-}
 
 window.electron.onActive(() => {
 });

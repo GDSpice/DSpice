@@ -35,25 +35,14 @@ contextBridge.exposeInMainWorld('electron', {
     saveAsWindowEditor: (data,filepath) => ipcRenderer.invoke('save-as-window-editor',data,filepath),
     openDialogAbout: () => ipcRenderer.send('open-dialog-about'),
     showConfirmationEditDialog: (message) => ipcRenderer.invoke('show-confirmation-edit-dialog', message),
-    //Python path dialog-------------------------------------------------------------------
-    openDialogPythonPath: () => ipcRenderer.invoke('dialog-python-path'),
-    pythonFolders: (callback) => ipcRenderer.on('python-folders', (event, dirs,dirsWithPath) => callback(dirs,dirsWithPath)),
-    savePythonFolder: (folder) => ipcRenderer.invoke('save-python-folder', folder),
-    getPythonFolder: () => ipcRenderer.invoke('get-python-folder'),
+ 
     
     //Edit html------------------------------------------------------------------------------
     editTextHtml: (text,caption) => ipcRenderer.invoke('edit-text-html', text,caption),
     onSetTextHtml: (callback) => ipcRenderer.on('set-text-html', (event, text) => callback(text)),
     sendEditedTextHtml: (text) => ipcRenderer.send('save-edited-text-html', text),
-    //Edit codePy------------------------------------------------------------------------------
-    editCodePy: (codeCircuit,codeAnalysis,caption) => ipcRenderer.invoke('edit-codePy', codeCircuit,codeAnalysis,caption),
-    onSetCodePy: (callback) => ipcRenderer.on('set-codePy', (event, codeCircuit,codeAnalysis) => callback(codeCircuit,codeAnalysis)),
-    sendEditedCodePy: (text) => ipcRenderer.send('save-edited-codePy', text),
-    runPythonCode: (code) => ipcRenderer.send('run-python-code', code),
-    onPyCodeProgress: (callback) => ipcRenderer.on("pyCode-progress", (event, data) => callback(data)),
-    onPyCodeContainer: (callback) => ipcRenderer.on("pyCode-container", (event, data) => callback(data)),
-    pyCodeClose: (callback) => ipcRenderer.on("pyCode-close", (event) => callback()),
-    stopPythonExecution: () => ipcRenderer.send('stop-python-execution'),
+
+    
     //Params----------------------------------------------------------------------------------
     editParams: (params, modelName) => ipcRenderer.invoke('edit-params', params, modelName),
     onSetParams: (callback) => ipcRenderer.on('set-params', (event, params, modelName) => callback(params, modelName)),
