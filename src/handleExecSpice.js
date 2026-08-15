@@ -12,7 +12,7 @@ const config = require('./config');
 
      
 
-const NGSPICE_PATH = path.join(config.folderPath, 'ngspice','bin', 'ngspice_con.exe');
+const NGSPICE_PATH = config.pathNgspice;
 
 
 ipcMain.handle('show-exec-op', async (event, spiceCode) => {
