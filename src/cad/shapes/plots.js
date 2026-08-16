@@ -1,28 +1,21 @@
 /*
 #-------------------------------------------------------------------------------
 # Name:        plots.js
-# Purpose:     PyAMS.org
+# Purpose:     DSpice
 # Author:      d.fathi
 # Created:     06/11/2021
-# Copyright:  (c) PyAMS 2021-2014
+# Copyright:  (c) DSpice 2021-2026
 # Licence:
 #-------------------------------------------------------------------------------
  */
-
 /*
-array to sting and string to array
-const elements = [5.2, 6.5, 9];
-s=elements.join()
-console.log(s);
-d=s.split(",").map(Number);
+Despite the fact that Plotly.js is open source, it is licensed under the MIT license, which means that you can use it for free in your own projects, 
+even commercial ones. However, if you want to use Plotly.js in a commercial product, you may need to purchase a commercial license from Plotly.
+it used in this project for plotting graphs and visualizing data. It provides a wide range of chart types and customization options, making it a popular
+ choice for data visualization in web applications.
 
-console.log(d[0]+d[1]);
-https://plotly.com/javascript/plotlyjs-function-reference/
-https://plotly.com/javascript/multiple-axes/
-https://community.plotly.com/t/get-state-of-current-chart/5827
-https://plotly.com/javascript/axes/
-https://www.w3schools.com/js/js_json_parse.asp
- */
+*/
+
 
 function plots() {
     var npoints = 10000;
@@ -58,14 +51,81 @@ function plots() {
     }
 
 }
-
+/*
 
 var plotConfig = {
     displaylogo: false,
     modeBarButtonsToRemove: ['toImage', 'pan2d', 'toggleSpikelines', 'select2d', 'lasso2d', 'resetScale2d']
 };
+*/
 
+// ============================================
+// Custom button icon for opening in a new window
+// ============================================
+var openExternalIcon = {
+    width: 1000,
+    height: 1000,
+    path: 'M786 296v-267q0-15-11-26t-25-10h-214v214h-143v-214h-214q-15 0-25 10t-11 26v267q0 1 0 2t0 2l321 264 321-264q1-1 1-4z m124 39l-34-41q-5-5-12-6h-2q-7 0-12 3l-386 322-386-322q-7-4-13-4-7 2-12 7l-35 41q-4 5-3 13t6 12l401 334q18 15 42 15t43-15l136-114v109q0 8 5 13t13 5h107q8 0 13-5t5-13v-227l122-102q5-5 6-12t-4-13z',
+    transform: 'matrix(1 0 0 -1 0 850)'
+};
 
+// ============================================
+// Plotly configuration for the plots
+// ============================================
+var plotConfig = {
+    displayModeBar: true,
+    displaylogo: false,
+    responsive: true,
+    modeBarButtonsToAdd: [
+        {
+            name: 'openExternal',
+            title : 'Open in New Window',
+            icon: openExternalIcon,
+            click: function(gd) {
+                // Get the data and layout from the current plot
+                var data = gd.data;
+                var layout = gd.layout;
+                
+                // Check if the Electron API is available
+                if (window.electron && window.electron.openGraphWindow) {
+                    window.electron.openGraphWindow({
+                        data: data,
+                        layout: layout,
+                        title: layout.title ? layout.title.text : 'Analysis Graph'
+                    });
+                } else {
+                    // Fallback for non-Electron environments: open in a new browser window
+                    var graphData = JSON.stringify({data: data, layout: layout});
+                    var newWindow = window.open('', '_blank');
+                    newWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Graph - Full View</title>
+                            <script src="https://cdn.plot.ly/plotly-latest.min.js"><\/script>
+                            <style>
+                                body { margin: 0; padding: 0; overflow: hidden; background: #fff; }
+                                #graph { width: 100vw; height: 100vh; }
+                            </style>
+                        </head>
+                        <body>
+                            <div id="graph"></div>
+                            <script>
+                                var graphData = ${graphData};
+                                Plotly.newPlot('graph', graphData.data, graphData.layout, {
+                                    displayModeBar: true,
+                                    displaylogo: false
+                                });
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                }
+            }
+        }
+    ],
+    modeBarButtonsToRemove: ['sendDataToCloud', 'resetScale2d'] // Remove the default "Send to Cloud" button
+};
 
 function addPlot(elem) {
 	creatPin(elem);

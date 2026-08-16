@@ -75,7 +75,9 @@ contextBridge.exposeInMainWorld('electron', {
     //Read library and project libraries------------------------------------------------------
     readLibrary: (libraryPath) => ipcRenderer.invoke('read-library', libraryPath),
     readCircuitProjectLibs: (circuitPath) => ipcRenderer.invoke('read-circuit-project-libs', circuitPath),
-    readFileContent: (filePath) => ipcRenderer.invoke('read-file-content', filePath)
+    readFileContent: (filePath) => ipcRenderer.invoke('read-file-content', filePath),
+    //Open graph window----------------------------------------------------------------------
+    openGraphWindow: (graphData) => ipcRenderer.send('open-graph-window', graphData)
 
 });
 

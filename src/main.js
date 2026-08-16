@@ -268,7 +268,7 @@ ipcMain.handle('get-library-files', async (event, libraryName, files) => {
 
 
 
-// Display a confirmation message and return the result to `index.html`
+// Display a confirmation message and return the result to `form.html`
 ipcMain.handle('show-confirmation-dialog', async (event, message) => {
   const result = await dialog.showMessageBox(mainWindow,{
       type: 'question',
@@ -406,6 +406,133 @@ ipcMain.handle('read-clipboard', () => clipboard.readText());
 ipcMain.handle('clipboard-write', (event, text) => {
   clipboard.writeText(text);
   return true;
+});
+
+
+// Handle the 'open-graph-window' event from the renderer process---------------------------------
+
+
+let graphWindow = null;
+
+ipcMain.on('open-graph-window', (event, graphData) => {
+    // Close the existing graph window if it exists
+    if (graphWindow && !graphWindow.isDestroyed()) {
+        graphWindow.close();
+    }
+
+    graphWindow = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        title: graphData.title || 'Graph Viewer',
+        icon: path.join(__dirname, 'build', 'logo.ico'), 
+        autoHideMenuBar: true, 
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
+        }
+    });
+
+
+
+    // Load the graph viewer HTML content with the provided graph data
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <title>${graphData.title || 'Graph Viewer'}</title>
+        
+
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #f5f5f5; 
+                overflow: hidden; 
+            }
+            #graph-container { 
+                width: 100vw; 
+                height: 100vh; 
+                padding: 10px;
+            }
+            #graph { 
+                width: 100%; 
+                height: 100%; 
+                background: white;
+                border-radius: 4px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            .header {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                z-index: 1000;
+                background: rgba(255,255,255,0.9);
+                padding: 5px 15px;
+                border-radius: 4px;
+                font-size: 14px;
+                color: #333;
+                border: 1px solid #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header"> Click on the points to see the values</div>
+         
+        <div id="graph-container">
+            <div id="graph"></div>
+        </div>
+        
+        <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+        <script>
+            var graphData = ${JSON.stringify(graphData)};
+            
+            // تحديث التخطيط للعرض الكامل
+            var layout = graphData.layout || {};
+            layout.autosize = true;
+            layout.width = undefined;
+            layout.height = undefined;
+            layout.margin = { l: 60, r: 40, t: 60, b: 60 };
+            
+            var config = {
+                displayModeBar: true,
+                displaylogo: false,
+                responsive: true,
+                scrollZoom: true,
+                toImageButtonOptions: {
+                    format: 'png',
+                    filename: 'graph',
+                    height: 900,
+                    width: 1600,
+                    scale: 2
+                }
+            };
+
+            Plotly.newPlot('graph', graphData.data, layout, config);
+            
+            // (hover) 
+            Plotly.relayout('graph', {
+                hovermode: 'closest',
+                hoverlabel: {
+                    bgcolor: '#FFF',
+                    bordercolor: '#333',
+                    font: { size: 13, color: '#333' }
+                }
+            });
+            
+            // Resize the plot when the window is resized
+            window.addEventListener('resize', function() {
+                Plotly.Plots.resize(document.getElementById('graph'));
+            });
+        <\/script>
+    </body>
+    </html>`;
+
+    graphWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent));
+    
+    // Open DevTools for debugging (optional)
+    // graphWindow.webContents.openDevTools();
 });
 
 
