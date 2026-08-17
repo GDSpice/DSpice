@@ -31,7 +31,7 @@ app.whenReady().then(() => {
     height: 600,
     maximized: true,
     icon: path.join(__dirname, 'build', 'logo.ico'), //  modified logo
-    autoHideMenuBar: true, // Hide the menu bar
+    autoHideMenuBar: false, // Hide the menu bar
     webPreferences: {
       preload:path.join(__dirname,'preload.js'), 
       contextIsolation: true,
@@ -530,6 +530,43 @@ ipcMain.on('open-graph-window', (event, graphData) => {
     </html>`;
 
     graphWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent));
+    
+    // Open DevTools for debugging (optional)
+    // graphWindow.webContents.openDevTools();
+});
+
+
+
+// Handle the 'open-html-window' event from the renderer process---------------------------------
+
+
+let htmlWindow = null;
+
+ipcMain.on('open-html-window', (event, htmlData) => {
+    // Close the existing graph window if it exists
+    if (htmlWindow && !htmlWindow.isDestroyed()) {
+        htmlWindow.close();
+    }
+
+    htmlWindow = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        title: 'Html Viewer',
+        icon: path.join(__dirname, 'build', 'logo.ico'), 
+        autoHideMenuBar: false, 
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
+        }
+    });
+
+
+
+    // Load the graph viewer HTML content with the provided graph data
+    const htmlContent = htmlData;
+
+    htmlWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent));
     
     // Open DevTools for debugging (optional)
     // graphWindow.webContents.openDevTools();

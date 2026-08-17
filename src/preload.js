@@ -41,8 +41,8 @@ contextBridge.exposeInMainWorld('electron', {
     editTextHtml: (text,caption) => ipcRenderer.invoke('edit-text-html', text,caption),
     onSetTextHtml: (callback) => ipcRenderer.on('set-text-html', (event, text) => callback(text)),
     sendEditedTextHtml: (text) => ipcRenderer.send('save-edited-text-html', text),
+    openHtmlWindow: (htmlData) => ipcRenderer.send('open-html-window', htmlData),
 
-    
     //Params----------------------------------------------------------------------------------
     editParams: (params, modelName) => ipcRenderer.invoke('edit-params', params, modelName),
     onSetParams: (callback) => ipcRenderer.on('set-params', (event, params, modelName) => callback(params, modelName)),

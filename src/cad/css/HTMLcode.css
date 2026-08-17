@@ -9,6 +9,7 @@
     border-radius: 8px;
     color: #333;
     box-sizing: border-box;
+    position: relative;
 }
 
 
@@ -115,3 +116,71 @@
         min-width: 100%;
     }
 }
+
+
+
+/****************************************************************/
+
+
+
+        /* Tools container */
+        .chtool {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Toolbar hidden by default */
+        .ch-page-toolbar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 6px;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none; /* Prevents clicking while hidden */
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Fix here: When hovering over the parent .chtool container, the toolbar appears */
+        .chtool:hover .ch-page-toolbar {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto; /* Allows clicking when visible */
+        }
+
+        .ch-toolbar-button {
+            width: 45px;
+            height: 45px;
+            border: none;
+            padding: 0;
+            background: #d0d0d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .ch-toolbar-button:hover {
+            background: #bcbcbc;
+        }
+
+        .ch-toolbar-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #555;
+        }
+
+        @media print {
+            .ch-page-toolbar {
+                display: none !important;
+            }
+        }
