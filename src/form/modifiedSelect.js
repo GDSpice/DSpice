@@ -1044,10 +1044,13 @@ function analysisSelect() {
 
     } else if(analy.type=='Time Domain') {
         var tr=analy.time
+        if(!tr.uic)
+            tr.uic='true';
         defaultData.sections.push({ title: "Time Domain Properties", collapsed: false, showReset: true, rows: [] });
         defaultData.sections[1].rows.push( { label: 'Start', type: "text", value: tr.start });
         defaultData.sections[1].rows.push( { label: 'Step', type: "text", value: tr.step });
         defaultData.sections[1].rows.push( { label: 'Stop', type: "text", value: tr.stop });
+        defaultData.sections[1].rows.push( { label: 'UIC', type: "dropdown", value: tr.uic, options: ['false', 'true'] });
 
         var r=tr.yAxe;
         var x=tr.xAxe;
@@ -1129,6 +1132,7 @@ function modifiedAnalysis() {
             analy.time.start=propertiesData.sections[1].rows[0].value;
             analy.time.step=propertiesData.sections[1].rows[1].value;
             analy.time.stop=propertiesData.sections[1].rows[2].value;
+            analy.time.uic=propertiesData.sections[1].rows[3].value;
         }
 
 

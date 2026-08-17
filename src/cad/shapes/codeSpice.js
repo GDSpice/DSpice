@@ -432,7 +432,16 @@ function getNewStruct(name,nodes,index,netListData,color)
         var tr=analy.time
         var r=tr.yAxe;
         var x=tr.xAxe;
-        var cmd=`.tran   ${tr.step}  ${tr.stop}  ${tr.start}  uic\n`;
+        var cmd=`.tran   ${tr.step}  ${tr.stop}  ${tr.start}  `;
+
+             
+        if(!tr.uic)
+            tr.uic='true';
+        if(tr.uic=='true')
+           cmd+=' uic\n';
+        else
+            cmd+='\n';
+
 
     } else if(analy.type=='AC Analysis') {
         var ac=analy.ac;
