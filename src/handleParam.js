@@ -22,7 +22,7 @@ async function createEditParamsDialog(params, modelName) {
             width: 500,
             height: 310,
             parent: BrowserWindow.getFocusedWindow(),
-            icon: path.join(__dirname, 'build', 'logo.ico'), //
+            icon: config.appIcon, //
             modal: true,
             resizable: false,
             minimizable: false,

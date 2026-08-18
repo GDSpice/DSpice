@@ -11,7 +11,7 @@ async function createSymbolsManagementWindow(data) {
             width: 480,
             height: 410,
             parent: BrowserWindow.getFocusedWindow(), //  Make it a sub-window
-            icon: path.join(__dirname, 'build', 'logo.ico'), //  modified logo
+            icon: config.appIcon, //  modified logo
             modal: true,
             autoHideMenuBar: true,
             resizable: false,

@@ -30,7 +30,7 @@ app.whenReady().then(() => {
     width: 800,
     height: 600,
     maximized: true,
-    icon: path.join(__dirname, 'build', 'logo.ico'), //  modified logo
+    icon: config.appIcon, //  modified logo
     autoHideMenuBar: false, // Hide the menu bar
     webPreferences: {
       preload:path.join(__dirname,'preload.js'), 
@@ -424,7 +424,7 @@ ipcMain.on('open-graph-window', (event, graphData) => {
         width: 1200,
         height: 800,
         title: graphData.title || 'Graph Viewer',
-        icon: path.join(__dirname, 'build', 'logo.ico'), 
+        icon: config.appIcon, 
         autoHideMenuBar: true, 
         webPreferences: {
             nodeIntegration: false,
@@ -551,8 +551,8 @@ ipcMain.on('open-html-window', (event, htmlData) => {
         width: 1200,
         height: 800,
         title: 'Html Viewer',
-        icon: path.join(__dirname, 'build', 'logo.ico'), 
-        autoHideMenuBar: false, 
+        icon: config.appIcon, 
+        autoHideMenuBar: true, 
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,

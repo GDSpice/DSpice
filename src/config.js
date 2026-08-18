@@ -16,26 +16,19 @@ if (createExecutable) {
 }
 
 let pathNgspice;
+let appIcon;
 
 if (process.platform === 'win32') {
-    pathNgspice = path.join(
-        folderPath,
-        'ngspice',
-        'bin',
-        'ngspice_con.exe'
-    );
+    pathNgspice = path.join(folderPath,'ngspice','bin','ngspice_con.exe');
+    appIcon = path.join(__dirname, 'build', 'logo.ico');
 } else if (process.platform === 'linux') {
-    pathNgspice = path.join(
-        folderPath,
-        'ngspice_linux',
-        'bin',
-        'ngspice'
-    );
+    pathNgspice = path.join(folderPath,'ngspice_linux','bin','ngspice');
+    appIcon = path.join(__dirname, 'build', 'logo.png');
 }
 
-console.log('ngspice path:', pathNgspice);
 
 module.exports = {
     folderPath,
-    pathNgspice
+    pathNgspice,
+    appIcon
 };

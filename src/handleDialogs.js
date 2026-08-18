@@ -21,7 +21,7 @@ async function createEditWindowHtml(text,caption) {
             height: 395,
             parent: BrowserWindow.getFocusedWindow(), 
             modal: true,
-            icon: path.join(__dirname, 'build', 'logo.ico'), // modified logo
+            icon: config.appIcon, // modified logo
             autoHideMenuBar: true,
             resizable: false,
             minimizable: false,
@@ -97,7 +97,7 @@ ipcMain.on('open-dialog-about', () => {
           width: 600,
           height: 500,
           parent: BrowserWindow.getFocusedWindow(),
-          icon: path.join(__dirname, 'build', 'logo.ico'), //modified logo
+          icon: config.appIcon, //modified logo
           modal: true,
           resizable: false,
           minimizable: false,
@@ -125,7 +125,7 @@ ipcMain.on('open-browser-window', (event, data) => {
             width: 800,
             height: 695,
             parent: BrowserWindow.getFocusedWindow(),
-            icon: path.join(__dirname, 'build', 'logo.ico'), // modified logo
+            icon: config.appIcon, // modified logo
             modal: true,
             autoHideMenuBar: true,
             webPreferences: {

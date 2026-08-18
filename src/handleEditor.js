@@ -26,7 +26,7 @@ async function createEditWindow(filePath,data) {
             width: 800,
             height: 600,
             parent: BrowserWindow.getFocusedWindow(), // ⬅️ Make it a sub-window
-            icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
+            icon: config.appIcon, // 🖼️ modified logo
             modal: true,
             autoHideMenuBar: true,
             webPreferences: {

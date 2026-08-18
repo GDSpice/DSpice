@@ -23,7 +23,7 @@ const LIB_FILE = path.join(LIB_DIR, 'library.lib');
         minimizable: false,
         maximizable: false,
         autoHideMenuBar: true,
-        icon: path.join(__dirname, 'build', 'logo.ico'), 
+        icon: config.appIcon, 
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false

@@ -59,6 +59,7 @@
       "config.js",
       "dialogs/about.html",
       "dialogs/editHtml.html",
+      "dialogs/htmlViewe.html",
       "dialogs/list.html",
       "dialogs/listElm.html",
       "dialogs/listModels.html",
@@ -195,9 +196,14 @@
       "target": "dmg"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "build/logo.png"
-    }
+    "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+    ],
+    "icon": "build/icons",
+    "category": "Utility"
+   }
   },
   "dependencies": {
     "monaco-editor": "^0.55.1"

@@ -223,7 +223,7 @@ async function createAnalysisWindow(spiceCode) {
             height: 555,
             parent: BrowserWindow.getFocusedWindow(), 
             modal: true,
-            icon: path.join(__dirname, 'build', 'logo.ico'), // 🖼️ modified logo
+            icon: config.appIcon, // 🖼️ modified logo
             autoHideMenuBar: true,
             resizable: false,
             minimizable: false,
