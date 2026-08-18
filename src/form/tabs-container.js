@@ -396,7 +396,7 @@ document.addEventListener('touchend', () => {
             return `         
         <div class="welcome-page" id="welcomePage">
            <div class="welcome-content">
-             <h1 class="welcome-title"><span class="icon"><img src="form/logo.png" class="welcome-icon" width="100" height="100" ></span>DSpice 0.1.3</h1>
+             <h1 class="welcome-title"><span class="icon"><img src="form/logo.png" class="welcome-icon" width="100" height="100" ></span>DSpice 0.1.4</h1>
              <p class="welcome-subtitle">Designing and Simulating Circuits with SPICE</p>
 
             <div class="welcome-columns">

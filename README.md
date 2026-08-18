@@ -13,7 +13,7 @@ DSpice: Design and Simulation of Circuits using Spice
 <p align="center">
  
  <a href="#News">
-    <img src="https://img.shields.io/badge/Version-0.1.3-blue" alt="v0.1.3">
+    <img src="https://img.shields.io/badge/Version-0.1.4-blue" alt="v0.1.4">
  </a>
 
     
@@ -44,18 +44,17 @@ The main objectives and features of DSpice are:
 
 ## News
 
-What’s New in Version 0.1.3 (13/08/2026)
+What’s New in Version 0.1.4 (18/08/2026)
 
+* Cross-Platform Expansion: Added native compatibility for Linux distributions (Ubuntu, Debian, Linux Mint, Xubuntu, Lubuntu) via `.deb` and `AppImage` packages.
+* Advanced Viewing & Export: Introduced an HTML viewer page with print and save support, and a new Graph Viewer with PNG export capabilities.
+* Simulation Enhancements: Added the UIC (Use Initial Conditions) option for more precise and controlled simulation startup.
+* Codebase Optimization: Removed the legacy Python version of the application to streamline development and focus entirely on the modern ElectronJS architecture.
 * Expanded SPICE Model Libraries: Added power MOSFET (VDMOS) and Zener diode SPICE models, with comprehensive updates to existing MOSFET and diode model libraries.
 * Enhanced Sidebar & Library Management: Introduced a dedicated SPICE library panel in the sidebar, complete with new SVG icons for better navigation and visual consistency.
 * Improved Workflow: Users can now open files directly from the SPICE library panel into the netlist editor, streamlining the circuit design process.
 * System Improvements: Updated dialog handling mechanisms for better stability and a smoother user experience.
 * New Components: Added internal port elements (Input, Output, Bidirectional), Voltage Bar element, and a new MESFET element.
-* Expanded SPICE Models: Added macro models for LM311 and LM393 (Voltage Comparator), and updated JFET and BJT model libraries for improved accuracy.
-* Enhanced UI/UX: Added SVG icons for Port and VBar in the toolbar/menus, updated the element list to display symbol names, and adjusted port sizes for better visibility.
-* Improved Workflow: Connected wires now automatically rename to match the port name.
-* Terminology & Cleanup: Renamed "Part" to "Symbol" and "Net" to "Wire" in the selection list for better clarity, and removed obsolete "modelspice" entries from the symbol list.
-
 
 ## Future Work / Roadmap
 

@@ -5,6 +5,14 @@ News
 ====
 What’s New in Version
 
+ **v0.1.4  (18-08-2027)**
+
+- Cross-Platform Expansion: Added native compatibility for Linux distributions (Ubuntu, Debian, Linux Mint, Xubuntu, Lubuntu) via `.deb` and `AppImage` packages.
+- Advanced Viewing & Export: Introduced an HTML viewer page with print and save support, and a new Graph Viewer with PNG export capabilities.
+- Simulation Enhancements: Added the UIC (Use Initial Conditions) option for more precise and controlled simulation startup.
+- Codebase Optimization: Removed the legacy Python version of the application to streamline development and focus entirely on the modern ElectronJS architecture.
+
+
  **v0.1.3  (13-08-2027)**
 
 - Expanded SPICE Model Libraries: Added power MOSFET (VDMOS) and Zener diode SPICE models, with comprehensive updates to existing MOSFET and diode model libraries.
