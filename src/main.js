@@ -543,7 +543,6 @@ ipcMain.on('open-graph-window', (event, graphData) => {
 let htmlWindow = null;
 
 ipcMain.on('open-html-window', (event, htmlData) => {
-    // Close the existing graph window if it exists
     if (htmlWindow && !htmlWindow.isDestroyed()) {
         htmlWindow.close();
     }
@@ -561,18 +560,51 @@ ipcMain.on('open-html-window', (event, htmlData) => {
         }
     });
 
-
-
-    // Load the graph viewer HTML content with the provided graph data
-    const htmlContent = htmlData;
-
-    htmlWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent));
+    var pathpage=path.join(__dirname,'dialogs','htmlViewe.html');
+    htmlWindow.loadFile(pathpage);
     
-    // Open DevTools for debugging (optional)
-    // graphWindow.webContents.openDevTools();
+    htmlWindow.webContents.once('did-finish-load', () => {
+                htmlWindow.webContents.send('set-html-code', htmlData);
+            });
+    
 });
 
+// --- File Save Handler (new) ---
+ipcMain.handle('save-html-file', async (event, htmlContent) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    
+    // Open native "Save As" dialog
+    const { filePath } = await dialog.showSaveDialog(win, {
+        title: 'Save HTML File',
+        defaultPath: 'page.html',
+        filters: [
+            { name: 'HTML Files', extensions: ['html', 'htm'] }
+        ]
+    });
 
+    if (filePath) {
+        try {
+            // Write content to file
+            fs.writeFileSync(filePath, htmlContent, 'utf-8');
+            return { success: true, path: filePath };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // If user canceled the operation
+    return { success: false, canceled: true };
+});
+
+// --- Print Handler (New) ---
+ipcMain.handle('print-page', async (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    // Use built-in Electron printing for better control (e.g., background printing)
+    return await win.webContents.print({ 
+        silent: false, 
+        printBackground: true 
+    });
+});
 
 
 
