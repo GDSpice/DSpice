@@ -33,7 +33,13 @@
     .ch-page-toolbar { 
         display: none !important; 
     }
-    
+
+.conteneur-parent {
+  display: flex;
+  justify-content: center; /* Centre horizontalement */
+  align-items: center;     /* Centre verticalement */
+  height: 100vh;           /* Optionnel : prend toute la hauteur de l'écran */
+}
     /* Ensure page has proper dimensions and is not considered empty */
     html, body {
         height: auto !important;
@@ -129,8 +135,17 @@
             // Initialize HTML content on DOM loaded
             document.addEventListener("DOMContentLoaded", () => {
                 window.electron.onSetHtmlCode((code) => {
-                    console.log(code);
-                    document.getElementById("code").innerHTML = code;
+                    document.getElementById("code").innerHTML = code.htmlcode;
+                    if(document.getElementById("circuit")) {
+                    document.getElementById("circuit").innerHTML=`
+                    <div class"conteneur-parent">
+                    <svg width="60%" height="auto" viewBox="0 0 ${code.circuit.width}   ${code.circuit.heigth}">
+                                                     ${code.circuit.svg}   
+                                                                  
+                        </svg>
+                     </div>`;
+                    }
+
                 });
             });
         </script>

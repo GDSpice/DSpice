@@ -75,6 +75,7 @@ function nodes()
         newElement.setAttribute("rx", r);
         newElement.setAttribute("ry", r);
 		newElement.setAttribute("id", 'node'+i);
+		newElement.setAttribute("name",'cnode');
         svg.appendChild(newElement);
     }
 	

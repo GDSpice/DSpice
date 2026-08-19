@@ -112,5 +112,5 @@ async function openEditCSS() {
 
 
 function goHome(){
-  window.electron.openHtmlWindow(mtable.select.firstChild.firstChild.getAttribute("code"));
+  window.electron.openHtmlWindow({htmlcode:mtable.select.firstChild.firstChild.getAttribute("code"),circuit:getCircuit()});
 }
