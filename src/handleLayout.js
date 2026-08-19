@@ -1,5 +1,6 @@
 const { ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
+const config = require('./config');
 
 
 function handlersLayout(mainWindow) {
