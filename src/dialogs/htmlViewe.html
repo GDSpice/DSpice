@@ -27,40 +27,29 @@
             .ch-toolbar-button { width: 45px; height: 45px; border: none; padding: 0; background: #d0d0d0; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 6px; transition: background 0.2s; }
             .ch-toolbar-button:hover { background: #bcbcbc; }
             .ch-toolbar-button svg { width: 24px; height: 24px; fill: #555; }
-            @media print { .ch-page-toolbar { display: none !important; } }
+            .conteneur-parent {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
             @media print {
-    /* Hide toolbar when printing */
-    .ch-page-toolbar { 
-        display: none !important; 
-    }
-
-.conteneur-parent {
-  display: flex;
-  justify-content: center; /* Centre horizontalement */
-  align-items: center;     /* Centre verticalement */
-  height: 100vh;           /* Optionnel : prend toute la hauteur de l'écran */
-}
-    /* Ensure page has proper dimensions and is not considered empty */
-    html, body {
-        height: auto !important;
-        min-height: 100vh !important;
-        background-color: white !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* Force browser to print colors and backgrounds accurately */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    /* Prevent cards from splitting across pages */
-    .ch-card, .ch-col, .ch-formula {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-}
+                .ch-page-toolbar { display: none !important; }
+                html, body {
+                    height: auto !important;
+                    min-height: 100vh !important;
+                    background-color: white !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                * {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                .ch-card, .ch-col, .ch-formula {
+                    break-inside: avoid !important;
+                    page-break-inside: avoid !important;
+                }
+            }
         </style>
     </head>
     <body>
@@ -80,9 +69,11 @@
             </div>
 
             <div id="code"></div>
+            <div id="dataplots"></div>
         </div>
-
+ <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
         <script>
+
             // Print page function
             window.printPage = async function() {
                 // Wait for page rendering to complete
@@ -137,17 +128,59 @@
                 window.electron.onSetHtmlCode((code) => {
                     document.getElementById("code").innerHTML = code.htmlcode;
                     if(document.getElementById("circuit")) {
+                    var svg=code.circuit.svg;
                     document.getElementById("circuit").innerHTML=`
-                    <div class"conteneur-parent">
-                    <svg width="60%" height="auto" viewBox="0 0 ${code.circuit.width}   ${code.circuit.heigth}">
-                                                     ${code.circuit.svg}   
-                                                                  
-                        </svg>
-                     </div>`;
-                    }
+                       <div class"conteneur-parent">
+                          <svg width="56%" height="auto" viewBox="0 0 ${svg.width}   ${svg.heigth}">
+                                                     ${svg.data}                                         
+                          </svg>
+                       </div>`;
+                        }
 
-                });
+                    var plots=code.circuit.plots;
+                    document.getElementById('dataplots').setAttribute("plots", JSON.stringify(plots));
+                    plotsData();
             });
+        });
+
+            function plotsData(){
+
+                 var plots=JSON.parse(document.getElementById('dataplots').getAttribute("plots"));
+                if(plots)
+                for(var i=0; i<plots.length; i++)
+                      {
+                        var id='plot'+(i+1);
+                        if(document.getElementById(id)) {
+                                    var layout = plots[i].layout;
+            layout.autosize = true;
+            layout.width = undefined;
+            layout.height = undefined;
+            layout.margin = { l: 60, r: 40, t: 60, b: 60 };
+            
+            var config = {
+                displayModeBar: true,
+                displaylogo: false,
+                responsive: true,
+                toImageButtonOptions: {
+                    format: 'png',
+                    filename: 'graph',
+                    height: 900,
+                    width: 1600,
+                    scale: 2
+                }
+            };
+            
+            Plotly.newPlot(id,  plots[i].data, layout, config);
+
+                        }
+                        
+                      }
+            }
+                    
+                   
+
+              plotsData();  
+          
         </script>
     </body>
     </html>

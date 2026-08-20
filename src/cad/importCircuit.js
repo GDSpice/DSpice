@@ -37,7 +37,7 @@ function getCircuit() {
             xmin = Math.min(x, xmin);
             ymin = Math.min(y, ymin);
             xmax = Math.max(x + w, xmax+10);
-            ymax = Math.max(y + h, ymax+10);
+            ymax = Math.max(y + h, ymax);
            console.log( elem.getAttribute("name"));
             break
         case "ellipse":
@@ -191,6 +191,18 @@ function getCircuit() {
     copySvg.setAttribute("width", xmax - xmin);
     copySvg.setAttribute("height", ymax - ymin);
 
-    return {svg:copySvg.innerHTML, width: xmax - xmin, heigth:ymax-ymin}
+    var plots=[];
+
+var t=document.getElementById("sym").children;
+   for(var i=0; i<t.length; i++){
+    if(t[i].getAttribute("name")=='analysis') {
+       var elem=t[i].lastChild.firstChild;
+       var layout=JSON.parse(elem.getAttribute("layout"));
+       var data=JSON.parse(elem.getAttribute("data"));
+       plots.push({layout:layout,data:data});
+   }
+  }
+
+    return {svg:{data:copySvg.innerHTML, width: xmax - xmin, heigth:ymax-ymin,},plots:plots}
 
 }

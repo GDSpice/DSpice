@@ -73,9 +73,9 @@ var openExternalIcon = {
 // Plotly configuration for the plots
 // ============================================
 var plotConfig = {
-    displayModeBar: true,
+    
     displaylogo: false,
-    responsive: true,
+   
     modeBarButtonsToAdd: [
         {
             name: 'openExternal',

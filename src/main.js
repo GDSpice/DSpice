@@ -478,6 +478,7 @@ ipcMain.on('open-graph-window', (event, graphData) => {
         </style>
     </head>
     <body>
+
         <div class="header"> Click on the points to see the values</div>
          
         <div id="graph-container">
@@ -552,7 +553,7 @@ ipcMain.on('open-html-window', (event, htmlData) => {
         height: 800,
         title: 'Html Viewer',
         icon: config.appIcon, 
-        autoHideMenuBar: true, 
+        autoHideMenuBar: false, 
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
