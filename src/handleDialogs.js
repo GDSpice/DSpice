@@ -18,14 +18,14 @@ async function createEditWindowHtml(text,caption) {
     return new Promise((resolve) => {
       editWindowHtml = new BrowserWindow({
             width: 800,
-            height: 395,
+            height: 695,
             parent: BrowserWindow.getFocusedWindow(), 
             modal: true,
             icon: config.appIcon, // modified logo
             autoHideMenuBar: true,
-            resizable: false,
-            minimizable: false,
-            maximizable: false,
+            resizable: true,
+            minimizable: true,
+            maximizable: true,
             title: caption,
             webPreferences: {
                 preload: path.join(__dirname, 'preload.js'),

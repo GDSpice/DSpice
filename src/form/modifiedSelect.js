@@ -704,7 +704,7 @@ function codeHTMLSelect() {
                     { label: "Pos.y", type: "number", value: parseInt(mtable.select.getAttribute("y")) },
                     { label: "Width  (px)", type: "number", value: parseInt(mtable.select.getAttribute("width")) },
                     { label: "Height (px)", type: "number", value: parseInt(mtable.select.getAttribute("height")) },
-                    { label: "HTML code", type: "Button", value: 'Show', setClick: 'openEditHtml()' }         
+                    { label: "HTML code", type: "Button", value: 'Show', setClick: 'openEditHtml()'}         
                 ]
             }
         ]

@@ -3,64 +3,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    
     <!-- CodeMirror CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/theme/dracula.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldgutter.min.css">
 
-  
     <style>
-        body {
-    margin: 0;
-    padding: 5px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 13px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-         .ok-button {
-            text-align: right;
-            padding: 10px;
-            border-top: 1px solid #aaa;
-            background: #f0f0f0;
+        * {
+            box-sizing: border-box;
         }
-        .ok-button button {
-            padding: 5px 15px;
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
         }
 
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-container {
+            flex: 1;
+            min-height: 0; /* Important for enabling scrolling */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            flex: 1;
+            height: 100% !important;
+            font-size: 13px;
+        }
+
+        .buttons-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+        
+        .btn {
+            padding: 8px 24px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            transition: all 0.15s;
+            font-weight: 600;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+        
+        .btn-primary {
+            background: #2196F3;
+            border-color: #1976D2;
+            color: #fff;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #1976D2;
+        }
+        
+        .btn-primary:disabled {
+            background: #90caf9;
+            border-color: #90caf9;
+            cursor: not-allowed;
+        }
     </style>
 
     <!-- CodeMirror JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.js"></script>
-
-    <!-- تحميل XML قبل HTMLMixed -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/mode/xml/xml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/mode/htmlmixed/htmlmixed.min.js"></script>
-
-    <!-- CodeMirror Add-ons for Code Folding -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/foldgutter.min.css"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/brace-fold.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/xml-fold.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/addon/fold/comment-fold.min.js"></script>
-
 </head>
 <body>
-
-    <!--h2>HTML Code Editor</h2-->
     
     <div class="editor-container">
         <textarea id="html-editor"></textarea>
     </div>
-    <div class="ok-button">
-         <button onclick="saveText()">💾 Save</button>
-     </div>
+
+    <div class="buttons-bar">
+        <button class="btn" onclick="cancelDialog()">Cancel</button>
+        <button class="btn btn-primary" id="btn-ok" onclick="submitResult()">OK</button>
+    </div>
 
     <script>
-
-var editor = CodeMirror.fromTextArea(document.getElementById("html-editor"), {
+        var editor = CodeMirror.fromTextArea(document.getElementById("html-editor"), {
             mode: "htmlmixed",
             theme: "dracula",
             lineNumbers: true,
@@ -71,15 +119,30 @@ var editor = CodeMirror.fromTextArea(document.getElementById("html-editor"), {
             gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
         });
 
+        // Update editor size when the window is resized
+        window.addEventListener('resize', () => {
+            editor.refresh();
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
-            window.electron.onSetTextHtml((text) => {
-                editor.setValue(text);
-            });
+            if (window.electron) {
+                window.electron.onSetTextHtml((text) => {
+                    editor.setValue(text);
+                });
+            }
         });
     
-        function saveText() {
+        function submitResult() {
             const newText = editor.getValue();
-            window.electron.sendEditedTextHtml(newText); // ⬅️ transfer to `main.js`
+            if (window.electron) {
+                window.electron.sendEditedTextHtml(newText);
+            }
+        }
+
+        function cancelDialog() {
+            if (window.electron) {
+                window.electron.sendEditedTextHtml(null);
+            }
         }
     </script>
 </body>
