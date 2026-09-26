@@ -96,6 +96,7 @@ width: fit-content;
 #btnModel  { --icon-color: #06836ae0 } 
 #btnCommand  { --icon-color: #06836ae0 } 
 #btnPin  { --icon-color: #06836ae0 } 
+#btnSubBlock  { --icon-color: #06836ae0 } 
 
 
 .toolbar-btn svg {
@@ -379,7 +380,7 @@ body.innerHTML = `
        <polygon points="19,16 16,17.5 19,19" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
        <rect x="19" y="16" width="3" height="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
      </svg>
-   </button>
+   </button>   
  </div>
  <div class="toolbar-group">
    <button class="toolbar-btn" id="btnZoomIn" title="Zoom In (+)">

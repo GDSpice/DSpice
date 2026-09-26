@@ -137,15 +137,12 @@ function getElementListSpice() {
   for(var i=0; i<s.length; i++){
     var part=s[i];
     var ref=part.getAttribute("sref");
-    var modeltype=part.firstChild.getAttribute("modeltype");
-    var modelname=part.firstChild.getAttribute("modelname");
-    console.log(modelname);
-    console.log(modeltype);
-    if(modeltype=='SPICE' && modelname!='None') {
-    list.push({ name: modelname+' ('+ref+')', voltages:[], currents: [] });
+    var sym=getPartModel(part);
+    if(sym.device.type=='SPICE' && sym.device.name!='None') {
+    list.push({ name: sym.device.name+' ('+ref+')', voltages:[], currents: [] });
     var data = list[list.length - 1];
 
-    if( twoTerminal.includes(modelname)){
+    if( twoTerminal.includes(sym.device.name)){
         data.voltages.push('V(' + ref+ ')' );
         data.currents.push('I(' + ref+ ')' );
     }
