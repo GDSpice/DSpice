@@ -4,23 +4,21 @@ DSpice is a professional, cross-platform circuit design and simulation environme
 
 ## What’s New 
 
-**v0.1.4 (Current)**
+**v0.1.5 (Current)**
 
 ### Added
-- **Circuit Simulation Engine:** Added `runSimulation` function to enable and execute circuit analysis.
-- **Simulation Results Display:** Added a dedicated view to display circuit simulation results directly within the editor.
-- **Analysis Graphs Enhancement:** Added X- and Y-axis output data visualization to analysis graphs for better data interpretation.
-- **Component Selection Dialog:** Introduced `elementDialog` for streamlined component selection and placement.
-- **Semiconductor Elements:** Added and updated various semiconductor elements to expand the built-in component library.
-- **Output Management:** Added functionality to dynamically add and remove analysis outputs during simulation setup.
-- **Interactive Properties Panel:** Updated analysis views to automatically show the Properties panel when double-clicking a circuit element.
+- <span style="color:red">**Simulation Analysis Scope:** OP (Operating Point) analysis is now fully functional and supported, while TR (Transient), DC, and AC analyses are postponed to upcoming releases.</span>
+- **Description Pane Controls:** Added a dedicated button to toggle (show/hide) the circuit description pane.
+- **Element Type Display:** Enhanced the description panel to dynamically show the currently selected element type.
+- **Symbol Model Management:** Added an "add model" button specifically tailored for symbol (`.sym`) files.
 
 ### Changed
-- **Code Refactoring:** Renamed internal parsing functions to match `parseSpiceResults` for better consistency and maintainability.
-- **DOM Utility Update:** Updated the `getElementsByClassName` function for improved performance and reliability across the webview.
+- **Comprehensive Theme Support:** Updated colors for Rectangle, Ellipse, Arc, Polygon, Polyline, Wire, and Pin shapes, along with toolbar button SVGs, to ensure seamless compatibility with all VS Code themes.
+- **HTML Description Theming:** Added full VS Code theme support to the HTML circuit description view and refined symbol list styling.
+- **Basic Symbol Refinement:** Updated the colors and naming conventions of basic symbols, including ports, V bar, and GND.
 
-### Fixed
-- **Reference Naming:** Resolved reference naming issues to ensure accurate component and net identification during simulation and editing.
+## Screenshots
+<img src="image/screenshot.gif" alt="DSpice VSCode Interface" width="800">
 
 
 ## Key Features

@@ -2,6 +2,21 @@
 
 All notable changes to DSpice will be documented in this file.
 
+## [0.1.5] - 2026-09-26
+### Added
+- <span style="color:red">**Simulation Analysis Scope:** OP (Operating Point) analysis is now fully functional and supported, while TR (Transient), DC, and AC analyses are postponed to upcoming releases.</span>
+- **Description Pane Controls:** Added a dedicated button to toggle (show/hide) the circuit description pane.
+- **Element Type Display:** Enhanced the description panel to dynamically show the currently selected element type.
+- **Symbol Model Management:** Added an "add model" button specifically tailored for symbol (`.sym`) files.
+
+### Changed
+- **Comprehensive Theme Support:** Updated colors for Rectangle, Ellipse, Arc, Polygon, Polyline, Wire, and Pin shapes, along with toolbar button SVGs, to ensure seamless compatibility with all VS Code themes.
+- **HTML Description Theming:** Added full VS Code theme support to the HTML circuit description view and refined symbol list styling.
+- **Basic Symbol Refinement:** Updated the colors and naming conventions of basic symbols, including ports, V bar, and GND.
+
+### Fixed
+- **Properties Panel Descriptions:** Resolved display issues regarding page size, SPICE model names, and element values within the Properties panel description area.
+
 ## [0.1.4] - 2026-09-20
 ### Added
 - **Circuit Simulation Engine:** Added `runSimulation` function to enable and execute circuit analysis.

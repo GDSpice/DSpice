@@ -161,7 +161,32 @@ function cratInfoRect(self) {
         self.svgElem.appendChild(newElement);
         var element = document.getElementById(setId);
     }
- if (self.setElement.getAttribute("name")=='part')
+  if (self.setElement.getAttribute("name")=='probe')
+ {
+	 		var elem=self.setElement;
+            var x = parseInt(elem.getAttribute("x"))-2;
+            var y = parseInt(elem.getAttribute("y"))-2;
+            var w = 1*(elem.childNodes[1].getAttribute("width"))+4;
+            var h = 1*(elem.childNodes[1].getAttribute("height"))+4;
+	   var points = [{
+            x: x,
+            y: y
+        }, {
+            x: x+w,
+            y: y
+        }, {
+            x: x+w,
+            y: y+h
+        }, {
+            x: x,
+            y: y+h
+        }, {
+            x: x,
+            y: y
+        }
+    ];
+
+ } else if (self.setElement.getAttribute("name")=='part')
  {
 	 		var elem=self.setElement;
 		    var xo = parseInt(elem.getAttribute("xo"));
@@ -463,7 +488,7 @@ function information(self) {
 		cratInfoArc(self);
         break;
 
-
+    case "probe":
     case "part":
         cratInfoRect(self);
         break;
