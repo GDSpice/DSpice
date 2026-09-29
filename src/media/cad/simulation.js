@@ -42,7 +42,8 @@ var libarayPath='';
     
     drawing.saveData('Op analysis');
 }).catch(err => {
-    console.error('Simulation failed:', err);
+   // console.error('Simulation failed:', err);
+   showError('Simulation failed', err);
 });
 
  }
