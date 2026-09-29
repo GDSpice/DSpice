@@ -12,7 +12,7 @@ An Operating Point simulation calculates the steady-state DC voltage and current
 .. image:: images/Ohm_law.gif
    :alt: DSPICE Circuit Editor Toolbar Interface
    :align: center
-   :width: 60%
+   :width: 90%
 
 Step-by-Step Workflow
 ---------------------
