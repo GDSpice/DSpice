@@ -62,5 +62,6 @@ Table of Contents
   Overview.rst
   News.rst
   Future.rst
+  simulation.rst
 
 .. End
