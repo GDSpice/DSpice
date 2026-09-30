@@ -2,6 +2,28 @@
 
 DSpice is a professional, cross-platform circuit design and simulation environment built for VS Code. It provides a powerful graphical schematic designer and delivers precise waveform simulation results powered by the robust **ngspice** engine.
 
+
+<h4 align="center">
+    <a href="https://dspice.sourceforge.io/"><img src="https://dspice.sourceforge.io/logo.png" width="175px" alt="DSpice"></a>
+    <br>
+    <a href="https://dspice.sourceforge.io/">https://dspice.sf.net/</a>
+    
+</h4>
+
+---
+
+<p align="center">
+ 
+ <a href="#News">
+    <img src="https://img.shields.io/badge/Version-0.1.6-blue" alt="v0.1.6">
+ </a>
+
+    
+  <a href="https://github.com/GDSpice/DSpice/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/Licenses-MIT-blue?labelColor=black" alt="MIT-licenses">
+  </a>
+</p>
+
 ## What’s New 
 
 **v0.1.5 (Current)**
