@@ -64,7 +64,8 @@ function pageSelect() {
                 collapsed: false,
                 showReset: true,
                 rows: [
-                    { label: "Netliste", type: "Button", value: 'show' , setClick:'openNetlistEditor' }
+                    { label: "Netliste", type: "Button", value: 'show' , setClick:'openNetlistEditor' },
+                    { label: "OP Check", type: "Button", value: 'show' , setClick:'OPCheck' }   
                 ]
             })
     }

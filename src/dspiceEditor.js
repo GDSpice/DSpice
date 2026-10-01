@@ -519,6 +519,7 @@ webviewPanel.onDidDispose(() => {
         const spiceNetlistDialogJs = webview.asWebviewUri(vscode.Uri.joinPath(dialogPath, 'spiceNetlistDialog.js'));
         const processAnalysisDialogJs = webview.asWebviewUri(vscode.Uri.joinPath(dialogPath, 'processAnalysisDialog.js'));
         const messageDialogJs =  webview.asWebviewUri(vscode.Uri.joinPath(dialogPath, 'messageDialog.js'));
+        const opAnalysisDialogJs = webview.asWebviewUri(vscode.Uri.joinPath(dialogPath, 'opAnalysisDialog.js'));
         const drawingJs = webview.asWebviewUri(vscode.Uri.joinPath(cadPath, 'drawing.js'));
         const stdJs= webview.asWebviewUri(vscode.Uri.joinPath(cadPath,'std.js'));
         const plotlyJs =webview.asWebviewUri(vscode.Uri.joinPath(mediaPath,'pack','plotly-latest.min.js'));
@@ -589,6 +590,7 @@ webviewPanel.onDidDispose(() => {
     <script nonce="${nonce}" src="${spiceNetlistDialogJs}"></script>
     <script nonce="${nonce}" src="${processAnalysisDialogJs}"></script>
     <script nonce="${nonce}" src="${messageDialogJs}"></script> 
+    <script nonce="${nonce}" src="${opAnalysisDialogJs}"></script>  
     <script nonce="${nonce}" src="${rulerJs}"></script>
     <script nonce="${nonce}" src="${gridJs}"></script>
     <script nonce="${nonce}" src="${bodyJs}"></script>

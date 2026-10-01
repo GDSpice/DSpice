@@ -738,6 +738,17 @@ function getDialog(setClick) {
             }
             break;
 
+        case 'OPCheck':
+            {
+                var spiceCode=getNetlistSpice();
+                spiceCode+='\n\n* Analysis\n\n.op\n\n* Control\n\n.control\nrun\n\nprint all\n\n\n.endc\n\n.end';
+                    drawing.runOpCheck(spiceCode).then(result => {
+                        console.log('OP check result:', result);
+                    }).catch(err => {
+                        console.error('OP check failed:', err);
+                    })
+            }
+
 
         case 'dcPramAnalysis': {
             try {

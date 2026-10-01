@@ -1,7 +1,7 @@
 {
   "name": "dspice-circuit-simulator",
   "displayName": "DSpice - Circuit Simulator",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "dspice-vscode",
   "icon": "image/logo.png",
   "engines": {
@@ -53,7 +53,6 @@
     "librarySync.js",
     "data.json",
     "image/logo.png",
-    "image/screenshot.gif",
     "media/**/*",
     "symbols/**/*",
     "library/**/*",
@@ -97,10 +96,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GDSpice/DSpice-VSCode"
+    "url": "https://github.com/GDSpice/DSpice"
   },
   "bugs": {
-    "url": "https://github.com/GDSpice/DSpice-VSCode/issues"
+    "url": "https://github.com/GDSpice/DSpice/issues"
   },
-  "homepage": "https://github.com/GDSpice/DSpice-VSCode"
+  "homepage": "https://dspice.readthedocs.io/",
+  "youtube": "https://www.youtube.com/@YDSpice"
 }

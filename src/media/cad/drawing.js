@@ -374,6 +374,27 @@ self.getSpiceNetlistEditor = function(netlist, onSubmit, onCancel) {
     spiceNetlistDialog.show();
 };
 
+//****************check circuit **********************************************************//
+self.runOpCheck = function(spiceCode) {
+    return new Promise((resolve, reject) => {
+        if (typeof opAnalysisDialog === 'undefined' || !opAnalysisDialog) {
+            opAnalysisDialog = new fOpAnalysisDialog(self);
+        }
+
+        opAnalysisDialog.setCallbacks(
+            function(result) {
+                resolve(result);
+            },
+            function() {
+                reject('OP analysis cancelled');
+            }
+        );
+
+        opAnalysisDialog.initData(spiceCode);
+        opAnalysisDialog.show();
+    });
+};
+
 // *************Run Analysis with Dialog*******************************//
 self.runAnalysis = function(spiceCode) {
     return new Promise((resolve, reject) => {

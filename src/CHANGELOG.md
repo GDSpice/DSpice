@@ -2,6 +2,15 @@
 
 All notable changes to DSpice will be documented in this file.
 
+## [0.1.6] - 2026-10-01
+### Added
+- **Message Dialog System:** Introduced a comprehensive message dialog system supporting error, warning, info, and success notifications for better user feedback.
+- **OP Simulation Error Handling:** Added a dedicated error dialog specifically for Operating Point (OP) simulation failures to provide clearer troubleshooting information.
+
+### Changed
+- **Documentation Enhancements:** Updated simulation documentation, including increased image width for better visibility, and general documentation refinements.
+- **Repository Metadata:** Updated README.md and clarified repository usage guidelines (e.g., source code usage).
+
 ## [0.1.5] - 2026-09-26
 ### Added
 - <span style="color:red">**Simulation Analysis Scope:** OP (Operating Point) analysis is now fully functional and supported, while TR (Transient), DC, and AC analyses are postponed to upcoming releases.</span>

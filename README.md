@@ -26,18 +26,16 @@ DSpice is a professional, cross-platform circuit design and simulation environme
 
 ## What’s New 
 
-**v0.1.5 (Current)**
+**v0.1.6 (Current)**
 
 ### Added
-- <span style="color:red">**Simulation Analysis Scope:** OP (Operating Point) analysis is now fully functional and supported, while TR (Transient), DC, and AC analyses are postponed to upcoming releases.</span>
-- **Description Pane Controls:** Added a dedicated button to toggle (show/hide) the circuit description pane.
-- **Element Type Display:** Enhanced the description panel to dynamically show the currently selected element type.
-- **Symbol Model Management:** Added an "add model" button specifically tailored for symbol (`.sym`) files.
+- **Message Dialog System:** Introduced a comprehensive message dialog system supporting error, warning, info, and success notifications for better user feedback.
+- **OP Simulation Error Handling:** Added a dedicated error dialog specifically for Operating Point (OP) simulation failures to provide clearer troubleshooting information.
 
 ### Changed
-- **Comprehensive Theme Support:** Updated colors for Rectangle, Ellipse, Arc, Polygon, Polyline, Wire, and Pin shapes, along with toolbar button SVGs, to ensure seamless compatibility with all VS Code themes.
-- **HTML Description Theming:** Added full VS Code theme support to the HTML circuit description view and refined symbol list styling.
-- **Basic Symbol Refinement:** Updated the colors and naming conventions of basic symbols, including ports, V bar, and GND.
+- **Documentation Enhancements:** Updated simulation documentation, including increased image width for better visibility, and general documentation refinements.
+- **Repository Metadata:** Updated README.md and clarified repository usage guidelines (e.g., source code usage).
+
 
 ## Screenshots
 <img src="src/image/screenshot.gif" alt="DSpice VSCode Interface" width="800">
@@ -66,10 +64,21 @@ DSpice is a professional, cross-platform circuit design and simulation environme
 - VS Code 1.70.0 or higher
 
 ## Document
-- https://dspice-vscode.readthedocs.io
+- https://dspice.readthedocs.io
+
+## Community & Social Links
+
+Join the DSpice community and follow our updates across different platforms:
+
+- **GitHub (GDSpice):** Access the source code, report issues, and contribute to the project.  
+  [github.com/GDSpice](https://github.com/GDSpice)
+- **Pinterest (PDSpice):** Explore circuit schematics, symbol designs, and visual tutorials.  
+  [pinterest.com/PDSpice](https://pinterest.com/PDSpice)
+- **YouTube (YDSpice):** Watch video tutorials, simulation walkthroughs, and feature demos.  
+  [youtube.com/@YDSpice](https://youtube.com/@YDSpice)
 
 ## License
 MIT License - See LICENSE file for details
 
 ## Support
-For issues and feature requests, please visit: https://github.com/GDSpice/DSpice-VSCode/issues
+For issues and feature requests, please visit: https://github.com/GDSpice/DSpice/issues

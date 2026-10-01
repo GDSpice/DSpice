@@ -2,8 +2,8 @@
 #--------------------------------------------------------------------------------------------------
 Name:        messageDialog.js
 Author:      d.fathi
-Created:     28/09/2026
-Updated:     28/09/2026
+Created:     29/09/2026
+Updated:     29/09/2026
 Copyright:   (c) DSpice 2026
 Licence:     free
 #---------------------------------------------------------------------------------------------------
@@ -15,8 +15,7 @@ function fMessageDialog(self) {
     selfDialog.drawing = self;
     selfDialog.isVisible = false;
     selfDialog.messageType = 'error';  // error, warning, info, success
-    selfDialog.title = 'Error';
-    selfDialog.message = '';
+    selfDialog.title = 'Message';
     selfDialog.details = null;
     selfDialog.onClose = null;
     selfDialog.onOk = null;
@@ -43,7 +42,7 @@ function fMessageDialog(self) {
     top: 60px;
     left: 50%;
     transform: translateX(-50%);
-    width: 420px;
+    width: 480px;
     max-width: 90vw;
     background: var(--vscode-editorWidget-background, var(--vscode-editor-background, #ffffff));
     border: 1px solid var(--vscode-editorWidget-border, var(--vscode-panel-border, #ccc));
@@ -62,7 +61,7 @@ function fMessageDialog(self) {
     display: flex;
 }
 
-/* Overlay backdrop */
+/* Overlay backdrop - NO click to close */
 #messageDialogOverlay {
     position: fixed;
     top: 0;
@@ -139,94 +138,34 @@ function fMessageDialog(self) {
     color: var(--vscode-editor-foreground, #333);
 }
 
-/* Content area */
+/* Content area - Details only, no icon */
 #messageDialogContent {
-    padding: 16px 14px;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
     flex: 1;
-    overflow-y: auto;
-}
-
-/* Large icon in content */
-#messageDialogIcon {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-    margin-top: 2px;
-}
-
-#messageDialogIcon svg {
-    width: 100%;
-    height: 100%;
-}
-
-#messageDialog.type-error #messageDialogIcon { color: var(--vscode-errorForeground, #f44336); }
-#messageDialog.type-warning #messageDialogIcon { color: var(--vscode-editorWarning-foreground, #ff9800); }
-#messageDialog.type-info #messageDialogIcon { color: var(--vscode-textLink-foreground, #2196F3); }
-#messageDialog.type-success #messageDialogIcon { color: #4CAF50; }
-
-/* Message text */
-#messageDialogMessage {
-    flex: 1;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--vscode-editor-foreground, #333);
-    word-wrap: break-word;
-    white-space: pre-wrap;
-}
-
-/* Details section (collapsible) */
-#messageDialogDetails {
-    margin-top: 12px;
-    border: 1px solid var(--vscode-panel-border, #e0e0e0);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-#messageDialogDetailsHeader {
-    padding: 8px 12px;
-    background: var(--vscode-sideBar-background, #f5f5f5);
-    cursor: pointer;
-    user-select: none;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--vscode-descriptionForeground, #666);
+    min-height: 0;
     display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-#messageDialogDetailsHeader:hover {
-    background: var(--vscode-list-hoverBackground, #ebebeb);
-}
-
-#messageDialogDetailsHeader .arrow {
-    font-size: 10px;
-    transition: transform 0.2s;
-}
-
-#messageDialogDetailsHeader .arrow.collapsed {
-    transform: rotate(-90deg);
-}
-
-#messageDialogDetailsContent {
-    padding: 10px 12px;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 11px;
-    color: var(--vscode-editor-foreground, #444);
+    flex-direction: column;
     background: var(--vscode-editor-background, #fafafa);
-    max-height: 150px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-break: break-all;
-    display: none;
 }
 
-#messageDialogDetailsContent.visible {
-    display: block;
+/* Details text */
+#messageDialogDetails {
+    flex: 1;
+    padding: 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--vscode-editor-foreground, #444);
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 350px;
 }
+
+/* Scrollbar for details */
+#messageDialogDetails::-webkit-scrollbar { width: 8px; }
+#messageDialogDetails::-webkit-scrollbar-track { background: var(--vscode-scrollbarSlider-background, #f1f1f1); }
+#messageDialogDetails::-webkit-scrollbar-thumb { background: var(--vscode-scrollbarSlider-hoverBackground, #c1c1c1); border-radius: 4px; }
+#messageDialogDetails::-webkit-scrollbar-thumb:hover { background: var(--vscode-scrollbarSlider-activeBackground, #a1a1a1); }
 
 /* Buttons bar */
 #messageDialogButtonsBar {
@@ -293,11 +232,6 @@ function fMessageDialog(self) {
 #messageDialog.type-success .message-btn-primary:hover {
     background: #388E3C;
 }
-
-/* Scrollbar for details */
-#messageDialogDetailsContent::-webkit-scrollbar { width: 8px; }
-#messageDialogDetailsContent::-webkit-scrollbar-track { background: var(--vscode-scrollbarSlider-background, #f1f1f1); }
-#messageDialogDetailsContent::-webkit-scrollbar-thumb { background: var(--vscode-scrollbarSlider-hoverBackground, #c1c1c1); border-radius: 4px; }
 `;
         var head = document.head || document.getElementsByTagName('head')[0];
         var style = document.createElement('style');
@@ -318,20 +252,12 @@ function fMessageDialog(self) {
     <div id="messageDialogHeader">
         <span id="messageDialogTitle">
             <span class="msg-icon" id="messageDialogTitleIcon"></span>
-            <span id="messageDialogTitleText">Error</span>
+            <span id="messageDialogTitleText">Message</span>
         </span>
         <button id="messageDialogClose" title="Close">×</button>
     </div>
     <div id="messageDialogContent">
-        <div id="messageDialogIcon"></div>
-        <div id="messageDialogMessage"></div>
-    </div>
-    <div id="messageDialogDetails" style="display:none;">
-        <div id="messageDialogDetailsHeader">
-            <span class="arrow">▼</span>
-            <span>Technical Details</span>
-        </div>
-        <div id="messageDialogDetailsContent"></div>
+        <div id="messageDialogDetails"></div>
     </div>
     <div id="messageDialogButtonsBar">
         <button class="message-btn message-btn-primary" id="messageDialogBtnOk">OK</button>
@@ -399,24 +325,12 @@ function fMessageDialog(self) {
         options = options || {};
         
         selfDialog.messageType = options.type || 'error';
-        selfDialog.title = options.title || selfDialog.getDefaultTitle();
-        selfDialog.message = options.message || '';
-        selfDialog.details = options.details || null;
+        selfDialog.title = options.title || 'Message';
+        selfDialog.details = options.details || options.message || '';
         selfDialog.onClose = options.onClose || null;
         selfDialog.onOk = options.onOk || null;
 
         selfDialog.updateContent();
-    };
-
-    // Get default title based on type
-    this.getDefaultTitle = function() {
-        var titles = {
-            error: 'Error',
-            warning: 'Warning',
-            info: 'Information',
-            success: 'Success'
-        };
-        return titles[selfDialog.messageType] || 'Message';
     };
 
     // Update dialog content
@@ -424,51 +338,22 @@ function fMessageDialog(self) {
         var dialog = document.getElementById('messageDialog');
         var titleIcon = document.getElementById('messageDialogTitleIcon');
         var titleText = document.getElementById('messageDialogTitleText');
-        var contentIcon = document.getElementById('messageDialogIcon');
-        var message = document.getElementById('messageDialogMessage');
-        var detailsSection = document.getElementById('messageDialogDetails');
-        var detailsContent = document.getElementById('messageDialogDetailsContent');
+        var details = document.getElementById('messageDialogDetails');
 
         if (!dialog) return;
 
         // Set type class
         dialog.className = 'type-' + selfDialog.messageType;
 
-        // Set icons
+        // Set icon in title only
         var iconSvg = icons[selfDialog.messageType] || icons.info;
         if (titleIcon) titleIcon.innerHTML = iconSvg;
-        if (contentIcon) contentIcon.innerHTML = iconSvg;
 
         // Set title
         if (titleText) titleText.textContent = selfDialog.title;
 
-        // Set message
-        if (message) message.textContent = selfDialog.message;
-
-        // Set details
-        if (detailsSection && detailsContent) {
-            if (selfDialog.details) {
-                detailsSection.style.display = 'block';
-                detailsContent.textContent = selfDialog.details;
-                detailsContent.classList.remove('visible');
-                detailsSection.querySelector('.arrow').classList.add('collapsed');
-                detailsSection.querySelector('.arrow').textContent = '▶';
-            } else {
-                detailsSection.style.display = 'none';
-            }
-        }
-    };
-
-    // Toggle details
-    this.toggleDetails = function() {
-        var detailsContent = document.getElementById('messageDialogDetailsContent');
-        var arrow = document.querySelector('#messageDialogDetailsHeader .arrow');
-        
-        if (detailsContent && arrow) {
-            var isVisible = detailsContent.classList.toggle('visible');
-            arrow.classList.toggle('collapsed', !isVisible);
-            arrow.textContent = isVisible ? '▼' : '▶';
-        }
+        // Set details (no icon in content area)
+        if (details) details.textContent = selfDialog.details;
     };
 
     // Close dialog
@@ -497,7 +382,6 @@ function fMessageDialog(self) {
         var closeBtn = document.getElementById('messageDialogClose');
         var overlay = document.getElementById('messageDialogOverlay');
         var btnOk = document.getElementById('messageDialogBtnOk');
-        var detailsHeader = document.getElementById('messageDialogDetailsHeader');
 
         if (!dialog || !header) return;
 
@@ -509,10 +393,12 @@ function fMessageDialog(self) {
             });
         }
 
-        // Overlay click closes
+        // Overlay click does NOTHING - prevents closing from outside
         if (overlay) {
-            overlay.addEventListener('click', function() {
-                selfDialog.closeDialog();
+            overlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Intentionally empty - dialog stays open
             });
         }
 
@@ -520,13 +406,6 @@ function fMessageDialog(self) {
         if (btnOk) {
             btnOk.addEventListener('click', function() {
                 selfDialog.okDialog();
-            });
-        }
-
-        // Details toggle
-        if (detailsHeader) {
-            detailsHeader.addEventListener('click', function() {
-                selfDialog.toggleDetails();
             });
         }
 
@@ -587,48 +466,44 @@ function fMessageDialog(self) {
 var messageDialog;
 
 // Convenience functions for quick usage
-function showError(message, details, onClose) {
+function showError(title, details, onClose) {
     if (!messageDialog) messageDialog = new fMessageDialog(null);
     messageDialog.initData({
         type: 'error',
-        title: 'Error',
-        message: message,
+        title: title || 'Error',
         details: details,
         onClose: onClose
     });
     messageDialog.show();
 }
 
-function showWarning(message, details, onClose) {
+function showWarning(title, details, onClose) {
     if (!messageDialog) messageDialog = new fMessageDialog(null);
     messageDialog.initData({
         type: 'warning',
-        title: 'Warning',
-        message: message,
+        title: title || 'Warning',
         details: details,
         onClose: onClose
     });
     messageDialog.show();
 }
 
-function showInfo(message, details, onClose) {
+function showInfo(title, details, onClose) {
     if (!messageDialog) messageDialog = new fMessageDialog(null);
     messageDialog.initData({
         type: 'info',
-        title: 'Information',
-        message: message,
+        title: title || 'Information',
         details: details,
         onClose: onClose
     });
     messageDialog.show();
 }
 
-function showSuccess(message, details, onClose) {
+function showSuccess(title, details, onClose) {
     if (!messageDialog) messageDialog = new fMessageDialog(null);
     messageDialog.initData({
         type: 'success',
-        title: 'Success',
-        message: message,
+        title: title || 'Success',
         details: details,
         onClose: onClose
     });
