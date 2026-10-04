@@ -50,12 +50,11 @@ class SymbolsSync {
                 .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.sym'))
                 .map(e => e.name);
 
-            if (subDirs.length > 0 || symFiles.length > 0) {
-                const dirKey = relativePath || path.basename(dirPath);
-                newDirs.push(dirKey);
-                if (symFiles.length > 0) {
-                    newFilesMap[dirKey] = symFiles;
-                }
+            if (relativePath !== '' && (subDirs.length > 0 || symFiles.length > 0)) {
+                newDirs.push(relativePath);
+            }
+            if (symFiles.length > 0) {
+                newFilesMap[relativePath] = symFiles;
             }
 
             for (const sub of subDirs) {

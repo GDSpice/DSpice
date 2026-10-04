@@ -2,8 +2,7 @@
     "dirs": [
         "Basic",
         "Source",
-        "Semiconductor",
-        "symbols"
+        "Semiconductor"
     ],
     "Basic": [
         "Resistor.sym",

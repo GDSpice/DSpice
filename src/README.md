@@ -41,10 +41,10 @@ DSpice is a professional, cross-platform circuit design and simulation environme
 - VS Code 1.70.0 or higher
 
 ## Document
-- https://dspice-vscode.readthedocs.io
+- https://dspice.readthedocs.io
 
 ## License
 MIT License - See LICENSE file for details
 
 ## Support
-For issues and feature requests, please visit: https://github.com/GDSpice/DSpice-VSCode/issues
+For issues and feature requests, please visit: https://github.com/GDSpice/DSpice/issues
