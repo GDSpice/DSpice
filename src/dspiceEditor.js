@@ -483,6 +483,7 @@ webviewPanel.onDidDispose(() => {
         const resizeJs = webview.asWebviewUri(vscode.Uri.joinPath(cadPath, 'resize.js'));
         const designeJs = webview.asWebviewUri(vscode.Uri.joinPath(cadPath, 'designe.js'));
         const listSymbolJs = webview.asWebviewUri(vscode.Uri.joinPath(cadPath, 'listSymbol.js'));
+        const importCircuitJs = webview.asWebviewUri(vscode.Uri.joinPath(cadPath, 'importCircuit.js'));
         const sh01Js= webview.asWebviewUri(vscode.Uri.joinPath(cadPath,'shapes', 'information.js'));
         const sh02Js= webview.asWebviewUri(vscode.Uri.joinPath(cadPath,'shapes', 'polyline.js'));
         const sh03Js= webview.asWebviewUri(vscode.Uri.joinPath(cadPath,'shapes', 'arc.js'));
@@ -583,6 +584,7 @@ webviewPanel.onDidDispose(() => {
     <script nonce="${nonce}" src="${propertiesBuilderJs}"></script>
     <script nonce="${nonce}" src="${propertiesRouterJs}"></script>
     <script nonce="${nonce}" src="${symbolsPanelJs}"></script>
+    <script nonce="${nonce}" src="${importCircuitJs}"></script>
     <script nonce="${nonce}" src="${signalDialogJs}"></script>
     <script nonce="${nonce}" src="${elementDialogJs}"></script>
     <script nonce="${nonce}" src="${listModelsDialogJs}"></script>
@@ -664,14 +666,40 @@ webviewPanel.onDidDispose(() => {
     }
 }
 // Execute copy, cut, and paste commands
-            if (msg.type === 'execCopy') {
-                 drawing.copy();
-            }
-            if (msg.type === 'execCut') {
-                 drawing.cut();
-            }
-            if (msg.type === 'execPaste') {
-                 drawing.paste(msg.data);
+            // If a text field (input/textarea/contenteditable) has focus, act on its text, not on the circuit
+            if (msg.type === 'execCopy' || msg.type === 'execCut' || msg.type === 'execPaste') {
+                var ae = document.activeElement;
+                var isTextField = ae && (ae.tagName === 'TEXTAREA' ||
+                    (ae.tagName === 'INPUT' && !/^(button|checkbox|radio|submit|reset|file|range|color|image)$/i.test(ae.type)) ||
+                    ae.isContentEditable);
+                if (isTextField) {
+                    var isFormEl = (ae.tagName === 'TEXTAREA' || ae.tagName === 'INPUT');
+                    var selText = isFormEl
+                        ? ae.value.substring(ae.selectionStart, ae.selectionEnd)
+                        : String(window.getSelection());
+                    if (msg.type === 'execCopy') {
+                        if (selText) vscode.postMessage({ type: 'copyData', data: selText });
+                    } else if (msg.type === 'execCut') {
+                        if (selText) {
+                            vscode.postMessage({ type: 'copyData', data: selText });
+                            if (!document.execCommand('delete') && isFormEl) {
+                                ae.setRangeText('', ae.selectionStart, ae.selectionEnd, 'end');
+                                ae.dispatchEvent(new Event('input', { bubbles: true }));
+                            }
+                        }
+                    } else if (msg.data) {
+                        if (!document.execCommand('insertText', false, msg.data) && isFormEl) {
+                            ae.setRangeText(msg.data, ae.selectionStart, ae.selectionEnd, 'end');
+                            ae.dispatchEvent(new Event('input', { bubbles: true }));
+                        }
+                    }
+                } else if (msg.type === 'execCopy') {
+                    drawing.copy();
+                } else if (msg.type === 'execCut') {
+                    drawing.cut();
+                } else {
+                    drawing.paste(msg.data);
+                }
             }
 // Receive the file name from VS Code and update drawing.fileName
     if (msg.type === 'setFileName') {
