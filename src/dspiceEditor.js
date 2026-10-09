@@ -710,6 +710,13 @@ webviewPanel.onDidDispose(() => {
            
         });
 
+        // Hide the VS Code Cut/Copy/Paste context menu inside dialogs (keep it on the schematic only)
+        document.addEventListener('contextmenu', function (e) {
+            if (e.target && e.target.closest && e.target.closest('[id$="Dialog"], [id$="DialogOverlay"]')) {
+                e.preventDefault();
+            }
+        }, true);
+
         // Notify VS Code that the Webview is ready
         vscode.postMessage({ type: 'ready' });
     </script>
@@ -971,4 +978,3 @@ function parseStdoutData(allText, results) {
 }
 
 module.exports = DSpiceEditorProvider;
-
