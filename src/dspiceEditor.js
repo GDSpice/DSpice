@@ -122,6 +122,25 @@ case 'ready':
                     if (webviewPanel.active) showZoom();
                     break;
 
+                case 'saveCsv': {
+                    try {
+                        const base = String(message.name || 'plot').replace(/[\\/:*?"<>|]+/g, '_').trim() || 'plot';
+                        const target = await vscode.window.showSaveDialog({
+                            defaultUri: vscode.Uri.file(path.join(path.dirname(document.fileName), base + '.csv')),
+                            filters: { 'CSV file': ['csv'] },
+                            saveLabel: 'Save CSV'
+                        });
+                        if (target) {
+                            // UTF-8 with BOM so Excel reads the file correctly
+                            await vscode.workspace.fs.writeFile(target, Buffer.from('\ufeff' + String(message.text), 'utf-8'));
+                            vscode.window.showInformationMessage('CSV saved: ' + target.fsPath);
+                        }
+                    } catch (err) {
+                        vscode.window.showErrorMessage('Could not save CSV: ' + err.message);
+                    }
+                    break;
+                }
+
                 case 'savePngError':
                     vscode.window.showErrorMessage('Could not create plot image: ' + message.error);
                     break;
