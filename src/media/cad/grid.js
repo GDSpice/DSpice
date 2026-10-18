@@ -54,6 +54,11 @@ this.getGrid = function () {
      document.getElementById(self.svg).setAttribute("height", self.zoom * self.height);
      document.getElementById(self.svg).setAttribute("width", self.zoom * self.width);
  	self.getRuler();
+ 	// Report the zoom level to VS Code (shown in the status bar)
+ 	try {
+ 	    if (typeof vscode !== 'undefined' && vscode.postMessage)
+ 	        vscode.postMessage({ type: 'zoomChanged', zoom: self.zoom });
+ 	} catch (e) {}
  }
  this.getRuler=function()
  {

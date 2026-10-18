@@ -37,9 +37,27 @@ class DSpiceEditorProvider {
 
         DSpiceEditorProvider.activeWebview = webviewPanel.webview;
 
+        // Zoom level shown in the status bar (per editor)
+        let currentZoom = null;
+        const showZoom = () => {
+            if (!DSpiceEditorProvider.zoomItem) {
+                DSpiceEditorProvider.zoomItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+                DSpiceEditorProvider.zoomItem.tooltip = 'DSpice zoom';
+            }
+            if (currentZoom === null) {
+                DSpiceEditorProvider.zoomItem.hide();
+            } else {
+                DSpiceEditorProvider.zoomItem.text = '$(zoom-in) ' + Math.round(currentZoom * 100) + '%';
+                DSpiceEditorProvider.zoomItem.show();
+            }
+        };
+
         webviewPanel.onDidChangeViewState(e => {
     if (e.webviewPanel.active) {
         DSpiceEditorProvider.activeWebview = webviewPanel.webview;
+        showZoom();
+    } else if (DSpiceEditorProvider.activeWebview === webviewPanel.webview && DSpiceEditorProvider.zoomItem) {
+        DSpiceEditorProvider.zoomItem.hide();
     }
 });
 
@@ -78,6 +96,11 @@ case 'ready':
     sendContent(document.getText());
     sendFileName(); //Send the filename when the Webview is ready
     break;
+
+                case 'zoomChanged':
+                    currentZoom = message.zoom;
+                    if (webviewPanel.active) showZoom();
+                    break;
 
                 case 'copyData':
                     await vscode.env.clipboard.writeText(message.data);
@@ -453,6 +476,7 @@ webviewPanel.onDidDispose(() => {
     
     if (DSpiceEditorProvider.activeWebview === webviewPanel.webview) {
         DSpiceEditorProvider.activeWebview = null;
+        if (DSpiceEditorProvider.zoomItem) DSpiceEditorProvider.zoomItem.hide();
     }
 });
     }
@@ -978,3 +1002,4 @@ function parseStdoutData(allText, results) {
 }
 
 module.exports = DSpiceEditorProvider;
+
