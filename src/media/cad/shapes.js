@@ -269,6 +269,27 @@ function fshapes(svg, setDrawing, width, height) {
         evt.addEventListener('mouseup', endDrag);
         evt.addEventListener('mouseleave', endDrag);
 
+        // Report the cursor position on the grid to VS Code (status bar)
+        var posPending = null;
+        var posLast = '';
+        function sendPos(p) {
+            try {
+                if (typeof vscode === 'undefined' || !vscode.postMessage) return;
+                var key = p ? p.x + ',' + p.y : '';
+                if (key === posLast) return;
+                posLast = key;
+                vscode.postMessage({ type: 'cursorPos', pos: p });
+            } catch (e) {}
+        }
+        evt.addEventListener('mousemove', function (ev) {
+            if (posPending) return;
+            posPending = requestAnimationFrame(function () {
+                posPending = null;
+                sendPos(getMousePosition(ev));
+            });
+        });
+        evt.addEventListener('mouseleave', function () { sendPos(null); });
+
         function startDrag(evt) {
 
             if (self.design.mouse) {

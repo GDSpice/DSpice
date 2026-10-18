@@ -39,6 +39,19 @@ class DSpiceEditorProvider {
 
         // Zoom level shown in the status bar (per editor)
         let currentZoom = null;
+        let currentPos = null;
+        const showPos = () => {
+            if (!DSpiceEditorProvider.posItem) {
+                DSpiceEditorProvider.posItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 101);
+                DSpiceEditorProvider.posItem.tooltip = 'DSpice cursor position (grid)';
+            }
+            if (currentPos) {
+                DSpiceEditorProvider.posItem.text = '$(location) X: ' + currentPos.x + '  Y: ' + currentPos.y;
+                DSpiceEditorProvider.posItem.show();
+            } else {
+                DSpiceEditorProvider.posItem.hide();
+            }
+        };
         const showZoom = () => {
             if (!DSpiceEditorProvider.zoomItem) {
                 DSpiceEditorProvider.zoomItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -56,8 +69,10 @@ class DSpiceEditorProvider {
     if (e.webviewPanel.active) {
         DSpiceEditorProvider.activeWebview = webviewPanel.webview;
         showZoom();
-    } else if (DSpiceEditorProvider.activeWebview === webviewPanel.webview && DSpiceEditorProvider.zoomItem) {
-        DSpiceEditorProvider.zoomItem.hide();
+        showPos();
+    } else if (DSpiceEditorProvider.activeWebview === webviewPanel.webview) {
+        if (DSpiceEditorProvider.zoomItem) DSpiceEditorProvider.zoomItem.hide();
+        if (DSpiceEditorProvider.posItem) DSpiceEditorProvider.posItem.hide();
     }
 });
 
@@ -96,6 +111,11 @@ case 'ready':
     sendContent(document.getText());
     sendFileName(); //Send the filename when the Webview is ready
     break;
+
+                case 'cursorPos':
+                    currentPos = message.pos;
+                    if (webviewPanel.active) showPos();
+                    break;
 
                 case 'zoomChanged':
                     currentZoom = message.zoom;
@@ -477,6 +497,7 @@ webviewPanel.onDidDispose(() => {
     if (DSpiceEditorProvider.activeWebview === webviewPanel.webview) {
         DSpiceEditorProvider.activeWebview = null;
         if (DSpiceEditorProvider.zoomItem) DSpiceEditorProvider.zoomItem.hide();
+        if (DSpiceEditorProvider.posItem) DSpiceEditorProvider.posItem.hide();
     }
 });
     }
