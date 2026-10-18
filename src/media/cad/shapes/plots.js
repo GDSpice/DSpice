@@ -69,12 +69,34 @@ var openExternalIcon = {
     transform: 'matrix(1 0 0 -1 0 850)'
 };
 
+// Camera icon for the "Save plot as PNG" button (Plotly is loaded after this file, so it is defined here)
+var cameraIcon = {
+    width: 1000,
+    height: 1000,
+    path: 'm500 450c-83 0-150-67-150-150 0-83 67-150 150-150 83 0 150 67 150 150 0 83-67 150-150 150z m400 150h-120c-16 0-34 13-39 29l-31 93c-6 15-23 28-40 28h-340c-16 0-34-13-39-28l-31-94c-6-15-23-28-40-28h-120c-55 0-100-45-100-100v-450c0-55 45-100 100-100h800c55 0 100 45 100 100v450c0 55-45 100-100 100z m-400-550c-138 0-250 112-250 250 0 138 112 250 250 250 138 0 250-112 250-250 0-138-112-250-250-250z m365 380c-19 0-35-16-35-35 0-19 16-35 35-35 19 0 35 16 35 35 0 19-16 35-35 35z',
+    transform: 'matrix(1 0 0 -1 0 850)'
+};
+
 // ============================================
 // Plotly configuration for the plots
 // ============================================
 var plotConfig = {
     displaylogo: false,
     modeBarButtonsToAdd: [
+        {
+            // Replaces Plotly's default "Download plot as png" (downloads are blocked inside VS Code webviews)
+            name: 'savePng',
+            title: 'Save plot as PNG',
+            icon: cameraIcon,
+            click: function(gd) {
+                Plotly.toImage(gd, { format: 'png', width: gd.offsetWidth || 1000, height: gd.offsetHeight || 600, scale: 2 })
+                    .then(function(dataUrl) {
+                        var t = (gd.layout && gd.layout.title) ? (gd.layout.title.text || gd.layout.title) : '';
+                        vscode.postMessage({ type: 'savePng', dataUrl: dataUrl, name: (typeof t === 'string' && t) ? t : 'plot' });
+                    })
+                    .catch(function(err) { console.error('Save PNG failed:', err); vscode.postMessage({ type: 'savePngError', error: String(err && err.message || err) }); });
+            }
+        },
         {
             name: 'openExternal',
             title : 'Open in New Window',
@@ -122,7 +144,7 @@ var plotConfig = {
             }
         }
     ],
-    modeBarButtonsToRemove: ['sendDataToCloud', 'resetScale2d'] // Remove the default "Send to Cloud" button
+    modeBarButtonsToRemove: ['sendDataToCloud', 'resetScale2d', 'toImage'] // Remove the default "Send to Cloud" button
 };
 
 function addPlot(elem) {

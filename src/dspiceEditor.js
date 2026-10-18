@@ -122,6 +122,30 @@ case 'ready':
                     if (webviewPanel.active) showZoom();
                     break;
 
+                case 'savePngError':
+                    vscode.window.showErrorMessage('Could not create plot image: ' + message.error);
+                    break;
+
+                case 'savePng': {
+                    try {
+                        const base = String(message.name || 'plot').replace(/[\\/:*?"<>|]+/g, '_').trim() || 'plot';
+                        const defaultDir = path.dirname(document.fileName);
+                        const target = await vscode.window.showSaveDialog({
+                            defaultUri: vscode.Uri.file(path.join(defaultDir, base + '.png')),
+                            filters: { 'PNG image': ['png'] },
+                            saveLabel: 'Save plot'
+                        });
+                        if (target) {
+                            const b64 = String(message.dataUrl).replace(/^data:image\/png;base64,/, '');
+                            await vscode.workspace.fs.writeFile(target, Buffer.from(b64, 'base64'));
+                            vscode.window.showInformationMessage('Plot saved: ' + target.fsPath);
+                        }
+                    } catch (err) {
+                        vscode.window.showErrorMessage('Could not save plot: ' + err.message);
+                    }
+                    break;
+                }
+
                 case 'copyData':
                     await vscode.env.clipboard.writeText(message.data);
                     break;
@@ -581,7 +605,7 @@ webviewPanel.onDidDispose(() => {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}' 'unsafe-eval';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; img-src data: blob: ${webview.cspSource}; font-src ${webview.cspSource} data:; script-src 'nonce-${nonce}' 'unsafe-eval';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSpice Editor</title>
     <link href="${htmlCodeCss}" rel="stylesheet">
